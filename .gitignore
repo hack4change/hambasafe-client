@@ -1,0 +1,69 @@
+#ignore thumbnails created by windows
+Thumbs.db
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+# Visual Studio 2015 cache/options directory
+.vs/
+
+# DNX
+project.lock.json
+artifacts/
+
+#Ignore files build by Visual Studio
+*.obj
+*.pdb
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.tlb
+*.tlh
+*.bak
+*.ilk
+*.log
+.vsmdi
+*.lib
+*.sbr
+_ReSharper*/
+[Tt]est[Rr]esult*
+packages/
+*.msi
+*.wixpdb
+~$*
+*.ncrunchsolution
+*.ncrunchsolution.user
+*.dat
+*.ncrunchproject
+*.cache$
+*.xap
+*.ncrunchsolution
+/ClientBin
+*.xls
+*.xlsm
+*.xlsb
+*.orig
+*log.txt*
+*.DotSettings
+*.DS_Store
+*NCrunch*
+/Client/www/lib
+/.idea
