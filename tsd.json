@@ -1,0 +1,81 @@
+{
+  "version": "v4",
+  "repo": "borisyankov/DefinitelyTyped",
+  "ref": "master",
+  "path": "typings",
+  "bundle": "typings/tsd.d.ts",
+  "installed": {
+    "angularjs/angular.d.ts": {
+      "commit": "1c4a98f36846f585b59e5383d26962ce24b372e2"
+    },
+    "jquery/jquery.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/Camera.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/cordova.d.ts": {
+      "commit": "03194c9dfec3ed508b8cc1660c1da45d476b2425"
+    },
+    "cordova/plugins/Contacts.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/DeviceMotion.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/Device.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/Dialogs.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/DeviceOrientation.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/FileSystem.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/FileTransfer.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/MediaCapture.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/BatteryStatus.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/Media.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/Push.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/Globalization.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/NetworkInformation.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/Splashscreen.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/StatusBar.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/Vibration.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/WebSQL.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "cordova/plugins/InAppBrowser.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    },
+    "google-maps/google-maps.d.ts": {
+      "commit": "c21a2d49821b1a7d882b85e72255cdcf1532d1a3"
+    },
+    "googlemaps/google.maps.d.ts": {
+      "commit": "237339b0238845b027431280c72dc663ca534132"
+    }
+  }
+}

@@ -65,5 +65,6 @@ packages/
 *.DotSettings
 *.DS_Store
 *NCrunch*
-/Client/www/lib
+node_modules
+www/lib
 /.idea
