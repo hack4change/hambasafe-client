@@ -1,3 +1,4 @@
+import {app} from "../app";
 app.service('EventService', ['$http', 'config',
     function ($http, config) {
       return {

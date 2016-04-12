@@ -68,3 +68,4 @@ packages/
 node_modules
 www/lib
 /.idea
+bower_components/

@@ -1,3 +1,4 @@
+import {app} from "../app";
 app.controller('MapCtrl', function ($scope, EventService, $state, $compile, $ionicLoading, $location) {
   (function(){
     $scope.sliderDistance = 10;

@@ -3,8 +3,8 @@
     "noImplicitAny": false,
     "noEmitOnError": true,
     "removeComments": false,
-    "sourceMap": true,
-
+    "inlineSourceMap": true,
+    "inlineSources": true,
     "out": "www/scripts/appBundle.js",
     "target": "es5"
   },

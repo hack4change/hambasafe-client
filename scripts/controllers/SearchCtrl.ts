@@ -1,3 +1,4 @@
+import {app} from "../app";
 app.controller('SearchCtrl', function ($scope, $stateParams, EventService, $location) {
     //init
     (function(){

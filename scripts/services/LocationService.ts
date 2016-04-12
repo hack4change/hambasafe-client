@@ -1,3 +1,4 @@
+import {app} from "../app";
 app.service('LocationService', ['$http', 'config',
     function ($http, config) {
       return {

@@ -1,3 +1,4 @@
+import {app} from "../app";
 app.controller('RegistrationCtrl', function ($scope, $stateParams, ProfileService) {
   ProfileService.getFaceBookProfile().then(function (profile) {
     $scope.user = profile;

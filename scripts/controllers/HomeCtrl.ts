@@ -1,3 +1,4 @@
+import {app} from "../app";
 app.controller('HomeCtrl', function ($scope, $location, EventService) {
   (function(){
     $scope.events = [];

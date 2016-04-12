@@ -1,3 +1,4 @@
+import {app} from "../app";
 app.controller('LandingCtrl', function ($scope, $stateParams, Facebook, ProfileService, $location) {
   $scope.getLoginStatus = function () {
     Facebook.logout();

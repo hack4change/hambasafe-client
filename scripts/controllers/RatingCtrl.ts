@@ -1,3 +1,4 @@
+import {app} from "../app";
 app.controller('RatingCtrl', function ($scope) {
   $scope.event = {Name:"Event Name",Description:"Description"}
   $scope.Rate=3;

@@ -1,3 +1,4 @@
+import {app} from "../app";
 app.controller('EventDetailCtrl', function ($scope, $location, EventFactory) {
 
       // $scope.eventData = {

@@ -1,3 +1,4 @@
+import {app} from "../app";
 app.factory("LocalStorage", ['$window',
   function ($window) {
     var _facebookAuth = null

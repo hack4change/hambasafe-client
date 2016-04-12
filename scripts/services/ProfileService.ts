@@ -1,3 +1,4 @@
+import {app} from "../app";
 app.service('ProfileService',
   function ($http, config, localStorageService, $q,Facebook) {
   var base = config.baseServiceURL + "/v1/";
