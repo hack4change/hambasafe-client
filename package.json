@@ -33,7 +33,6 @@
     "karma-jasmine": "^0.3.7",
     "karma-notify-reporter": "^0.1.1",
     "karma-phantomjs-launcher": "^1.0.0",
-
     "node-sass": "^3.4.2",
     "phantomjs": "^2.1.7",
     "rimraf": "^2.5.2",

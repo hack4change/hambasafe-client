@@ -11,15 +11,16 @@
               "></script>
 
     <!-- ionic/angularjs js -->
-    <script src="lib/ionic/js/ionic.bundle.js"></script>
-    <script src="lib/angular-facebook/lib/angular-facebook.js"></script>
-    <script src="lib/angular-resource/angular-resource.js"></script>
-    <script src="lib/ngAutocomplete/src/ngAutocomplete.js"></script>
-    <script src="lib/angular-local-storage/dist/angular-local-storage.js"></script>
-
+    <script src="lib/libs.js"></script>
+    
     <!-- cordova script (this will be a 404 during development) -->
     <script src="cordova.js"></script>
-    <!-- your app's js -->
+    <script>
+        System.config({
+            defaultJSExtensions: true,
+            baseURL: '',
+        });
+    </script>
     <script src="scripts/appBundle.js"></script>
 
 

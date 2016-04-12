@@ -1,5 +1,5 @@
 {
-  "name": "HelloIonic",
+  "name": "Hambasafe",
   "private": "true",
   "devDependencies": {
     "ionic": "driftyco/ionic-bower#1.2.4"
@@ -10,9 +10,12 @@
     "ng-facebook": "^0.1.6",
     "angular-resource": "^1.5.2",
     "ngAutocomplete": "^1.0.0",
-    "angular-local-storage": "*"
+    "angular-local-storage": "*",
+    "angular": "1.4.6",
+    "angular-animate": "1.4.5"
   },
   "resolutions": {
-    "angular": "1.5.2"
+    "angular": ">= 1.0.8"
+    
   }
 }

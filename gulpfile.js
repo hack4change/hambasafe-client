@@ -7,7 +7,7 @@ var sass = require('gulp-sass');
 var minifyCss = require('gulp-minify-css');
 var rename = require('gulp-rename');
 var sh = require('shelljs');
-
+var notify = require("gulp-notify");
 var del = require("del");
 var sass = require("gulp-sass");
 var spawn = require("child_process").spawn;
@@ -51,50 +51,44 @@ gulp.task("bower:install", function () {
  * Watch
  */
 gulp.task("watch", function () {
-  gulp.watch(paths.scripts, ["compile:typescript"]);
-  gulp.watch(paths.sass, ["compile:sass"]);
+  gulp.watch(paths.scripts, ["scripts"]);
+  gulp.watch(paths.sass, ["sass"]);
 });
 
 /**
  * Compile & Copy
  */
-gulp.task("compile:lib", function () {
+gulp.task("libs", function () {
   return gulp.src([
-          paths.bower + "/jquery/dist/jquery.min.js",
-          paths.npm + "/systemjs/dist/system-polyfills.js",
-          paths.npm + "/systemjs/dist/system.js",
-          paths.bower + "ionic/js/ionic.bundle.js",
-          paths.bower + "angular-facebook/lib/angular-facebook.js",
-          paths.bower + "angular-resource/angular-resource.js",
-          paths.bower + "ngAutocomplete/src/ngAutocomplete.js",
-          paths.bower + "angular-local-storage/dist/angular-local-storage.js",
+           paths.bower + "ionic/js/ionic.bundle.min.js",
+           paths.npm + "/systemjs/dist/system-polyfills.js",
+           paths.npm + "/systemjs/dist/system.js",
+           paths.bower + "angular-facebook/lib/angular-facebook.js",
+           paths.bower + "angular-resource/angular-resource.js",
+           paths.bower + "ngAutocomplete/src/ngAutocomplete.js",
+           paths.bower + "angular-local-storage/dist/angular-local-storage.js"
   ])
-      .pipe(concat("libs.js"))
-      .pipe(gulp.dest( "/www/lib"));
+        .pipe(concat("libs.js"))
+        .pipe(gulp.dest("www/lib"));
+});
+gulp.task("scripts", function () {
+  var stream = gulp.src(["scripts/**/*.ts"])
+      .pipe(sourcemaps.init())
+      .pipe(ts({
+        "noImplicitAny": false,
+        "noEmitOnError": true,
+        "removeComments": false,
+        "inlineSourceMap": true,
+        "inlineSources": true,
+        "outFile": "www/scripts/appBundle.js",
+        "target": "es5"
+
+      })).on('error', stopOnError);
+  stream.pipe(sourcemaps.write())
+    .pipe(gulp.dest(""))
+  .pipe(notify("Scripts Compiled"));
 });
 
-
-gulp.task("compile:sass", function () {
-  var stream = gulp.src(paths.source + "/scss/**/*.scss");
-  if (env.isDevelopment()) {
-    stream = stream.pipe(sourcemaps.init());
-  }
-  stream = stream.pipe(sass()).on('error', stopOnError);
-
-
-  stream = stream.pipe(concat("application.min.css"));
-  if (env.isDevelopment()) {
-    stream = stream.pipe(sourcemaps.write())
-  }
-  stream.pipe(gulp.dest(paths.app + "/assets/css"));
-
-});
-gulp.task('scripts', function () {
-  var tsResult = tsProject.src() // instead of gulp.src(...)
-		.pipe(ts(tsProject));
-
-  return tsResult.js.pipe(gulp.dest('www/scripts'));
-});
 gulp.task('sass', function (done) {
   gulp.src('./scss/ionic.app.scss')
     .pipe(sass())
@@ -105,6 +99,7 @@ gulp.task('sass', function (done) {
     }))
     .pipe(rename({ extname: '.min.css' }))
     .pipe(gulp.dest('./www/css/'))
+    .pipe(notify("Sass Compiled"))
     .on('end', done);
 });
 

@@ -5,13 +5,13 @@
     "removeComments": false,
     "inlineSourceMap": true,
     "inlineSources": true,
-    "out": "www/scripts/appBundle.js",
+    "outFile": "www/scripts/appBundle.js",
     "target": "es5"
   },
 
   "exclude": [
     "node_modules",
-    "www/lib",
+    "bower_components",
     "platforms"
 
   ]
