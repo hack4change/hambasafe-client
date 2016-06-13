@@ -15,6 +15,7 @@ app.controller('MapCtrl', function ($scope, EventService, $state, $compile, $ion
       $location.path('app/search?lat='+$scope.gCoords.lat()+ "&lng"+$scope.gCoords.lng()+"&dist="+ $scope.sliderDistance);
     }
   }
+  ``
   $scope.init = function() {
 
 

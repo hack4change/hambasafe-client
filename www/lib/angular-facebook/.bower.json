@@ -31,7 +31,7 @@
     "tag": "v0.2.3",
     "commit": "e2abb74a438bef7eefbde11983c29f3716247e89"
   },
-  "_source": "git://github.com/Ciul/Angularjs-Facebook.git",
+  "_source": "https://github.com/Ciul/Angularjs-Facebook.git",
   "_target": "^0.2.3",
   "_originalSource": "angular-facebook"
 }

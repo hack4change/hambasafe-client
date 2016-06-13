@@ -20,6 +20,7 @@
  *
  * SUPPORTS:
  *
+ *    500px
  *    Dropbox
  *    Digital Ocean
  *    Google
@@ -52,6 +53,8 @@
  *    Slack
  *    Jawbone
  *    Untappd
+ *    Xing
+ *    Trakt.tv
  */
 
 angular.module("ngCordovaOauth", [

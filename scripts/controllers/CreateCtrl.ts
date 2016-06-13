@@ -9,7 +9,9 @@ app.controller('CreateCtrl', function ($scope, EventFactory) {
   $scope.searchEvents = function () {
 
     EventFactory.create(
-      {id: 1},
+      {
+        'id': 1
+      },
       function (event) {
         $scope.eventData = event;
       },
@@ -30,6 +32,7 @@ app.controller('CreateCtrl', function ($scope, EventFactory) {
       $scope.shownGroup = group;
     }
   };
+
   $scope.toggleSelection = function (selected, group) {
     $scope.typeSelected = selected;
     $scope.toggleGroup(group);
@@ -50,16 +53,15 @@ app.controller('CreateCtrl', function ($scope, EventFactory) {
   }
 
   function generateLocationFromAutoComplete(details) {
-    var location :any= {};
-    location.Address = details.formatted_address;
-    location.Suburb = extractSuburb(details.address_components);
-    location.City = extractCity(details.address_components);
-    location.Province = extractProvince(details.address_components);
-    location.Country = extractCountry(details.address_components);
-    location.Latitude = details.geometry.location.lat();
-    location.Longtitude = details.geometry.location.lng();
-    console.log(location);
-    return location;
+    var placeDetails :any = {};
+    placeDetails.Address = details.formatted_address;
+    placeDetails.Suburb = extractSuburb(details.address_components);
+    placeDetails.City = extractCity(details.address_components);
+    placeDetails.Province = extractProvince(details.address_components);
+    placeDetails.Country = extractCountry(details.address_components);
+    placeDetails.Latitude = details.geometry.location.lat();
+    placeDetails.Longtitude = details.geometry.location.lng();
+    return placeDetails;
   }
 
   function extractSuburb(results) {
@@ -126,7 +128,6 @@ app.controller('CreateCtrl', function ($scope, EventFactory) {
           }
         }
       }
-
     }
     return results;
   }

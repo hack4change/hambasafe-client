@@ -1,3 +1,22 @@
+0.2.8 -
+
+* Add Trakt.tv support
+
+0.2.7 - May 17, 2016
+
+* Fix `Can't find variable: requestToken` error for various providers
+
+0.2.6 - May 12, 2016
+
+* Add Xing support
+* Add Netatmo support
+* Add 500px support
+
+0.2.5 - April 1, 2016
+
+* Fix variable definitions that are conflicting with other libraries
+* Localize header settings
+
 0.2.3 - February 10, 2016
 
 * Fix issue with Apache Cordova 6.0 where the InAppBrowser plugin now holds a new name

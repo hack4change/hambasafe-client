@@ -12,7 +12,7 @@
     "tag": "v1.0.0",
     "commit": "c9ea47f13a2ffa86b97bb2eb1e4f0e1ed9bf4d1e"
   },
-  "_source": "git://github.com/wpalahnuk/ngAutocomplete.git",
+  "_source": "https://github.com/wpalahnuk/ngAutocomplete.git",
   "_target": "^1.0.0",
   "_originalSource": "ngAutocomplete"
 }

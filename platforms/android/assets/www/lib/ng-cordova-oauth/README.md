@@ -91,6 +91,10 @@ Each web service API acts independently in this library.  However, when configur
     $cordovaOauth.weibo(string clientId, string clientSecret, array appScope, object options);
     $cordovaOauth.untappd(string clientId, object options);
     $cordovaOauth.pocket(string clientId, object options);
+    $cordovaOauth.xing(string clientId, string clientSecret, object options);
+    $cordovaOauth.fiveHundredsPx(string sdkKey, object options);
+    $cordovaOauth.netatmo(object options);
+    $cordovaOauth.trakttv(string clientId, string clientSecret, string state);
 
 Each API call returns a promise.  The success callback will provide a response object and the error
 callback will return a string.
@@ -103,12 +107,20 @@ $cordovaOauth.google("CLIENT_ID_HERE", ["email"]).then(function(result) {
 });
 ```
 
-To authenticate with Twitter, Withings, and Magento an additional library is required.  These services require HMAC-SHA1 signatures in their Oauth implementation.  Including the sha1.js component of jsSHA will accomplish this task.
+To authenticate with Twitter, Withings, Magento and Xing an additional library is required.  These services require HMAC-SHA1 signatures in their Oauth implementation.  Including the sha1.js component of jsSHA will accomplish this task.
 
-As of Apache Cordova 5.0.0, the [whitelist plugin](https://blog.nraboy.com/2015/05/whitelist-external-resources-for-use-in-ionic-framework/) must be used in order to reach external web services.
+As of Apache Cordova 5.0.0, the [whitelist plugin](https://www.thepolyglotdeveloper.com/2015/05/whitelist-external-resources-for-use-in-ionic-framework/) must be used in order to reach external web services.
 
-This library will **NOT** work with a web browser, ionic serve, or ionic view.  It **MUST** be used via installing to a device or simulator.
+### Important Note About Testing
 
+This library will **NOT** work with a web browser, ionic serve, ionic live-reload, or ionic view.  It **MUST** be used via installing to a device or simulator.
+
+## Content-Security-Policy
+
+When using the Content-Security-Policy as mentioned in the [Apache Cordova Whitelist Plugin](https://github.com/apache/cordova-plugin-whitelist) documentation, you'll need to allow content from the OAuth Provider. For example, if using Google Login, you'll need to add `https://www.googleapis.com` to your `default-src` list. Your meta tag would look something like this for Google and Facebook:
+```html
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' https://www.googleapis.com https://graph.facebook.com">
+```
 
 ## Version History
 
@@ -163,13 +175,15 @@ $cordovaOauth.$inject = [
 ];
 ```
 
-## Have a question or found a bug (compliments work too)?
+## Support
 
-This project is maintained by **Nic Raboy** and **Matheus Rocha**.
+This project is maintained by **Nic Raboy** and **Matheus Rocha**.  This plugin is and will always be open source.  That said, support is not.  If you'd like to **purchase** paid support for this library, please contact either of us on Twitter.
 
-Tweet Nic Raboy on Twitter - [@nraboy](https://www.twitter.com/nraboy)
+Nic Raboy on Twitter - [@nraboy](https://www.twitter.com/nraboy)
 
-Tweet Matheus Rocha on Twitter - [@matheusrocha](https://www.twitter.com/matheusrocha)
+Matheus Rocha on Twitter - [@matheusrocha](https://www.twitter.com/matheusrocha)
+
+The issue tracker is to be used for bug reporting only.  We will not help you build your application, diagnose your problems, or teach you how to use the various oauth providers through the issue tracker.  Free support can be found in the forums or on Stack Overflow.
 
 
 ## Resources
@@ -180,4 +194,4 @@ AngularJS - [http://www.angularjs.org](http://www.angularjs.org)
 
 Apache Cordova - [http://cordova.apache.org](http://cordova.apache.org)
 
-Nic Raboy's Code Blog - [https://blog.nraboy.com](https://blog.nraboy.com)
+The Polyglot Developer - [https://www.thepolyglotdeveloper.com](https://www.thepolyglotdeveloper.com)

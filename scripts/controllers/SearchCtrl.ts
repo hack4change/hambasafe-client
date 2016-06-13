@@ -19,11 +19,11 @@ app.controller('SearchCtrl', function ($scope, $stateParams, EventService, $loca
         $scope.eventsToList = response.data;
         console.log(response);
       }, function(response){
-
+        console.log(response);
       });
     }
     $scope.searchEvents();
-    $scope.getTypes=function(){
+    $scope.getTypes = function(){
 
       EventService.getEventTypes().then(function(response) {
 
@@ -64,7 +64,7 @@ app.controller('SearchCtrl', function ($scope, $stateParams, EventService, $loca
       return $scope.selectedSearch === selection;
     }
     $scope.filterResults = function(eventObject){
-      if($scope.typeSelected == "Event Type"){
+      if ($scope.typeSelected == "Event Type") {
         return true;
       } else {
         if($scope.typeSelected == eventObject.EventType.Name){

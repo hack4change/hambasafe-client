@@ -9774,6 +9774,9 @@ a.button {
 .linkedin-color {
   color: #007bb5; }
 
+.button {
+  border-radius: 0 !important; }
+
 /* Fonts */
 /*@font-face {
   font-family: 'montserrat';
