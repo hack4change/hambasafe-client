@@ -10,7 +10,8 @@
     "ng-facebook": "^0.1.6",
     "angular-resource": "^1.5.2",
     "ngAutocomplete": "^1.0.0",
-    "angular-local-storage": "*"
+    "angular-local-storage": "*",
+    "ionic-datepicker": "^1.1.0"
   },
   "resolutions": {
     "angular": "1.5.2"

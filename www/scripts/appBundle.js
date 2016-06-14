@@ -1,6 +1,6 @@
 ///<reference path="../typings/tsd.d.ts"/>
 ///<reference path="ref.ts"/>
-var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule", 'facebook'])
+var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule", 'ionic-datepicker'])
     .constant('config', {
     baseServiceURL: "http://hsdevapi1.azurewebsites.net"
 })
@@ -20,9 +20,26 @@ var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule",
         $rootScope.user = {};
     });
 })
-    .config(function ($stateProvider, $urlRouterProvider, FacebookProvider, $httpProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $httpProvider, ionicDatePickerProvider) {
     $httpProvider.defaults.useXDomain = true;
-    FacebookProvider.init('289482390688');
+    // FacebookProvider.init('289482390688');
+    var datePickerObj = {
+        inputDate: new Date(),
+        setLabel: 'Set',
+        todayLabel: 'Today',
+        closeLabel: 'Close',
+        mondayFirst: false,
+        weeksList: ["S", "M", "T", "W", "T", "F", "S"],
+        monthsList: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
+        templateType: 'popup',
+        from: new Date(2012, 8, 1),
+        to: new Date(2018, 8, 1),
+        showTodayButton: true,
+        dateFormat: 'dd MMMM yyyy',
+        closeOnSelect: false,
+        disableWeekdays: [6]
+    };
+    ionicDatePickerProvider.configDatePicker(datePickerObj);
     // Ionic uses AngularUI Router which uses the concept of states
     // Learn more here: https://github.com/angular-ui/ui-router
     // Set up the various states which the app can be in.
@@ -214,7 +231,7 @@ var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule",
         }
     });
     //if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/splash');
+    $urlRouterProvider.otherwise('/app/registration');
 });
 // For an introduction to the Blank template, see the following documentation:
 // http://go.microsoft.com/fwlink/?LinkID=397705
@@ -549,7 +566,7 @@ app.controller('RatingCtrl', function ($scope) {
     };
     console.log('Here');
 });
-app.controller('RegistrationCtrl', function ($rootScope, $scope, $window, $stateParams, ProfileService) {
+app.controller('RegistrationCtrl', function ($rootScope, $scope, $window, $stateParams, ProfileService, ionicDatePicker) {
     (function () {
         $scope.genders = [
             'male',
@@ -564,6 +581,30 @@ app.controller('RegistrationCtrl', function ($rootScope, $scope, $window, $state
             console.log(profile);
         });
     });
+    var pickDateObj = {
+        callback: function (val) {
+            $scope.user.dateOfBirth = new Date(val);
+        },
+        disabledDates: [
+            new Date(2016, 2, 16),
+            new Date(2015, 3, 16),
+            new Date(2015, 4, 16),
+            new Date(2015, 5, 16),
+            new Date('Wednesday, August 12, 2015'),
+            new Date("08-16-2016"),
+            new Date(1439676000000)
+        ],
+        from: new Date(2012, 1, 1),
+        to: new Date(2016, 10, 30),
+        inputDate: new Date(),
+        mondayFirst: true,
+        disableWeekdays: [0],
+        closeOnSelect: false,
+        templateType: 'popup' //Optional
+    };
+    $scope.openDatePicker = function () {
+        ionicDatePicker.openDatePicker(pickDateObj);
+    };
     $scope.isGenderOpen = function () {
         return $scope.genderOpen;
     };

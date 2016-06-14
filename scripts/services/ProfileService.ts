@@ -13,7 +13,6 @@ app.service('ProfileService', function ($http, $q, $rootScope, config, localStor
 		getById: function (id) {
 			var val = id || localStorage.getItem(profileKey);
 			return $http.get(base + 'users?username=' + val, config);
-
 		},
 		getByUsername: function (id) {
 			var val = id || localStorage.getItem(profileKey);

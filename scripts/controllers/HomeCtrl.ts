@@ -14,9 +14,9 @@ app.controller('HomeCtrl', function ($scope, $location, EventService) {
 
   $scope.click = function(event) {
     if (event.EventDateTimeEnd < new Date()) {
-      $location.path("app/rating")
+      $location.path("app/rating");
     } else {
-      $location.path("app/event-detail")
+      $location.path("app/event-detail");
     }
   }
 });

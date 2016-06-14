@@ -1,6 +1,6 @@
 ///<reference path="ref.ts"/>
 
-var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule", 'facebook'])
+var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule", 'ionic-datepicker'])
 
 .constant('config', {
   baseServiceURL: "http://hsdevapi1.azurewebsites.net"
@@ -28,10 +28,27 @@ var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule",
 	});
 })
 
-.config(function($stateProvider, $urlRouterProvider, FacebookProvider, $httpProvider) {
+.config(function($stateProvider, $urlRouterProvider, $httpProvider, ionicDatePickerProvider) {
 
 	$httpProvider.defaults.useXDomain = true;
-	FacebookProvider.init('289482390688');
+	// FacebookProvider.init('289482390688');
+	var datePickerObj = {
+		inputDate: new Date(),
+		setLabel: 'Set',
+		todayLabel: 'Today',
+		closeLabel: 'Close',
+		mondayFirst: false,
+		weeksList: ["S", "M", "T", "W", "T", "F", "S"],
+		monthsList: ["Jan", "Feb", "March", "April", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec"],
+		templateType: 'popup',
+		from: new Date(2012, 8, 1),
+		to: new Date(2018, 8, 1),
+		showTodayButton: true,
+		dateFormat: 'dd MMMM yyyy',
+		closeOnSelect: false,
+		disableWeekdays: [6]
+	};
+	ionicDatePickerProvider.configDatePicker(datePickerObj);
 
 	// Ionic uses AngularUI Router which uses the concept of states
 	// Learn more here: https://github.com/angular-ui/ui-router
@@ -51,198 +68,198 @@ var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule",
 		url: '/splash',
 
 		views: {
-      'menuContent': {
-        templateUrl: 'templates/splash.html',
-        controller: 'SplashCtrl'
-      }
-    }
-  })
+			'menuContent': {
+				templateUrl: 'templates/splash.html',
+				controller: 'SplashCtrl'
+			}
+		}
+	})
 
-    .state('app.landing', {
-    url: '/landing',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/landing.html',
-          controller: 'LandingCtrl'
-        }
-      }
-  })
+	.state('app.landing', {
+		url: '/landing',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/landing.html',
+				controller: 'LandingCtrl'
+			}
+		}
+	})
 
-  .state('app.emergency', {
-      url: "/emergency",
-      views: {
-        'menuContent': {
-          templateUrl: "templates/emergency.html",
-        }
-      }
-    })
-    .state('app.registration', {
-      url: '/registration',
-      views: {
-        'menuContent': {
-      templateUrl: 'templates/registration.html',
-      controller: 'RegistrationCtrl'
-      }
-    }
-    })
+	.state('app.emergency', {
+		url: "/emergency",
+		views: {
+			'menuContent': {
+				templateUrl: "templates/emergency.html",
+			}
+		}
+	})
+	.state('app.registration', {
+		url: '/registration',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/registration.html',
+				controller: 'RegistrationCtrl'
+			}
+		}
+	})
 
-  .state('app.home', {
-    url: '/home',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/home.html',
-        controller: 'HomeCtrl'
-      }
-    }
-  })
+	.state('app.home', {
+		url: '/home',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/home.html',
+				controller: 'HomeCtrl'
+			}
+		}
+	})
 
-  .state('app.terms', {
-    url: '/terms',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/terms.html',
-        controller: 'TermsCtrl'
-      }
-    }
-  })
+	.state('app.terms', {
+		url: '/terms',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/terms.html',
+				controller: 'TermsCtrl'
+			}
+		}
+	})
 
-  .state('app.about-us', {
-    url: '/about-us',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/about-us.html',
-        controller: 'AboutUsCtrl'
-      }
-    }
-  })
-  .state('app.tell-a-friend', {
-    url: '/tell-a-friend',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/about-us.html',
-        controller: 'TellaFriendCtrl'
-      }
-    }
-  })
-  .state('tab', {
-    url: '/tab',
-    abstract: true,
-    templateUrl: 'templates/tabs.html'
-  })
+	.state('app.about-us', {
+		url: '/about-us',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/about-us.html',
+				controller: 'AboutUsCtrl'
+			}
+		}
+	})
+	.state('app.tell-a-friend', {
+		url: '/tell-a-friend',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/about-us.html',
+				controller: 'TellaFriendCtrl'
+			}
+		}
+	})
+	.state('tab', {
+		url: '/tab',
+		abstract: true,
+		templateUrl: 'templates/tabs.html'
+	})
 
-  .state('latest', {
-    url: '/latest',
-    templateUrl: 'templates/latest.html',
-    controller: 'LatestCtrl'
-  })
+	.state('latest', {
+		url: '/latest',
+		templateUrl: 'templates/latest.html',
+		controller: 'LatestCtrl'
+	})
 
-  .state('app.event-detail', {
-    url: '/event-detail/:id',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/event-detail.html',
-        controller: 'EventDetailCtrl'
-      }
-    }
-  })
+	.state('app.event-detail', {
+		url: '/event-detail/:id',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/event-detail.html',
+				controller: 'EventDetailCtrl'
+			}
+		}
+	})
 
-  .state('app.create', {
-    url: '/create',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/create.html',
-        controller: 'CreateCtrl'
-      }
-    }
-  })
+	.state('app.create', {
+		url: '/create',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/create.html',
+				controller: 'CreateCtrl'
+			}
+		}
+	})
 
-  .state('app.map', {
-    url: '/map',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/map.html',
-        controller: 'MapCtrl'
-      }
-    }
-  })
-  .state('app.rating', {
-    url: '/rating',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/rating.html',
-        controller: 'RatingCtrl'
-      }
-    }
-  })
+	.state('app.map', {
+		url: '/map',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/map.html',
+				controller: 'MapCtrl'
+			}
+		}
+	})
+	.state('app.rating', {
+		url: '/rating',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/rating.html',
+				controller: 'RatingCtrl'
+			}
+		}
+	})
 
-  .state('app.search', {
-      url: '/search?lng&lat&dist',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/search.html',
-          controller: 'SearchCtrl'
-        }
-      }
-    })
-    .state('app.profile', {
-      url: '/profile',
-      views: {
-        'menuContent': {
-          templateUrl: 'templates/profile.html',
-          controller: 'ProfileCtrl'
-        }
-      }
-    })
+	.state('app.search', {
+		url: '/search?lng&lat&dist',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/search.html',
+				controller: 'SearchCtrl'
+			}
+		}
+	})
+	.state('app.profile', {
+		url: '/profile',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/profile.html',
+				controller: 'ProfileCtrl'
+			}
+		}
+	})
 
-  .state('tab.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
-      }
-    }
-  })
+	.state('tab.dash', {
+		url: '/dash',
+		views: {
+			'tab-dash': {
+				templateUrl: 'templates/tab-dash.html',
+				controller: 'DashCtrl'
+			}
+		}
+	})
 
-  .state('tab.chats', {
-    url: '/chats',
-    views: {
-      'tab-chats': {
-        templateUrl: 'templates/tab-chats.html',
-        controller: 'ChatsCtrl'
-      }
-    }
-  })
+	.state('tab.chats', {
+		url: '/chats',
+		views: {
+			'tab-chats': {
+				templateUrl: 'templates/tab-chats.html',
+				controller: 'ChatsCtrl'
+			}
+		}
+	})
 
-  .state('tab.chat-detail', {
-    url: '/chats/:chatId',
-    views: {
-      'tab-chats': {
-        templateUrl: 'templates/chat-detail.html',
-        controller: 'ChatDetailCtrl'
-      }
-    }
-  })
+	.state('tab.chat-detail', {
+		url: '/chats/:chatId',
+		views: {
+			'tab-chats': {
+				templateUrl: 'templates/chat-detail.html',
+				controller: 'ChatDetailCtrl'
+			}
+		}
+	})
 
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
-      }
-    }
-  })
+	.state('tab.account', {
+		url: '/account',
+		views: {
+			'tab-account': {
+				templateUrl: 'templates/tab-account.html',
+				controller: 'AccountCtrl'
+			}
+		}
+	})
 
-  .state('app.userInvite', {
-    url: '/user-invite',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/user-invite.html',
-        controller: ''
-      }
-    }
-  })
-  //if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/splash');
+	.state('app.userInvite', {
+		url: '/user-invite',
+		views: {
+			'menuContent': {
+				templateUrl: 'templates/user-invite.html',
+				controller: ''
+			}
+		}
+	})
+	//if none of the above states are matched, use this as the fallback
+	$urlRouterProvider.otherwise('/app/registration');
 });

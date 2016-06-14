@@ -9967,3 +9967,58 @@ ion-side-menus ion-side-menu ion-list ion-item .item-content {
 .register-wrapper {
   overflow-y: hidden;
   width: 100%; }
+  .register-wrapper .register-container {
+    width: 100%;
+    height: 100%; }
+    .register-wrapper .register-container form {
+      height: 100%; }
+      .register-wrapper .register-container form .row {
+        height: 12%; }
+        .register-wrapper .register-container form .row ion-item {
+          height: 100%;
+          width: 100%;
+          border: 0; }
+          .register-wrapper .register-container form .row ion-item .valign-outer {
+            height: 100%; }
+            .register-wrapper .register-container form .row ion-item .valign-outer p {
+              font-size: 1.2em;
+              color: #AAAAAA;
+              padding: 0;
+              margin: 0;
+              display: inline-block; }
+        .register-wrapper .register-container form .row label {
+          width: 100%; }
+        .register-wrapper .register-container form .row input {
+          padding-left: 1em;
+          width: 100%;
+          height: 100%;
+          font-size: 1.2em;
+          color: #AAAAAA; }
+        .register-wrapper .register-container form .row .profile-pic {
+          width: 0.1px;
+          height: 0.1px;
+          opacity: 0;
+          overflow: hidden;
+          position: absolute;
+          z-index: -1; }
+        .register-wrapper .register-container form .row .profile-pic + label {
+          font-size: 1.25em;
+          font-weight: 700;
+          color: white;
+          background-color: black;
+          display: inline-block;
+          cursor: pointer; }
+        .register-wrapper .register-container form .row .profile-pic:focus + label,
+        .register-wrapper .register-container form .row .profile-pic + label:hover {
+          background-color: #FFBC00; }
+        .register-wrapper .register-container form .row input:focus {
+          border-left: 5px solid #0C9EF9; }
+      .register-wrapper .register-container form .half-row {
+        height: 6.5%; }
+
+.bottom-toolbar {
+  background-color: #FFBC00 !important;
+  padding: 0px; }
+  .bottom-toolbar button {
+    width: 100%;
+    height: 100%; }
