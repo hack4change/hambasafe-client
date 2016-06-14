@@ -1,7 +1,11 @@
-app.controller('RegistrationCtrl', function ($scope, $stateParams, ProfileService) {
-  ProfileService.getFaceBookProfile().then(function (profile) {
-    $scope.user = profile;
-  });
+app.controller('RegistrationCtrl', function ($scope, $window, $stateParams, ProfileService) {
+  (function(){
+    angular.element(document).on('fbLoad', function() {
+     ProfileService.getFaceBookProfile().then(function (profile) {
+      $scope.user = profile;
+    });
+   })
+  })()
   /*
    *  DoB
    *  Email
@@ -9,9 +13,6 @@ app.controller('RegistrationCtrl', function ($scope, $stateParams, ProfileServic
    */
   $scope.doRegister = function (valid) {
     $scope.submitted = true;
-
-
-
     $scope.updatePasswordError();
 
     if (valid) {

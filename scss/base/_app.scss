@@ -1,15 +1,24 @@
 /* Fonts */
-/*@font-face {
-  font-family: 'montserrat';
-  url('fonts/Montserrat-Regular.ttf') format('truetype');
+@font-face {
+  font-family: 'DINPro';
+  src: url('/fonts/DINPro.otf') format('opentype');
 }
 @font-face {
-  font-family: 'opensans';
-  url('fonts/OpenSans-Regular.ttf') format('truetype');
-}*/
+  font-family: 'DINPro-Medium';
+  src: url('/fonts/DINPro-Medium.otf') format('opentype');
+}
+@font-face {
+  font-family: 'DINPro-Black';
+  src: url('/fonts/DINPro-Black.otf') format('opentype');
+}
 
 .app-logo {
   text-align: center;
+}
+
+
+* {
+   font-family: 'DINPro-Medium' !important;
 }
 
 .app-logo > img {
@@ -78,4 +87,8 @@ $landing-icon-width: 42px;
 }
 .star-filled{
   color:gold;
+}
+
+ion-header-bar {
+  background-color: #fff !important;
 }

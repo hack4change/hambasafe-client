@@ -1,13 +1,13 @@
 ///<reference path="ref.ts"/>
 
-var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule", 'facebook', 'ngResource'])
+var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule", 'facebook'])
 
 .constant('config', {
   baseServiceURL: "http://hsdevapi1.azurewebsites.net"
     //baseServiceURL: "http://api.emguidance.com/openmed/api"
 })
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $rootScope, $window) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -22,23 +22,103 @@ var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule",
     }
 
     //$facebookProvider.setAppId(289482390688)
+		$rootScope.user = {};
+
+		$window.fbAsyncInit = function() {
+			// Executed when the SDK is loaded
+
+			FB.init({
+
+				/*
+					 The app id of the web app;
+					 To register a new app visit Facebook App Dashboard
+					 ( https://developers.facebook.com/apps/ )
+				 */
+				appId: '289482390688',
+
+				/*
+					 Adding a Channel File improves the performance
+					 of the javascript SDK, by addressing issues
+					 with cross-domain communication in certain browsers.
+				 */
+
+				// channelUrl: 'app/channel.html',
+
+				/*
+					 Set if you want to check the authentication status
+					 at the start up of the app
+				 */
+				status: true,
+
+				/*
+					 Enable cookies to allow the server to access
+					 the session
+				 */
+				cookie: true,
+
+				/* Parse XFBML */
+				xfbml: true,
+
+				version    : 'v2.6',
+			});
 
 
-  });
+		};
+
+		(function(d){
+			// load the Facebook javascript SDK
+
+			var js,
+			id = 'facebook-jssdk',
+				ref = d.getElementsByTagName('script')[0];
+
+			if (d.getElementById(id)) {
+				return;
+			}
+
+			js = d.createElement('script');
+			js.id = id;
+			js.async = true;
+			js.src = "/lib/sdk.js";
+
+			ref.parentNode.insertBefore(js, ref);
+console.log('here');
+
+		}(document));
+
+	});
 })
 
 .config(function($stateProvider, $urlRouterProvider, FacebookProvider, $httpProvider) {
 
-  $httpProvider.defaults.useXDomain = true;
-  FacebookProvider.init('289482390688');
+	$httpProvider.defaults.useXDomain = true;
+	FacebookProvider.init('289482390688');
 
-  // Ionic uses AngularUI Router which uses the concept of states
-  // Learn more here: https://github.com/angular-ui/ui-router
-  // Set up the various states which the app can be in.
-  // Each state's controller can be found in controllers.js
-  $stateProvider
+	// Ionic uses AngularUI Router which uses the concept of states
+	// Learn more here: https://github.com/angular-ui/ui-router
+	// Set up the various states which the app can be in.
+	// Each state's controller can be found in controllers.js
+	$stateProvider
 
-  // setup an abstract state for the tabs directive
+	// setup an abstract state for the tabs directive
+
+	.state('app', {
+		url: "/app",
+		abstract: true,
+		templateUrl: "templates/menu.html",
+		// controller: 'AppCtrl'
+	})
+	.state('app.splash', {
+		url: '/splash',
+
+		views: {
+      'menuContent': {
+        templateUrl: 'templates/splash.html',
+        controller: 'SplashCtrl'
+      }
+    }
+  })
+
     .state('app.landing', {
     url: '/landing',
       views: {
@@ -47,13 +127,6 @@ var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule",
           controller: 'LandingCtrl'
         }
       }
-  })
-
-  .state('app', {
-    url: "/app",
-    abstract: true,
-    templateUrl: "templates/menu.html",
-    // controller: 'AppCtrl'
   })
 
   .state('app.emergency', {
@@ -231,6 +304,6 @@ var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule",
       }
     }
   })
-  // if none of the above states are matched, use this as the fallback
+  //if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/app/landing');
 });

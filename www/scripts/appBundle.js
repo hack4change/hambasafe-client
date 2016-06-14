@@ -1,10 +1,10 @@
 ///<reference path="../typings/tsd.d.ts"/>
 ///<reference path="ref.ts"/>
-var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule", 'facebook', 'ngResource'])
+var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule", 'facebook'])
     .constant('config', {
     baseServiceURL: "http://hsdevapi1.azurewebsites.net"
 })
-    .run(function ($ionicPlatform) {
+    .run(function ($ionicPlatform, $rootScope, $window) {
     $ionicPlatform.ready(function () {
         // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
         // for form inputs)
@@ -17,6 +17,50 @@ var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule",
             window.StatusBar.styleDefault();
         }
         //$facebookProvider.setAppId(289482390688)
+        $rootScope.user = {};
+        $window.fbAsyncInit = function () {
+            // Executed when the SDK is loaded
+            FB.init({
+                /*
+                     The app id of the web app;
+                     To register a new app visit Facebook App Dashboard
+                     ( https://developers.facebook.com/apps/ )
+                 */
+                appId: '289482390688',
+                /*
+                     Adding a Channel File improves the performance
+                     of the javascript SDK, by addressing issues
+                     with cross-domain communication in certain browsers.
+                 */
+                // channelUrl: 'app/channel.html',
+                /*
+                     Set if you want to check the authentication status
+                     at the start up of the app
+                 */
+                status: true,
+                /*
+                     Enable cookies to allow the server to access
+                     the session
+                 */
+                cookie: true,
+                /* Parse XFBML */
+                xfbml: true,
+                version: 'v2.6',
+            });
+        };
+        (function (d) {
+            // load the Facebook javascript SDK
+            var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+            if (d.getElementById(id)) {
+                return;
+            }
+            js = d.createElement('script');
+            js.id = id;
+            js.async = true;
+            js.src = "/lib/sdk.js";
+            ref.parentNode.insertBefore(js, ref);
+            console.log('here');
+        }(document));
     });
 })
     .config(function ($stateProvider, $urlRouterProvider, FacebookProvider, $httpProvider) {
@@ -27,6 +71,20 @@ var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule",
     // Set up the various states which the app can be in.
     // Each state's controller can be found in controllers.js
     $stateProvider
+        .state('app', {
+        url: "/app",
+        abstract: true,
+        templateUrl: "templates/menu.html",
+    })
+        .state('app.splash', {
+        url: '/splash',
+        views: {
+            'menuContent': {
+                templateUrl: 'templates/splash.html',
+                controller: 'SplashCtrl'
+            }
+        }
+    })
         .state('app.landing', {
         url: '/landing',
         views: {
@@ -35,11 +93,6 @@ var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule",
                 controller: 'LandingCtrl'
             }
         }
-    })
-        .state('app', {
-        url: "/app",
-        abstract: true,
-        templateUrl: "templates/menu.html",
     })
         .state('app.emergency', {
         url: "/emergency",
@@ -203,7 +256,7 @@ var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule",
             }
         }
     });
-    // if none of the above states are matched, use this as the fallback
+    //if none of the above states are matched, use this as the fallback
     $urlRouterProvider.otherwise('/app/landing');
 });
 // For an introduction to the Blank template, see the following documentation:
@@ -269,7 +322,9 @@ app.controller('CreateCtrl', function ($scope, EventFactory) {
         $scope.options = {};
     })();
     $scope.searchEvents = function () {
-        EventFactory.create({ id: 1 }, function (event) {
+        EventFactory.create({
+            'id': 1
+        }, function (event) {
             $scope.eventData = event;
         }, function (error) {
         });
@@ -302,16 +357,15 @@ app.controller('CreateCtrl', function ($scope, EventFactory) {
         generateLocationFromAutoComplete(this.details);
     };
     function generateLocationFromAutoComplete(details) {
-        var location = {};
-        location.Address = details.formatted_address;
-        location.Suburb = extractSuburb(details.address_components);
-        location.City = extractCity(details.address_components);
-        location.Province = extractProvince(details.address_components);
-        location.Country = extractCountry(details.address_components);
-        location.Latitude = details.geometry.location.lat();
-        location.Longtitude = details.geometry.location.lng();
-        console.log(location);
-        return location;
+        var placeDetails = {};
+        placeDetails.Address = details.formatted_address;
+        placeDetails.Suburb = extractSuburb(details.address_components);
+        placeDetails.City = extractCity(details.address_components);
+        placeDetails.Province = extractProvince(details.address_components);
+        placeDetails.Country = extractCountry(details.address_components);
+        placeDetails.Latitude = details.geometry.location.lat();
+        placeDetails.Longtitude = details.geometry.location.lng();
+        return placeDetails;
     }
     function extractSuburb(results) {
         var suburbResults;
@@ -428,24 +482,30 @@ app.controller('HomeCtrl', function ($scope, $location, EventService) {
         }
     };
 });
-app.controller('LandingCtrl', function ($scope, $stateParams, Facebook, ProfileService, $location) {
-    $scope.getLoginStatus = function () {
-        Facebook.logout();
-        Facebook.getLoginStatus(function (response) {
+app.controller('LandingCtrl', function ($scope, $stateParams, $location, $window, $ionicLoading, ProfileService) {
+    (function () {
+        console.log(angular.element($window));
+        angular.element($window).on('load', function () {
+            FB.getLoginStatus(function (response) {
+                if (response.status === "connected") {
+                    $location.path('app/registration');
+                }
+            });
+        });
+    })();
+    $scope.fbLogin = function () {
+        console.log('fbLogin');
+        ProfileService.doFBLogin().then(function (response) {
             console.log(response);
-            if (response.status === 'connected') {
-                $location.path('app/home');
+            if (response === "connected") {
+                $location.path('app/registration');
             }
             else {
-                $scope.loggedIn = false;
+                $ionicLoading.show({
+                    template: 'Failed, please try again.',
+                    duration: 1000
+                });
             }
-        });
-    };
-    $scope.fbLogin = function () {
-        Facebook.login(function (response) {
-            console.log(response);
-            ProfileService.setProfileFromFacebook(response);
-            $location.path('app/registration');
         });
     };
 });
@@ -533,10 +593,14 @@ app.controller('RatingCtrl', function ($scope) {
     };
     console.log('Here');
 });
-app.controller('RegistrationCtrl', function ($scope, $stateParams, ProfileService) {
-    ProfileService.getFaceBookProfile().then(function (profile) {
-        $scope.user = profile;
-    });
+app.controller('RegistrationCtrl', function ($scope, $window, $stateParams, ProfileService) {
+    (function () {
+        angular.element(document).on('fbLoad', function () {
+            ProfileService.getFaceBookProfile().then(function (profile) {
+                $scope.user = profile;
+            });
+        });
+    })();
     /*
      *  DoB
      *  Email
@@ -572,6 +636,7 @@ app.controller('SearchCtrl', function ($scope, $stateParams, EventService, $loca
             $scope.eventsToList = response.data;
             console.log(response);
         }, function (response) {
+            console.log(response);
         });
     };
     $scope.searchEvents();
@@ -627,6 +692,16 @@ app.controller('SearchCtrl', function ($scope, $stateParams, EventService, $loca
     };
     $scope.goMap = function () {
         $location.path('app/map');
+    };
+});
+app.controller('SplashCtrl', function ($scope, $location, EventService) {
+    (function () {
+    })();
+    $scope.goToLanding = function () {
+        $location.path("app/landing");
+    };
+    $scope.goToTerms = function () {
+        $location.path("app/terms");
     };
 });
 app.controller('TellaFriendCtrl', function ($scope) {
@@ -730,6 +805,14 @@ app.service('EventService', ['$http', 'config',
         };
     }
 ]);
+app.service('FacebookService', function ($http, config, localStorageService, $q) {
+    var base = config.baseServiceURL + "/v1/";
+    var profileKey = "profileKey";
+    return {
+        login: function () {
+        }
+    };
+});
 app.factory("LocalStorage", ['$window',
     function ($window) {
         var _facebookAuth = null;
@@ -772,11 +855,12 @@ app.service('LocationService', ['$http', 'config',
         };
     }
 ]);
-app.service('ProfileService', function ($http, config, localStorageService, $q, Facebook) {
+app.service('ProfileService', function ($http, config, localStorageService, $q) {
     var base = config.baseServiceURL + "/v1/";
     var profileKey = "profileKey";
     return {
         setProfileFromFacebook: function (profile) {
+            console.log(profile);
             localStorageService.set(profileKey, profile);
         },
         getAll: function (id) {
@@ -796,18 +880,42 @@ app.service('ProfileService', function ($http, config, localStorageService, $q, 
         },
         getProfileId: function () {
         },
-        getFaceBookProfile: function () {
+        doFBLogin: function () {
             var defer = $q.defer();
-            Facebook.api('/me', function (response) {
+            FB.getLoginStatus(function (response) {
+                if (response.status !== 'connected') {
+                    FB.login(function (response) {
+                        if (response.status === 'connected') {
+                            this.setProfileFromFacebook(response.authResponse);
+                        }
+                        defer.resolve(response.status);
+                    });
+                }
+                else {
+                    this.setProfileFromFacebook(response.authResponse);
+                    defer.resolve('connected');
+                }
+            }.bind(this));
+            return defer.promise;
+        },
+        getRegistrationData: function () {
+            var defer = $q.defer();
+            FB.api('/me', 'get', { 'fields': ['first_name', 'last_name', 'date_of_birth'] }, function (response) {
                 console.log(response);
-                var prof = {
-                    FirstNames: response.first_name,
-                    LastName: response.last_name,
-                    Gender: response.gender
-                };
-                defer.resolve(prof);
+                defer.resolve(response);
             });
             return defer.promise;
+        },
+        getFaceBookProfile: function () {
+            var defer = $q.defer();
+            FB.api('/me', 'get', { 'fields': ['first_name', 'last_name', 'date_of_birth'] }, function (response) {
+                console.log(response);
+                defer.resolve(response);
+            });
+            return defer.promise;
+        },
+        logout: function () {
+            this.setProfileFromFacebook('');
         }
     };
 });

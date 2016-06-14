@@ -23,3 +23,4 @@
 /// <reference path="cordova/plugins/WebSQL.d.ts" />
 /// <reference path="google-maps/google-maps.d.ts" />
 /// <reference path="googlemaps/google.maps.d.ts" />
+/// <reference path="fbsdk.d.ts" />
