@@ -1,15 +1,14 @@
-.register-wrapper {
-  overflow-y: hidden;
-  height: 100%;
-  width: 100%;
-  .top-toolbar{
-    background-color: $energized;
-    padding-left: 1.5em;
-    div {
-      height: 100%;
-      h4 {
-        color: $light;
-      }
+.top-toolbar{
+  background-color: $energized !important;
+  padding-left: 1.5em;
+  div {
+    height: 100%;
+    h4 {
+      color: $light;
     }
   }
+}
+.register-wrapper {
+  overflow-y: hidden;
+  width: 100%;
 }

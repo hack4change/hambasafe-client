@@ -9956,14 +9956,14 @@ ion-side-menus ion-side-menu ion-list ion-item .item-content {
       .landing-wrapper .bar-footer .footer-link a:hover {
         border-bottom: 1px solid #fff; }
 
+.top-toolbar {
+  background-color: #FFBC00 !important;
+  padding-left: 1.5em; }
+  .top-toolbar div {
+    height: 100%; }
+    .top-toolbar div h4 {
+      color: #fff; }
+
 .register-wrapper {
   overflow-y: hidden;
-  height: 100%;
   width: 100%; }
-  .register-wrapper .top-toolbar {
-    background-color: #FFBC00;
-    padding-left: 1.5em; }
-    .register-wrapper .top-toolbar div {
-      height: 100%; }
-      .register-wrapper .top-toolbar div h4 {
-        color: #fff; }
