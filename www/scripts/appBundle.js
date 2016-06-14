@@ -18,49 +18,6 @@ var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule",
         }
         //$facebookProvider.setAppId(289482390688)
         $rootScope.user = {};
-        $window.fbAsyncInit = function () {
-            // Executed when the SDK is loaded
-            FB.init({
-                /*
-                     The app id of the web app;
-                     To register a new app visit Facebook App Dashboard
-                     ( https://developers.facebook.com/apps/ )
-                 */
-                appId: '289482390688',
-                /*
-                     Adding a Channel File improves the performance
-                     of the javascript SDK, by addressing issues
-                     with cross-domain communication in certain browsers.
-                 */
-                // channelUrl: 'app/channel.html',
-                /*
-                     Set if you want to check the authentication status
-                     at the start up of the app
-                 */
-                status: true,
-                /*
-                     Enable cookies to allow the server to access
-                     the session
-                 */
-                cookie: true,
-                /* Parse XFBML */
-                xfbml: true,
-                version: 'v2.6',
-            });
-        };
-        (function (d) {
-            // load the Facebook javascript SDK
-            var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-            if (d.getElementById(id)) {
-                return;
-            }
-            js = d.createElement('script');
-            js.id = id;
-            js.async = true;
-            js.src = "/lib/sdk.js";
-            ref.parentNode.insertBefore(js, ref);
-            console.log('here');
-        }(document));
     });
 })
     .config(function ($stateProvider, $urlRouterProvider, FacebookProvider, $httpProvider) {
@@ -484,14 +441,6 @@ app.controller('HomeCtrl', function ($scope, $location, EventService) {
 });
 app.controller('LandingCtrl', function ($scope, $stateParams, $location, $window, $ionicLoading, ProfileService) {
     (function () {
-        console.log(angular.element($window));
-        angular.element($window).on('load', function () {
-            FB.getLoginStatus(function (response) {
-                if (response.status === "connected") {
-                    $location.path('app/registration');
-                }
-            });
-        });
     })();
     $scope.fbLogin = function () {
         console.log('fbLogin');
@@ -508,6 +457,13 @@ app.controller('LandingCtrl', function ($scope, $stateParams, $location, $window
             }
         });
     };
+    angular.element(document).ready(function () {
+        FB.getLoginStatus(function (response) {
+            if (response.status === "connected") {
+                $location.path('app/registration');
+            }
+        });
+    });
 });
 app.controller('LatestCtrl', function ($scope, $location) {
     $scope.goCreateAnEvent = function () {
@@ -593,14 +549,27 @@ app.controller('RatingCtrl', function ($scope) {
     };
     console.log('Here');
 });
-app.controller('RegistrationCtrl', function ($scope, $window, $stateParams, ProfileService) {
+app.controller('RegistrationCtrl', function ($rootScope, $scope, $window, $stateParams, ProfileService) {
     (function () {
-        angular.element(document).on('fbLoad', function () {
-            ProfileService.getFaceBookProfile().then(function (profile) {
-                $scope.user = profile;
-            });
-        });
+        $scope.genders = [
+            'male',
+            'female',
+            'other',
+        ];
+        $scope.genderOpen = false;
     })();
+    angular.element(document).ready(function () {
+        ProfileService.getRegistrationData().then(function (profile) {
+            $scope.user = profile;
+            console.log(profile);
+        });
+    });
+    $scope.isGenderOpen = function () {
+        return $scope.genderOpen;
+    };
+    $scope.toggleGenderOpen = function () {
+        $scope.genderOpen = !$scope.genderOpen;
+    };
     /*
      *  DoB
      *  Email
@@ -855,7 +824,7 @@ app.service('LocationService', ['$http', 'config',
         };
     }
 ]);
-app.service('ProfileService', function ($http, config, localStorageService, $q) {
+app.service('ProfileService', function ($http, $q, $rootScope, config, localStorageService) {
     var base = config.baseServiceURL + "/v1/";
     var profileKey = "profileKey";
     return {
@@ -887,12 +856,14 @@ app.service('ProfileService', function ($http, config, localStorageService, $q) 
                     FB.login(function (response) {
                         if (response.status === 'connected') {
                             this.setProfileFromFacebook(response.authResponse);
+                            $rootScope.loggedIn = true;
                         }
                         defer.resolve(response.status);
                     });
                 }
                 else {
                     this.setProfileFromFacebook(response.authResponse);
+                    $rootScope.loggedIn = true;
                     defer.resolve('connected');
                 }
             }.bind(this));
@@ -900,17 +871,25 @@ app.service('ProfileService', function ($http, config, localStorageService, $q) 
         },
         getRegistrationData: function () {
             var defer = $q.defer();
-            FB.api('/me', 'get', { 'fields': ['first_name', 'last_name', 'date_of_birth'] }, function (response) {
+            FB.api('/me', 'get', {
+                'fields': [
+                    'first_name',
+                    'last_name',
+                    'birthday',
+                    'gender',
+                    'email',
+                ]
+            }, function (response) {
                 console.log(response);
-                defer.resolve(response);
-            });
-            return defer.promise;
-        },
-        getFaceBookProfile: function () {
-            var defer = $q.defer();
-            FB.api('/me', 'get', { 'fields': ['first_name', 'last_name', 'date_of_birth'] }, function (response) {
-                console.log(response);
-                defer.resolve(response);
+                var profile = {
+                    firstName: response['first_name'],
+                    lastName: response['last_name'],
+                    dateOfBirth: response['birthday'],
+                    gender: response['gender'],
+                    email: response['email'],
+                };
+                $rootScope.currentUser = response['id'];
+                defer.resolve(profile);
             });
             return defer.promise;
         },

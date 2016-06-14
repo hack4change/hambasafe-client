@@ -1,47 +1,70 @@
-<ion-view view-title="Registration" >
-  <ion-content class="padding">
+<ion-view hide-nav-bar="true" view-title="Registration">
+	<ion-header-bar class="bar bar-header top-toolbar">
+		<!-- <div class="valign-outer"> -->
+		<div>
+			<h4>
+				PROFILE
+			</h4>
+		</div>
+		<!-- </div> -->
+	</ion-header-bar>
+  <ion-content class="register-wrapper has-header">
+			<div class="">
+				<form name="registrationForm" ng-submit="doRegister(signupForm.$valid)" novalidate>
+					<div class="row">
+hi
+					</div>
+					<div class="row">
+					</div>
+					<div class="row">
+					</div>
+					<div class="row">
+					</div>
+					<div class="row">
+					</div>
+					<div class="row">
+					</div>
+					<div class="row">
+					</div>
+				</form>
+			</div>
+  </ion-content>
+</ion-view>
 
-    <form name="registrationForm" ng-submit="doRegistration(signupForm.$valid)" novalidate>
-      <div class="list">
-        <label class="item item-input">
-          <input type="text" placeholder="First Name" ng-model="user.FirstNames" required>
+<!--
+        <label class="item item-input item-floating-label">
+					<span class="input-label">Firstname</span>
+					<input type="text" placeholder="Firstname" ng-model="user.firstName" required/>
+				</label>
+        <label class="item item-input item-floating-label">
+					<span class="input-label">Surname</span>
+					<input type="text" placeholder="Surname" ng-model="user.lastName" required/>
+				</label>
+        <label class="item item-input item-floating-label">
+          <input type="date" placeholder="Date of Birth" ng-model="user.dateOfBirth" required>
         </label>
-        <label class="item item-input">
-          <input type="text" placeholder="Last Name" ng-model="user.LastName" required>
-        </label>
-        <label class="item item-input">
-          <input type="date" placeholder="Date of Birth" ng-model="user.DateOfBirth" required>
-        </label>
-        <label class="item item-input item-select">
-          <div class="input-label" >
-            Gender
-          </div>
-          <select prompt="gender" ng-model="user.Gender">
-            <option>Male</option>
-            <option selected>Female</option>
-            <option>Other</option>
-          </select>
-        </label>
-        <label class="item item-input">
-          <input type="tel" placeholder="Cell Number" ng-model="user.PhoneNumber" required>
-        </label>
-        <label class="item item-input">
-          <input type="email" placeholder="Email" ng-model="user.EmailAddress" required>
-        </label>
-        <label class="item item-input">
-          <input type="email" placeholder="Confirm Email" ng-model="user.ConfirmEmailAddress" required>
-        </label>
-        <label class="item item-input">
-          <input type="password" placeholder="Password" ng-model="user.Password" required>
-        </label>
-        <label class="item item-input">
-          <input type="password" placeholder="Confirm Password" ng-model="user.ConfirmPassword" required>
+        <ion-item class="item" ng-click="toggleGenderOpen()" ng-class="{active: isGenderOpen()}">
+          Gender							
+          <i class="icon pull-right" ng-class="isGenderOpen() ? 'ion-chevron-up' : 'ion-chevron-down'"></i>
+        </ion-item>
+				<ion-checkbox class="item-checkbox-right item-accordion gender-group" ng-repeat="gender in genders" ng-show="isGenderOpen()" >{{ gender }}</ion-checkbox>
+
+        <label class="item item-input item-floating-label">
+					<span class="input-label">Cell number</span>
+					<input type="tel" placeholder="Cell Number" ng-model="user.phoneNumber" required/>
+				</label>
+        <label class="item item-input item-floating-label">
+					<span class="input-label">Email</span>
+					<input type="email" placeholder="Email" ng-model="user.email" required/>
+				</label>
+        <label class="item item-input item-floating-label">
+					<span class="input-label">Cell number</span>
+					<input type="tel" placeholder="Cell Number" ng-model="user.phoneNumber" required/>
+				</label>
+        <label class="item item-input item-floating-label">
+          <input type="email" placeholder="Confirm Email" ng-model="user.confirmEmail" required>
         </label>
         <div class="row">
           <button class="button button-positive" type="submit">Sign Up</button>
         </div>
-      </div>
-    </form>
-
-  </ion-content>
-</ion-view>
+-->

@@ -1,4 +1,4 @@
-app.service('ProfileService', function ($http, config, localStorageService, $q) {
+app.service('ProfileService', function ($http, $q, $rootScope, config, localStorageService) {
 	var base = config.baseServiceURL + "/v1/";
 	var profileKey = "profileKey";
 
@@ -12,19 +12,16 @@ app.service('ProfileService', function ($http, config, localStorageService, $q) 
 		},
 		getById: function (id) {
 			var val = id || localStorage.getItem(profileKey);
-
 			return $http.get(base + 'users?username=' + val, config);
 
 		},
 		getByUsername: function (id) {
 			var val = id || localStorage.getItem(profileKey);
-
 			return $http.get(base + 'users?username=' + val, config);
 		},
 		get: function (id) {
 			var val = id || localStorage.getItem(profileKey);
 			return $http.get(base + 'user?id=' + val, config);
-
 		},
 		getProfileId: function() {
 
@@ -36,11 +33,13 @@ app.service('ProfileService', function ($http, config, localStorageService, $q) 
           FB.login(function(response: any) {
             if(response.status === 'connected') {
               this.setProfileFromFacebook(response.authResponse);
+              $rootScope.loggedIn = true;
             }
             defer.resolve(response.status);
           });
         } else {
           this.setProfileFromFacebook(response.authResponse);
+          $rootScope.loggedIn = true;
           defer.resolve('connected');
         }
       }.bind(this));
@@ -48,21 +47,27 @@ app.service('ProfileService', function ($http, config, localStorageService, $q) 
 		},
 		getRegistrationData: function() {
 			var defer = $q.defer();
-			FB.api('/me', 'get', {'fields': ['first_name', 'last_name', 'date_of_birth']}, function (response) {
+			FB.api('/me', 'get', {
+        'fields': [
+          'first_name',
+          'last_name',
+          'birthday',
+          'gender',
+          'email',
+        ]
+      }, function (response) {
 				console.log(response);
-				defer.resolve(response);
+        var profile = {
+          firstName     : response['first_name'],
+          lastName      : response['last_name'],
+          dateOfBirth   : response['birthday'],
+          gender        : response['gender'],
+          email         : response['email'],
+        }
+        $rootScope.currentUser = response['id'];
+				defer.resolve(profile);
 			});
 			return defer.promise;
-
-		},
-		getFaceBookProfile: function() {
-			var defer = $q.defer();
-			FB.api('/me', 'get', {'fields': ['first_name', 'last_name', 'date_of_birth']}, function (response) {
-				console.log(response);
-				defer.resolve(response);
-			});
-			return defer.promise;
-
 		},
     logout(){
       this.setProfileFromFacebook('');

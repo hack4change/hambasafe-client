@@ -1,11 +1,28 @@
-app.controller('RegistrationCtrl', function ($scope, $window, $stateParams, ProfileService) {
+app.controller('RegistrationCtrl', function ($rootScope, $scope, $window, $stateParams, ProfileService) {
   (function(){
-    angular.element(document).on('fbLoad', function() {
-     ProfileService.getFaceBookProfile().then(function (profile) {
-      $scope.user = profile;
-    });
-   })
+		$scope.genders = [
+			'male',
+			'female',
+			'other',
+		]
+    $scope.genderOpen = false;
   })()
+	angular.element(document).ready(function(){
+    ProfileService.getRegistrationData().then(function (profile) {
+      $scope.user = profile;
+      console.log(profile);
+    })
+	})
+
+  $scope.isGenderOpen = function() {
+    return $scope.genderOpen;
+  }
+  $scope.toggleGenderOpen = function() {
+    $scope.genderOpen = !$scope.genderOpen;  
+  }
+	
+	
+
   /*
    *  DoB
    *  Email

@@ -9835,31 +9835,6 @@ ion-list.list-borderless div {
   border-radius: 50%;
   height: 150px; }
 
-.landing {
-  background: url(/img/landing.jpg) no-repeat;
-  background-size: cover; }
-
-.landing ion-content {
-  background: rgba(255, 255, 255, 0.6); }
-
-.landing-content h3 {
-  font-family: 'montserrat';
-  background: rgba(255, 255, 255, 0.4);
-  border-radius: 15px;
-  padding: 6px;
-  width: 200px;
-  display: block;
-  margin-left: auto;
-  color: #4A4A4A;
-  text-shadow: 2px 2px #E6E6E6;
-  margin-right: auto; }
-
-.login-button i::before {
-  width: 42px; }
-
-.login-button span {
-  margin-left: -42px; }
-
 .margin-left {
   margin-left: 15px; }
 
@@ -9890,6 +9865,10 @@ ion-header-bar {
 
 .scroll {
   height: 100%; }
+
+ion-side-menus ion-side-menu ion-list ion-item .item-content {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important; }
 
 .splash-wrapper {
   background-color: #0C9EF9; }
@@ -9932,6 +9911,59 @@ ion-header-bar {
       .splash-wrapper .bar-footer .footer-link a:hover {
         border-bottom: 1px solid #fff; }
 
-ion-side-menus ion-side-menu ion-list ion-item .item-content {
-  padding-top: 0 !important;
-  padding-bottom: 0 !important; }
+.landing-wrapper {
+  background: url(/img/landing.jpg) no-repeat;
+  background-size: cover;
+  background-position: 55%; }
+  .landing-wrapper .landing-content {
+    padding-top: 22%; }
+  .landing-wrapper .menu-icon {
+    margin-left: 0.4em;
+    color: #fff;
+    font-size: 2em; }
+  .landing-wrapper .landing-container {
+    display: block;
+    width: 60%;
+    margin: 0 auto;
+    text-align: center; }
+    .landing-wrapper .landing-container img {
+      width: 50%; }
+    .landing-wrapper .landing-container .landing-intro-one {
+      padding-top: 15%; }
+      .landing-wrapper .landing-container .landing-intro-one h1 {
+        font-weight: bold;
+        color: #fff; }
+    .landing-wrapper .landing-container .landing-intro-two {
+      padding-top: 15%; }
+      .landing-wrapper .landing-container .landing-intro-two h5 {
+        color: #fff; }
+    .landing-wrapper .landing-container .landing-intro-button {
+      width: 100%; }
+      .landing-wrapper .landing-container .landing-intro-button .login-button {
+        border-radius: 5px !important; }
+        .landing-wrapper .landing-container .landing-intro-button .login-button i::before {
+          width: 42px; }
+        .landing-wrapper .landing-container .landing-intro-button .login-button span {
+          margin-left: -42px; }
+  .landing-wrapper .bar-footer {
+    background-color: transparent !important; }
+    .landing-wrapper .bar-footer .footer-link {
+      margin: 0 auto;
+      cursor: pointer; }
+      .landing-wrapper .bar-footer .footer-link a {
+        color: #fff;
+        text-decoration: none; }
+      .landing-wrapper .bar-footer .footer-link a:hover {
+        border-bottom: 1px solid #fff; }
+
+.register-wrapper {
+  overflow-y: hidden;
+  height: 100%;
+  width: 100%; }
+  .register-wrapper .top-toolbar {
+    background-color: #FFBC00;
+    padding-left: 1.5em; }
+    .register-wrapper .top-toolbar div {
+      height: 100%; }
+      .register-wrapper .top-toolbar div h4 {
+        color: #fff; }
