@@ -7,12 +7,6 @@ app.controller('RegistrationCtrl', function ($rootScope, $scope, $window, $state
 		]
     $scope.genderOpen = false;
   })()
-	angular.element(document).ready(function(){
-    ProfileService.getRegistrationData().then(function (profile) {
-      $scope.user = profile;
-      console.log(profile);
-    })
-	})
 
 
 	var pickDateObj = {
@@ -37,7 +31,7 @@ app.controller('RegistrationCtrl', function ($rootScope, $scope, $window, $state
 		templateType: 'popup'       //Optional
 	};
 
-	$scope.openDatePicker = function(){
+	$scope.openDatePicker = function() {
 		ionicDatePicker.openDatePicker(pickDateObj);
 	};
 
@@ -82,4 +76,11 @@ app.controller('RegistrationCtrl', function ($rootScope, $scope, $window, $state
       $scope.error = 'Please fill in all required fields';
     }
   }
+
+  angular.element(document).ready(function(){
+    ProfileService.getRegistrationData().then(function (profile) {
+      $scope.user = profile;
+      console.log(profile);
+    })
+  })
 });

@@ -231,7 +231,7 @@ var app = angular.module('starter', ['ui.router', 'ionic', "LocalStorageModule",
         }
     });
     //if none of the above states are matched, use this as the fallback
-    $urlRouterProvider.otherwise('/app/registration');
+    $urlRouterProvider.otherwise('/app/landing');
 });
 // For an introduction to the Blank template, see the following documentation:
 // http://go.microsoft.com/fwlink/?LinkID=397705
@@ -575,12 +575,6 @@ app.controller('RegistrationCtrl', function ($rootScope, $scope, $window, $state
         ];
         $scope.genderOpen = false;
     })();
-    angular.element(document).ready(function () {
-        ProfileService.getRegistrationData().then(function (profile) {
-            $scope.user = profile;
-            console.log(profile);
-        });
-    });
     var pickDateObj = {
         callback: function (val) {
             $scope.user.dateOfBirth = new Date(val);
@@ -625,6 +619,12 @@ app.controller('RegistrationCtrl', function ($rootScope, $scope, $window, $state
             $scope.error = 'Please fill in all required fields';
         }
     };
+    angular.element(document).ready(function () {
+        ProfileService.getRegistrationData().then(function (profile) {
+            $scope.user = profile;
+            console.log(profile);
+        });
+    });
 });
 app.controller('SearchCtrl', function ($scope, $stateParams, EventService, $location) {
     //init

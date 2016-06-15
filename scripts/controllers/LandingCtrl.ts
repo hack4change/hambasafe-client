@@ -1,5 +1,4 @@
 app.controller('LandingCtrl', function ($scope, $stateParams, $location, $window, $ionicLoading, ProfileService) {
-
 	(function(){
 	})()
 
