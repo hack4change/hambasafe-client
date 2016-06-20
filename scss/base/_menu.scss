@@ -1,0 +1,12 @@
+ion-side-menus {
+  ion-side-menu {
+    ion-list {
+      ion-item{
+        .item-content{
+          padding-top: 0 !important;
+          padding-bottom: 0 !important; 
+        }
+      }
+    }
+  }
+}

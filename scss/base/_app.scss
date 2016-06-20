@@ -1,0 +1,61 @@
+/* Fonts */
+@font-face {
+  font-family: 'DINPro';
+  src: url('/fonts/DINPro.otf') format('opentype');
+}
+@font-face {
+  font-family: 'DINPro-Medium';
+  src: url('/fonts/DINPro-Medium.otf') format('opentype');
+}
+@font-face {
+  font-family: 'DINPro-Black';
+  src: url('/fonts/DINPro-Black.otf') format('opentype');
+}
+
+.app-logo {
+  text-align: center;
+}
+
+
+* {
+   font-family: 'DINPro-Medium' !important;
+}
+
+.app-logo > img {
+  border-radius: 50%;
+  height: 150px;
+}
+
+$landing-icon-width: 42px;
+
+
+.margin-left
+{
+  margin-left: 15px;
+}
+.margin-right
+{
+  margin-right: 15px;
+}
+.margin-top
+{
+  margin-top: 15px;
+}
+.margin-bottom
+{
+  margin-bottom: 15px;
+}
+
+.ion-android-add-circle {
+  position: absolute !important;
+  right: 20px;
+  bottom: 20px;
+  font-size: 50px;
+}
+.star-filled{
+  color:gold;
+}
+
+ion-header-bar {
+  background-color: #fff !important;
+}

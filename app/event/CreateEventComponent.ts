@@ -12,8 +12,15 @@ constructor(private eventService:EventService) {
 
   searchEvents  () {
 
+<<<<<<< HEAD:app/event/CreateEventComponent.ts
     this.eventService.createEvent(
       {id: 1}).then(
+=======
+    EventFactory.create(
+      {
+        'id': 1
+      },
+>>>>>>> 4ff3d74b4efda841ff45f5dc0381e7f59a6d2d52:scripts/controllers/CreateCtrl.ts
       function (event) {
         this.eventData = event;
       },
@@ -32,9 +39,16 @@ eventType = ["Walk", "Run", "Cycle"];
       this.shownGroup = group;
     }
   };
+<<<<<<< HEAD:app/event/CreateEventComponent.ts
   toggleSelection = function (selected, group) {
     this.typeSelected = selected;
     this.toggleGroup(group);
+=======
+
+  $scope.toggleSelection = function (selected, group) {
+    $scope.typeSelected = selected;
+    $scope.toggleGroup(group);
+>>>>>>> 4ff3d74b4efda841ff45f5dc0381e7f59a6d2d52:scripts/controllers/CreateCtrl.ts
   };
 
   isGroupShown = function (type, group) {
@@ -52,6 +66,7 @@ eventType = ["Walk", "Run", "Cycle"];
     console.log(this.result);
     this.generateLocationFromAutoComplete(this.details);
   }
+<<<<<<< HEAD:app/event/CreateEventComponent.ts
  
    generateLocationFromAutoComplete(details) {
     var location :any= {};
@@ -64,6 +79,19 @@ eventType = ["Walk", "Run", "Cycle"];
     location.Longtitude = details.geometry.location.lng();
     console.log(location);
     return location;
+=======
+
+  function generateLocationFromAutoComplete(details) {
+    var placeDetails :any = {};
+    placeDetails.Address = details.formatted_address;
+    placeDetails.Suburb = extractSuburb(details.address_components);
+    placeDetails.City = extractCity(details.address_components);
+    placeDetails.Province = extractProvince(details.address_components);
+    placeDetails.Country = extractCountry(details.address_components);
+    placeDetails.Latitude = details.geometry.location.lat();
+    placeDetails.Longtitude = details.geometry.location.lng();
+    return placeDetails;
+>>>>>>> 4ff3d74b4efda841ff45f5dc0381e7f59a6d2d52:scripts/controllers/CreateCtrl.ts
   }
 
    extractSuburb(results) {
@@ -130,7 +158,6 @@ eventType = ["Walk", "Run", "Cycle"];
           }
         }
       }
-
     }
     return results;
   }

@@ -7,6 +7,7 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="msapplication-tap-highlight" content="no">
 
+<<<<<<< HEAD
   <link ios-href="build/css/app.ios.css" rel="stylesheet">
   <link md-href="build/css/app.md.css" rel="stylesheet">
   <link wp-href="build/css/app.wp.css" rel="stylesheet">  
@@ -26,4 +27,104 @@
   <!-- the bundle which is built from the app's source code -->
   <script src="build/js/app.bundle.js"></script>
 </body>
+=======
+    <script type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyDLhNc1dIy4Z0l7o03mhnm-LOTK5yRRBNI
+              "></script>
+    <script>
+		window.fbAsyncInit = function() {
+			// Executed when the SDK is loaded
+
+			FB.init({
+
+				/*
+					 The app id of the web app;
+					 To register a new app visit Facebook App Dashboard
+					 ( https://developers.facebook.com/apps/ )
+				 */
+				appId: '1824765444411364',//'289482390688',
+
+				/*
+					 Adding a Channel File improves the performance
+					 of the javascript SDK, by addressing issues
+					 with cross-domain communication in certain browsers.
+				 */
+
+				// channelUrl: 'app/channel.html',
+
+				/*
+					 Set if you want to check the authentication status
+					 at the start up of the app
+				 */
+				status: true,
+
+				/*
+					 Enable cookies to allow the server to access
+					 the session
+				 */
+				cookie: true,
+
+				/* Parse XFBML */
+				xfbml: true,
+
+				version    : 'v2.6',
+			});
+
+
+		};
+
+		(function(d){
+			// load the Facebook javascript SDK
+
+			var js,
+			id = 'facebook-jssdk',
+				ref = d.getElementsByTagName('script')[0];
+
+			if (d.getElementById(id)) {
+				return;
+			}
+
+			js = d.createElement('script');
+			js.id = id;
+			js.async = true;
+			js.src = "//connect.facebook.net/en_US/sdk.js";
+
+			ref.parentNode.insertBefore(js, ref);
+console.log('here');
+
+		}(document));
+    </script>
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+    <script src="lib/angular-facebook/lib/angular-facebook.js"></script>
+    <script src="lib/angular-resource/angular-resource.js"></script>
+    <script src="lib/ngAutocomplete/src/ngAutocomplete.js"></script>
+    <script src="lib/angular-local-storage/dist/angular-local-storage.js"></script>
+    <script src="lib/ionic-datepicker/dist/ionic-datepicker.bundle.min.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+    <!-- your app's js -->
+    <script src="scripts/appBundle.js"></script>
+
+
+  </head>
+  <body ng-app="starter">
+    <div id="fb-root"></div>
+    <!--
+      The nav bar that will be updated as we navigate between views.
+    -->
+    <!--<ion-nav-bar class="bar-stable">-->
+      <!--<ion-nav-back-button>-->
+      <!--</ion-nav-back-button>-->
+    <!--</ion-nav-bar>-->
+    <!--
+      The views will be rendered in the <ion-nav-view> directive below
+      Templates are in the /templates folder (but you could also
+      have templates inline in this html file if you'd like).
+    -->
+    <ion-nav-view></ion-nav-view>
+  </body>
+>>>>>>> 4ff3d74b4efda841ff45f5dc0381e7f59a6d2d52
 </html>

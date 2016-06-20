@@ -1,0 +1,20 @@
+
+
+$light:                           #fff !default;
+$stable:                          #f8f8f8 !default;
+$positive:                        #0C9EF9 !default; //rgb 12 158 249 old: #387ef5
+$calm:                            #11c1f3 !default;
+$balanced:                        #33cd5f !default;
+$energized:                       #FFBC00 !default; //255, 188, 0    old: #ffc900
+$assertive:                       #ef473a !default;
+$royal:                           #886aea !default;
+$dark:                            #444 !default;
+
+
+// The path for our ionicons font files, relative to the built CSS in www/css
+$ionicons-font-path: "../lib/ionic/fonts" !default;
+
+// Include all of Ionic
+@import "www/lib/ionic/scss/ionic";
+@import "base/index";
+

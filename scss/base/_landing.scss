@@ -1,0 +1,67 @@
+.landing-wrapper {
+  background: url(/img/landing.jpg) no-repeat;
+  background-size: cover;
+  background-position: 55%;
+  
+  .landing-content {
+    padding-top: 22%;
+  }
+
+  .menu-icon {
+    margin-left: 0.4em;
+    color: $light;
+    font-size: 2em;
+  }
+
+
+  .landing-container {
+    display: block;
+    width: 60%;
+    margin: 0 auto;
+    text-align: center;
+    img {
+      width: 50%;
+    }
+    .landing-intro-one {
+      padding-top:15%;
+      h1 {
+        font-weight: bold; 
+        color: $light;
+      }
+    }
+    .landing-intro-two {
+      padding-top:15%;
+      h5 {
+        color: $light;
+      }
+    }
+    .landing-intro-button {
+      width: 100%;
+      .login-button {
+        border-radius: 5px !important;
+
+        i::before {
+          width: $landing-icon-width;
+        }
+
+        span {
+          margin-left: -$landing-icon-width;
+        }
+      }
+    }
+  }
+  .bar-footer {
+     background-color: transparent !important;
+    .footer-link{
+      margin: 0 auto;
+      cursor: pointer;
+      a{ 
+        color: $light;
+        text-decoration: none;
+      }
+      a:hover{
+        border-bottom: 1px solid $light; 
+      }
+    }
+  }
+}

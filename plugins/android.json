@@ -20,10 +20,17 @@
             "PACKAGE_NAME": "com.ionicframework.myapp632552"
         },
         "cordova-plugin-whitelist": {
+<<<<<<< HEAD
             "PACKAGE_NAME": "com.ionicframework.myapp632552"
         },
         "ionic-plugin-keyboard": {
             "PACKAGE_NAME": "com.ionicframework.myapp632552"
+=======
+            "PACKAGE_NAME": "com.ionicframework.hambasafe117876"
+        },
+        "cordova-plugin-x-toast": {
+            "PACKAGE_NAME": "com.ionicframework.hambasafe117876"
+>>>>>>> 4ff3d74b4efda841ff45f5dc0381e7f59a6d2d52
         }
     },
     "dependent_plugins": {}

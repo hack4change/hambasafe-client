@@ -1,0 +1,56 @@
+.splash-wrapper {
+  background-color: $positive;
+  .menu-icon {
+    margin-left: 0.4em;
+    color: $light;
+    font-size: 2em;
+  }
+
+
+  .splash-container {
+    display: block;
+    width: 50%;
+    margin: 0 auto;
+    text-align: center;
+    img {
+      width: 50%;
+    }
+    .splash-intro-one {
+      padding-top:15%;
+      h3 {
+        font-weight: bold; 
+        color: $light;
+      }
+    }
+    .splash-intro-two {
+      padding-top:15%;
+      h4 {
+        color: $light;
+      }
+    }
+    .splash-intro-button {
+      padding-top:30%;
+      padding-bottom:50%;
+      width: 100%;
+      button{
+        width: 75%;
+        border-radius: 4px !important;
+        color: $positive;
+        font-weight:bold;
+      }
+    }
+  }
+  .bar-footer {
+    background-color: $positive !important;
+    .footer-link{
+      margin: 0 auto;
+      a{ 
+        color: $light;
+        text-decoration: none;
+      }
+      a:hover{
+        border-bottom: 1px solid $light; 
+      }
+    }
+  }
+}

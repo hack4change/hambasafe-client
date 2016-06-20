@@ -23,6 +23,7 @@
         "is_top_level": true,
         "variables": {}
     },
+<<<<<<< HEAD
     "cordova-plugin-splashscreen": {
         "source": {
             "type": "registry",
@@ -43,6 +44,13 @@
         "source": {
             "type": "registry",
             "id": "ionic-plugin-keyboard"
+=======
+    "cordova-plugin-x-toast": {
+        "source": {
+            "type": "git",
+            "url": "https://github.com/EddyVerbruggen/Toast-PhoneGap-Plugin.git",
+            "subdir": "."
+>>>>>>> 4ff3d74b4efda841ff45f5dc0381e7f59a6d2d52
         },
         "is_top_level": true,
         "variables": {}
