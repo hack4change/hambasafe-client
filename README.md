@@ -1,1 +1,0 @@
-# hambasafe-client

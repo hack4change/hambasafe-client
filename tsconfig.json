@@ -1,19 +1,23 @@
 {
   "compilerOptions": {
-    "noImplicitAny": false,
-    "noEmitOnError": true,
-    "removeComments": false,
-    "inlineSourceMap": true,
-    "inlineSources": true,
-    "outFile": "www/scripts/appBundle.js",
-    "target": "es5"
+    "target": "es5",
+    "module": "commonjs",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceRoot": "app",
+    "inlineSourceMap": true
   },
-
+  "filesGlob": [
+    "**/*.ts",
+    "!node_modules/**/*"
+  ],
   "exclude": [
     "node_modules",
-    "bower_components",
-    "platforms"
-
-  ]
-
+    "typings/main",
+    "typings/main.d.ts"
+  ],
+  "compileOnSave": true,
+  "atom": {
+    "rewriteTsconfig": false
+  }
 }

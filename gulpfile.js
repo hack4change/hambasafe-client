@@ -1,128 +1,72 @@
-/// <binding Clean='clean:build' ProjectOpened='bower:install, watch, run' />
-var gulp = require('gulp');
-var gutil = require('gulp-util');
-var bower = require('bower');
-var concat = require('gulp-concat');
-var sass = require('gulp-sass');
-var minifyCss = require('gulp-minify-css');
-var rename = require('gulp-rename');
-var sh = require('shelljs');
-var notify = require("gulp-notify");
-var del = require("del");
-var sass = require("gulp-sass");
-var spawn = require("child_process").spawn;
-var sourcemaps = require("gulp-sourcemaps");
-var ts = require("gulp-typescript");
-var bower = require("gulp-bower");
-var watch = require("gulp-watch");
-var path = require("path");
-var tsProject = ts.createProject('tsconfig.json');
+var gulp = require('gulp'),
+    gulpWatch = require('gulp-watch'),
+    del = require('del'),
+    runSequence = require('run-sequence'),
+    argv = process.argv;
 
-var paths = {
-  bower: "bower_components/",
-  npm: "node_modules",
-  scripts: ['./scripts/**/*.ts'],
-  sass: ['./scss/**/*.scss']
-};
-var stopOnError = function (error) {
-  console.log(error);
-
-  if (!env.isCi()) this.emit('end');
-  else process.exit(1);
-};
-var env = {
-  isCi: function () {
-    return typeof process.env.BUILD_NUMBER !== "undefined";
-
-  }
-};
-gulp.task('default', ['sass']);
-gulp.task("clean", ["clean:bower", "clean:build", "clean:artifacts", "clean:nuget"]);
 
 /**
- * Bower
+ * Ionic hooks
+ * Add ':before' or ':after' to any Ionic project command name to run the specified
+ * tasks before or after the command.
  */
-gulp.task("bower:install", function () {
-  return bower(paths.bower)
-      .pipe(gulp.dest(paths.lib));
-});
+gulp.task('serve:before', ['watch']);
+gulp.task('emulate:before', ['build']);
+gulp.task('deploy:before', ['build']);
+gulp.task('build:before', ['build']);
+
+// we want to 'watch' when livereloading
+var shouldWatch = argv.indexOf('-l') > -1 || argv.indexOf('--livereload') > -1;
+gulp.task('run:before', [shouldWatch ? 'watch' : 'build']);
 
 /**
- * Watch
+ * Ionic Gulp tasks, for more information on each see
+ * https://github.com/driftyco/ionic-gulp-tasks
+ *
+ * Using these will allow you to stay up to date if the default Ionic 2 build
+ * changes, but you are of course welcome (and encouraged) to customize your
+ * build however you see fit.
  */
-gulp.task("watch", function () {
-  gulp.watch(paths.scripts, ["scripts"]);
-  gulp.watch(paths.sass, ["sass"]);
+var buildBrowserify = require('ionic-gulp-browserify-typescript');
+var buildSass = require('ionic-gulp-sass-build');
+var copyHTML = require('ionic-gulp-html-copy');
+var copyFonts = require('ionic-gulp-fonts-copy');
+var copyScripts = require('ionic-gulp-scripts-copy');
+
+var isRelease = argv.indexOf('--release') > -1;
+
+gulp.task('watch', ['clean'], function(done){
+  runSequence(
+    ['sass', 'html', 'fonts', 'scripts'],
+    function(){
+      gulpWatch('app/**/*.scss', function(){ gulp.start('sass'); });
+      gulpWatch('app/**/*.html', function(){ gulp.start('html'); });
+      buildBrowserify({ watch: true }).on('end', done);
+    }
+  );
 });
 
-/**
- * Compile & Copy
- */
-gulp.task("libs", function () {
-  return gulp.src([
-           paths.bower + "ionic/js/ionic.bundle.min.js",
-           paths.npm + "/systemjs/dist/system-polyfills.js",
-           paths.npm + "/systemjs/dist/system.js",
-           paths.bower + "angular-facebook/lib/angular-facebook.js",
-           paths.bower + "angular-resource/angular-resource.js",
-           paths.bower + "ngAutocomplete/src/ngAutocomplete.js",
-           paths.bower + "angular-local-storage/dist/angular-local-storage.js"
-  ])
-        .pipe(concat("libs.js"))
-        .pipe(gulp.dest("www/lib"));
-});
-gulp.task("scripts", function () {
-  var stream = gulp.src(["scripts/**/*.ts"])
-      .pipe(sourcemaps.init())
-      .pipe(ts({
-        "noImplicitAny": false,
-        "noEmitOnError": true,
-        "removeComments": false,
-        "inlineSourceMap": true,
-        "inlineSources": true,
-        "outFile": "www/scripts/appBundle.js",
-        "target": "es5"
-
-      })).on('error', stopOnError);
-  stream.pipe(sourcemaps.write())
-    .pipe(gulp.dest(""))
-  .pipe(notify("Scripts Compiled"));
+gulp.task('build', ['clean'], function(done){
+  runSequence(
+    ['sass', 'html', 'fonts', 'scripts'],
+    function(){
+      buildBrowserify({
+        minify: isRelease,
+        browserifyOptions: {
+          debug: !isRelease
+        },
+        uglifyOptions: {
+          mangle: false
+        }
+      }).on('end', done);
+    }
+  );
 });
 
-gulp.task('sass', function (done) {
-  gulp.src('./scss/ionic.app.scss')
-    .pipe(sass())
-    .on('error', sass.logError)
-    .pipe(gulp.dest('./www/css/'))
-    .pipe(minifyCss({
-      keepSpecialComments: 0
-    }))
-    .pipe(rename({ extname: '.min.css' }))
-    .pipe(gulp.dest('./www/css/'))
-    .pipe(notify("Sass Compiled"))
-    .on('end', done);
-});
-
-gulp.task('watch', function () {
-  gulp.watch(paths.sass, ['sass']);
-});
-
-gulp.task('install', ['git-check'], function () {
-  return bower.commands.install()
-    .on('log', function (data) {
-      gutil.log('bower', gutil.colors.cyan(data.id), data.message);
-    });
-});
-
-gulp.task('git-check', function (done) {
-  if (!sh.which('git')) {
-    console.log(
-      '  ' + gutil.colors.red('Git is not installed.'),
-      '\n  Git, the version control system, is required to download Ionic.',
-      '\n  Download git here:', gutil.colors.cyan('http://git-scm.com/downloads') + '.',
-      '\n  Once git is installed, run \'' + gutil.colors.cyan('gulp install') + '\' again.'
-    );
-    process.exit(1);
-  }
-  done();
+gulp.task('sass', buildSass);
+gulp.task('html', copyHTML);
+gulp.task('fonts', copyFonts);
+gulp.task('scripts', copyScripts);
+gulp.task('clean', function(){
+  return del('www/build');
 });
