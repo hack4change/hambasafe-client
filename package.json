@@ -1,6 +1,5 @@
 {
   "dependencies": {
-
     "@angular/common": "^2.0.0-rc.2",
     "@angular/compiler": "^2.0.0-rc.2",
     "@angular/core": "^2.0.0-rc.2",
@@ -22,7 +21,6 @@
     "gulp-sass": "^2.2.0",
     "node-sass": "^3.4.2",
     "typings": "^1.1.0"
-
   },
   "devDependencies": {
     "del": "2.2.0",
@@ -45,9 +43,5 @@
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard"
   ],
-
-  "cordovaPlatforms": [
-    "android"
-  ]
-
+  "cordovaPlatforms": []
 }
