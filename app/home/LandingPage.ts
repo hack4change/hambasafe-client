@@ -1,7 +1,11 @@
+import {Component} from '@angular/core';
+@Component({
+  templateUrl: 'build/home/landing.html'
+})
 export class LandingPage 
 {
-  loggedIn;
-  constructor( private Facebook, private ProfileService, private $location) { }
+  loggedIn; private Facebook; private ProfileService; private $location;
+  constructor( ) { }
   getLoginStatus  () {
     this.Facebook.logout();
     this. Facebook.getLoginStatus(function (response) {

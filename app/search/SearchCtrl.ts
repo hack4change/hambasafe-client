@@ -6,7 +6,6 @@ export class SearchCtrl {
   shownGroup;
   constructor(private $stateParams, private EventService, private $location) {
    
-
     this.eventType = ["Event Type"];
     this.typeSelected = this.eventType[0];
     this.selectedSearch = 0;

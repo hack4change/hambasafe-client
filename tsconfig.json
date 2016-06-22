@@ -16,7 +16,7 @@
     "typings/main",
     "typings/main.d.ts"
   ],
-  "compileOnSave": true,
+  "compileOnSave": false,
   "atom": {
     "rewriteTsconfig": false
   }

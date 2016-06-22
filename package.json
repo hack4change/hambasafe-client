@@ -1,6 +1,6 @@
 {
   "dependencies": {
-<<<<<<< HEAD
+
     "@angular/common": "^2.0.0-rc.2",
     "@angular/compiler": "^2.0.0-rc.2",
     "@angular/core": "^2.0.0-rc.2",
@@ -14,8 +14,7 @@
     "ionicons": "3.0.0",
     "reflect-metadata": "^0.1.3",
     "rxjs": "5.0.0-beta.9",
-    "zone.js": "^0.6.12"
-=======
+    "zone.js": "^0.6.12",
     "gulp": "^3.5.6",
     "gulp-concat": "^2.2.0",
     "gulp-minify-css": "^0.3.0",
@@ -23,7 +22,7 @@
     "gulp-sass": "^2.2.0",
     "node-sass": "^3.4.2",
     "typings": "^1.1.0"
->>>>>>> 4ff3d74b4efda841ff45f5dc0381e7f59a6d2d52
+
   },
   "devDependencies": {
     "del": "2.2.0",
@@ -46,14 +45,9 @@
     "cordova-plugin-statusbar",
     "ionic-plugin-keyboard"
   ],
-<<<<<<< HEAD
-  "cordovaPlatforms": [ ],
-=======
+
   "cordovaPlatforms": [
     "android"
-  ],
->>>>>>> 4ff3d74b4efda841ff45f5dc0381e7f59a6d2d52
-  "scripts": {
-    "ts": "tsc -w"
-  }
+  ]
+
 }
