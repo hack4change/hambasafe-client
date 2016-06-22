@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
 @Component({
-  templateUrl: 'build/home/landing.html'
+  templateUrl: 'build/pages/home/landing.html'
 })
 export class LandingPage 
 {

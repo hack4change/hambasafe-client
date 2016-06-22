@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {Platform, ionicBootstrap} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
-import {LandingPage} from "./home/LandingPage";
+import {LandingPage} from "./pages/home/LandingPage";
 
 
 @Component({

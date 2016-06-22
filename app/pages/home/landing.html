@@ -1,0 +1,43 @@
+<ion-navbar *navbar>
+  <ion-title>
+    About
+  </ion-title>
+</ion-navbar>
+<ion-content padding>
+  <button class="button button-icon button-clear ion-android-more-vertical menu-icon" menu-toggle="left"></button>
+  <div class="landing-content">
+    <div class="landing-container">
+      <img src="/img/hambasafe_app_icon_logo.png">
+      <div class="landing-intro-one">
+        <h1>
+          HambaSafe
+        </h1>
+      </div>
+      <div class="landing-intro-two">
+        <h5>
+          Login or Sign Up
+        </h5>
+      </div>
+      <div class="landing-intro-button">
+        <!-- facebook login button -->
+        <button class="button button-full button-light login-button" ng-click="fbLogin()">
+          <i class="ion-social-facebook icon-l pull-left facebook-color"></i>
+          <span>Facebook</span>
+        </button>
+        <!--
+        <button class="button button-full button-light login-button">
+        <i class="ion-social-linkedin icon-l pull-left linkedin-color "></i>
+        <span>LinkedIn</span>
+        </button>
+           -->
+      </div>
+    </div>
+  </div>
+  <div class="bar bar-footer">
+    <div class="footer-link">
+      <a ng-click="goToTerms()">Terms of Use</a>
+    </div>
+  </div>
+</ion-content>
+
+
