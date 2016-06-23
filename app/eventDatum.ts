@@ -14,18 +14,18 @@ export const EventDatumRecord = Record({
   'numberOfAttendees' : 0,
 })
 
-export class EventDatum extends EventDatumRecord({
-  'id'                : string,
-  'description'       : string,
-  'date'              : Date,
-  'difficulty'        : string,
-  'distance'          : number,
-  'image'             : string,
-  'name'              : string,
-  'place'             : string,
-  'coordinates'       : Object,
-  'eventType'         : Object,
-  'numberOfAttendees' : number,
+export class EventDatum extends EventDatumRecord{
+  id                : string;
+  description       : string;
+  date              : Date;
+  difficulty        : string;
+  distance          : number;
+  image             : string;
+  name              : string;
+  place             : string;
+  coordinates       : Object;
+  eventType         : Object;
+  numberOfAttendees : number;
   constructor(props){
     super(props);
   }
@@ -44,4 +44,4 @@ export class EventDatum extends EventDatumRecord({
       'numberOfAttendees' :  data.numberOfAttendees ,
     })
   }
-})
+}

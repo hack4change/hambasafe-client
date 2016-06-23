@@ -1,5 +1,5 @@
 import {fromJS, List, Map} from 'immutable';
-import {EventDatum} from '../EventDatum';
+import {EventDatum} from '../eventDatum';
 import {User} from '../user';
 
 export const getInitialState = ()=> {

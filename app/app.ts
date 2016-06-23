@@ -21,6 +21,9 @@ export class MyApp {
       this.setAnonymous();
     });
   }
+  NgOnInit() {
+      
+  }
 	setLoggedIn(){
     this.menu.enable(true, 'authorised-menu');
     this.menu.enable(false, 'anonymous-menu');

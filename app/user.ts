@@ -5,25 +5,25 @@ export const UserRecord = Record({
   'firstname'         : '',
   'surname'           : '',
   'joined'            : new Date(),
-  'rating'            : number,
-  'age'               : number,
+  'rating'            : 0,
+  'age'               : 0,
   'place'             : '',
   'gender'            : '',
   'numberOfFriends'   : 0,
   'attended'          : 0,
 })
 
-export class User extends UserRecord({
-  'id'               : string,
-  'firstname'        : string,
-  'surname'          : string,
-  'joined'           : Date,
-  'rating'           : number,
-  'age'              : number,
-  'place'            : string,
-  'gender'           : string,
-  'numberOfFriends'  : number,
-  'attended'         : number,
+export class User extends UserRecord{
+  'id'               : string;
+  'firstname'        : string;
+  'surname'          : string;
+  'joined'           : Date;
+  'rating'           : number;
+  'age'              : number;
+  'place'            : string;
+  'gender'           : string;
+  'numberOfFriends'  : number;
+  'attended'         : number;
 
   constructor(props){
     super(props);
@@ -32,7 +32,7 @@ export class User extends UserRecord({
     return new User({
       'id'                :  data.id                      ,
       'firstname'         :  data.firstname               ,
-      'surname'           :  data.surname                ,
+      'surname'           :  data.surname                 ,
       'joined'            :  data.joined                  ,
       'rating'            :  data.rating                  ,
       'age'               :  data.age                     ,
@@ -42,4 +42,4 @@ export class User extends UserRecord({
       'attended'          :  data.attended                ,
     })
   }
-})
+}

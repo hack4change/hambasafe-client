@@ -1,4 +1,4 @@
-import * as keyMirror from 'keyMirror';
+import * as keyMirror from 'keymirror';
 
 const actionTypes = keyMirror({
 //USER
