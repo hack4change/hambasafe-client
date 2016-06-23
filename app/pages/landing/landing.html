@@ -1,0 +1,51 @@
+<ion-toolbar class="icon-only">
+  <a class="clickable" menuToggle>
+    <ion-icon light class="menu-icon" name="menu"></ion-icon>
+  </a>
+</ion-toolbar>
+<ion-content>
+  <div class="landing-content">
+    <ion-row>
+      <ion-col width-10>
+      </ion-col>
+      <ion-col class="landing-container">
+        <div class="flex-single">
+        </div>
+        <div class="flex-single">
+          <div class="landing-app-image">
+            <img src="/img/hambasafe_app_icon_logo.png" />
+          </div>
+            <h1>
+              HambaSafe
+            </h1>
+        </div>
+        <div class="flex-single">
+          <h5>
+            Login or Sign Up
+          </h5>
+        </div>
+        <div class="flex-single">
+          <!-- facebook login button -->
+          <button light block (click)="fbLogin()">
+            <ion-icon class="facebook-color pull-left" name="logo-facebook" item-left></ion-icon>
+            <div class="text-center">
+              Facebook
+            </div>
+          </button>
+        </div>
+        <div class="flex-double">
+        </div>
+      </ion-col>
+      <ion-col width-10>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>
+<ion-toolbar position="bottom">
+  <ion-title class="text-footer">
+    <a (click)="goToTerms()">
+      Terms of Use
+    </a>
+  </ion-title>
+</ion-toolbar>
+

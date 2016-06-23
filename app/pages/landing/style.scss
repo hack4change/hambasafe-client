@@ -1,0 +1,36 @@
+.landing-page {
+  background: url(/img/landing.jpg) no-repeat;
+  background-size: cover;
+  background-position: 55%;
+  height: 100%;
+  .landing-content {
+    height: 100%;
+    .landing-app-image {
+      display: block;
+      margin: 0 auto; 
+      img {
+        width: 128px;
+      }
+    }
+    ion-row {
+       height: 100%;
+      .landing-container {
+        text-align: center; 
+        display: -webkit-flex;
+        display: flex;
+        -webkit-flex-direction: column;
+        flex-direction: column;
+        button div {
+          text-align:center;
+        }
+        h1, h2, h3, h4, h5, h6, p { 
+          color: white;
+        }
+        h1{
+          font-size: 3em;
+        }
+      }
+    }
+  }
+}
+//1 2 1 2 2

@@ -1,0 +1,42 @@
+ion-toolbar {
+  ion-icon.menu-icon {
+    padding: 0.5em;
+    font-size: 2em;
+  }
+}
+ion-toolbar[position='bottom'] {
+  .toolbar-title{
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: normal;
+    color: $light;
+  }
+}
+ion-toolbar[position='bottom'] {
+  .text-footer {
+    a { 
+      color: $light;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    a:hover {
+      border-bottom: 1px solid $light; 
+    }
+
+  }
+}
+#anonymous-menu {
+  ion-toolbar{
+    .toolbar-background {
+      background-color: $light;
+    }
+  }
+  ion-toolbar[position='bottom'] {
+    .toolbar-background {
+      background-color: $energized;
+    }
+  }
+  ion-content{
+    background-color: $light;
+  }
+}
