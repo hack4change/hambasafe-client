@@ -26,10 +26,38 @@
 // are different per mode.
 
 $colors: (
-  primary:    #387ef5,
-  secondary:  #32db64,
-  danger:     #f53d3d,
-  light:      #f4f4f4,
-  dark:       #222,
-  favorite:   #69BB7B
+  primary   :  #387ef5,
+  secondary :  #32db64,
+  danger    :  #f53d3d,
+  light     :  #f4f4f4,
+  dark      :  #222222,
+  favorite  :  #69BB7B,
+  energized :  #FFBC00,
 );
+
+/* Fonts */
+@font-face {
+  font-family: 'DINPro';
+  src: url('/fonts/DINPro.otf') format('opentype');
+}
+@font-face {
+  font-family: 'DINPro-Medium';
+  src: url('/fonts/DINPro-Medium.otf') format('opentype');
+}
+@font-face {
+  font-family: 'DINPro-Black';
+  src: url('/fonts/DINPro-Black.otf') format('opentype');
+}
+
+$light:                           #fff !default;
+$stable:                          #f8f8f8 !default;
+$positive:                        #0C9EF9 !default; //rgb 12 158 249 old: #387ef5
+$calm:                            #11c1f3 !default;
+$balanced:                        #33cd5f !default;
+$energized:                       #FFBC00 !default; //255, 188, 0    old: #ffc900
+$assertive:                       #ef473a !default;
+$royal:                           #886aea !default;
+$dark:                            #444 !default;
+
+// The path for our ionicons font files, relative to the built CSS in www/css
+// $ionicons-font-path: "../lib/ionic/fonts" !default;

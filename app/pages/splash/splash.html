@@ -1,0 +1,36 @@
+<ion-toolbar >
+    <a class="clickable" menuToggle>
+      <ion-icon light class="menu-icon" name="menu"></ion-icon>
+    </a>
+</ion-toolbar>
+<ion-content>
+  <div class="valign-outer splash-wrapper">
+    <div class="valign-inner">
+      <div class="splash-container">
+        <img src="/img/hambasafe_app_icon_logo.png">
+        <div class="splash-intro-one">
+          <h3>
+            Join the HambaSafe community
+          </h3>
+        </div>
+        <div class="splash-intro-two">
+          <h4>
+            Create your profile
+          </h4>
+        </div>
+        <div class="splash-intro-button">
+          <button (click)="goToLanding()" class="button button-light">
+            Let's go!
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</ion-content>
+<ion-toolbar position="bottom">
+  <ion-title class="text-footer">
+    <a (click)="goToTerms()">
+      Terms of Use
+    </a>
+  </ion-title>
+</ion-toolbar>
