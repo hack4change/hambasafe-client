@@ -2,22 +2,23 @@ import {Component} from '@angular/core';
 import {Platform, ionicBootstrap, MenuController} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
 import {LandingPage} from "./pages/landing/LandingPage";
+import {provider, NgRedux} from 'ng2-redux';
+import store from './stores/store';
 
 @Component({
   templateUrl: 'build/pages/app.html',
 })
 export class MyApp {
 
-  private rootPage: any;
+  private rootPage: any = LandingPage;
 
-  constructor(private platform: Platform, private menu: MenuController) {
-    this.setAnonymous();
-    this.rootPage = LandingPage;
+  constructor(private platform: Platform, private menu: MenuController, private ngRedux: NgRedux<any>) {
 
     platform.ready().then(() => {
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
+      this.setAnonymous();
     });
   }
 	setLoggedIn(){
@@ -45,4 +46,4 @@ export class MyApp {
   }
 }
 
-ionicBootstrap(MyApp)
+ionicBootstrap(MyApp, [provider(store)], {})
