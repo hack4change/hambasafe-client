@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {Platform, ionicBootstrap, MenuController} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
-import {LandingPage} from "./pages/landing/LandingPage";
+import {CreatePage} from "./pages/create/CreatePage";
 import {provider, NgRedux} from 'ng2-redux';
 import store from './stores/store';
 
@@ -10,7 +10,7 @@ import store from './stores/store';
 })
 export class MyApp {
 
-  private rootPage: any = LandingPage;
+  private rootPage: any = CreatePage;
 
   constructor(private platform: Platform, private menu: MenuController, private ngRedux: NgRedux<any>) {
 
@@ -24,27 +24,27 @@ export class MyApp {
   NgOnInit() {
       
   }
-	setLoggedIn(){
+	setLoggedIn() {
     this.menu.enable(true, 'authorised-menu');
     this.menu.enable(false, 'anonymous-menu');
   }
-	setAnonymous(){
+	setAnonymous() {
     this.menu.enable(true, 'anonymous-menu');
     this.menu.enable(false, 'authorised-menu');
   }
-  goToAboutPage(){
+  goToAboutPage() {
     console.log('triggered About');
   }
-  goToEmergencyPage(){
+  goToEmergencyPage() {
   
   }
-  goToProfilePage(){
+  goToProfilePage() {
   
   }
-  goToSharePage(){
+  goToSharePage() {
   
   }
-  goToTermsPage(){
+  goToTermsPage() {
   
   }
 }

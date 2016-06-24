@@ -4,6 +4,7 @@ import jsonRequest from '../utils/jsonRequest';
 import {User} from '../user';
 
 const API_ROOT = 'http://hambasafetesting.azurewebsites.net';
+
 // Success.
 const setSuccessState = (response) => {
   return {
@@ -11,7 +12,7 @@ const setSuccessState = (response) => {
       items: response.data.children.map((p)=>User.fromJS(p.data)),
       status: 'success',
     }),
-    type: actionTypes.USER_FETCH_SUCCESS,
+    type: actionTypes.USER_AUTH_SUCCESS,
   };
 };
 
@@ -23,7 +24,7 @@ const setErrorState = (error) => {
       message: error,
       status: 'error',
     }),
-    type: actionTypes.USER_FETCH_FAIL,
+    type: actionTypes.USER_AUTH_FAIL,
   };
 };
 
@@ -33,11 +34,11 @@ const setLoadingState = () => {
       items: [],
       status: 'loading',
     }),
-    type: actionTypes.USER_FETCH_INIT,
+    type: actionTypes.USER_AUTH_INIT,
   };
 };
 
-const fetchUser = ():any => {
+const authhUser = ():any => {
   return dispatch => {
     const url = 'https://www.reddit.com/top/.json?limit=10';
 
@@ -53,6 +54,6 @@ const fetchUser = ():any => {
   };
 };
 
-export const postsActions = {
-  fetchUser,
+export const authActions = {
+  authhUser,
 };

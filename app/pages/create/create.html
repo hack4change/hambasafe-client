@@ -1,7 +1,83 @@
-<ion-side-menus>
-  <side-menu></side-menu>
+<ion-toolbar class="icon-only">
+  <a class="clickable" menuToggle>
+    <ion-icon dark class="menu-icon" name="md-more"></ion-icon>
+  </a>
+</ion-toolbar>
+<ion-content>
+  <ion-list>
+    <ion-item class="list-title">
+      <ion-icon name="md-close-circle" item-left></ion-icon>
+      CREATE AN EVENT
+    </ion-item>
+		<ion-item>
+			<ion-label>Public</ion-label>
+			<ion-toggle checked="true"></ion-toggle>
+		</ion-item>
+		<ion-item class="">
+			<ion-label>Event Type</ion-label> <!-- replace tile with selected gender-->
+			<ion-select [(ngModel)]="eventType" required>
+				<ion-option value="walk">Walk</ion-option>
+				<ion-option value="run">Run</ion-option>
+				<ion-option value="cycle">Cycle</ion-option>
+			</ion-select>
+    </ion-item>
+    <ion-item class="">
+			<!-- <ion-label fixed>Name</ion-label> -->
+			<ion-input [(ngModel)]="name" type="text" placeholder="Name" required></ion-input>
+    </ion-item>
+    <ion-item class="">
+			<!-- <ion-label >Description</ion-label> -->
+			<ion-input [(ngModel)]="description" placeholder="Description" type="text" required></ion-input>
+    </ion-item>
+    <ion-item class="">
+			<!-- <ion-label >Place</ion-label> -->
+      <ion-input [(ngModel)]="startLocation" placeholder="Where does it start?" type="text" required></ion-input>
+    </ion-item>
+    <ion-item class="">
+      <ion-label>
+        What time does it start?
+      </ion-label>
+      <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime"></ion-datetime>
+    </ion-item>
+    <ion-item class="">
+      <ion-label>
+        What day does it start?
+      </ion-label>
+      <ion-datetime displayFormat="DD/MMM/YY" pickerFormat="DD MMM YY" [(ngModel)]="startDate"></ion-datetime>
+    </ion-item>
+    <ion-item class="">
+      <ion-label>
+        What time does it end?
+      </ion-label>
+      <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="endTime"></ion-datetime>
+    </ion-item>
+    <ion-item class="">
+      <ion-label>
+        What day does it end?
+      </ion-label>
+      <ion-datetime displayFormat="DD/MMM/YY" pickerFormat="DD MMM YY" [(ngModel)]="endDate"></ion-datetime>
+    </ion-item>
+    <ion-item class="">
+			<!-- <ion-label >Place</ion-label> -->
+      <ion-input [(ngModel)]="endLocation" placeholder="Where does it end?" type="text" required></ion-input>
+    </ion-item>
+    <ion-item class="">
+			<!-- <ion-label >Place</ion-label> -->
+      <ion-label>
+        Wait time(minutes)?
+      </ion-label>
+      <ion-input type="number "[(ngModel)]="waitMins"></ion-input>
+    </ion-item>
+  </ion-list>
+</ion-content>
+<ion-toolbar position="bottom">
+	<button primary (click)="createEvent()" full>
+		Post
+	</button>
+</ion-toolbar>
+<!--
 
-  <ion-side-menu-content>
+
     <ion-nav-bar class="bar-positive">
       <ion-nav-buttons side="left">
         <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
@@ -79,3 +155,4 @@
     </ion-nav-bar>
   </ion-side-menu-content>
 </ion-side-menus>
+-->

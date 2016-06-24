@@ -16,7 +16,6 @@ export class LandingPage
     this. Facebook.getLoginStatus(function (response) {
       console.log(response);
       if (response.status === 'connected') {
-
         this.$location.path('app/home');
       } else {
         this.loggedIn = false;

@@ -1,34 +1,39 @@
-  <ion-content>
-  	<div class="button-bar">
-  		<a class="button button-positive" >
-          <i class="icon ion-clock" ></i>
+<ion-content>
+  <div class="button-bar">
+    <a class="button button-positive" >
+      <i class="icon ion-clock" ></i>
+    </a>
+      <a class="button" >
+        <i class="icon ion-ios-people" ></i>
       </a>
-  		<a class="button" >
-          <i class="icon ion-ios-people" ></i>
-      </a>
-   </div>
-   <div class="tiled-list">
+  </div>
+  <div class="tiled-list">
     <div class="list">
-      <a class="item item-avatar" ng-click = click(event) ng-class="" collection-repeat = "event in events">
+      <a class="item item-avatar" *ngFor="let event in events">
         <img src="http://ionicframework.com/img/docs/stantz.jpg">
         <div class="right">
-          <h3>{{event.Name}}</h3>
-          <h3>{{event.Description}}</h3>
-          <h3>{{event.Distance}}km</h3>
-          <h3>{{event.EventDateTimeEnd}}</h3>
-          <h3 ng-show="event.PublicEvent">Public Event</h3>
-          <h3 ng-show="!event.PublicEvent">Private Event</h3>
+          <h3>{{event.name}}</h3>
+          <h3>{{event.description}}</h3>
+          <h3>{{event.distance}}km</h3>
+          <h3>{{event.eventDateTimeEnd}}</h3>
         </div>
       </a>
     </div>
-    <!-- <div class="list">
-      <div class="item" collection-repeat="event in events"
-           collection-item-width="'100%'"
-           collection-item-height="200">
-        <div>{{event.Name}}</div>
-        <div class="clear"></div>
-      </div>
-    </div> -->
-
-   <a class="icon ion-android-add-circle bottom add-button "  href="#/create"> </a>
-  </ion-content>
+    <a class="icon ion-android-add-circle bottom add-button "  href="#/create"> </a>
+  </div>
+</ion-content>
+<!-- 
+  
+          <h3 ng-show="event.PublicEvent">Public Event</h3>
+          <h3 ng-show="!event.PublicEvent">Private Event</h3>
+  
+  
+  
+  <div class="list">
+  <div class="item" collection-repeat="event in events"
+  collection-item-width="'100%'"
+  collection-item-height="200">
+  <div>{{event.Name}}</div>
+  <div class="clear"></div>
+  </div>
+  </div> -->

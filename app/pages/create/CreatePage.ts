@@ -1,19 +1,119 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {NavController} from 'ionic-angular';
+import {Observable} from 'rxjs';
+import {NgRedux} from 'ng2-redux';
+
+import {eventDataActions} from '../../actions/eventDataActions';
 
 @Component({
   templateUrl: 'build/pages/create/create.html'
 })
 export class CreatePage {
-  constructor() { }
+  created$: Observable<any>;
+
+  eventType;
+  name;
+  description
+  startTime;
+  startDate;
+  startLocation;
+  endTime;
+  endDate;
+  endLocation;
+  waitMins;
+  constructor(private nav: NavController, private ngRedux: NgRedux<any>) { }
+
+  ngOnInit(){
+  
+    this.created$ = this.ngRedux.select(state=>state.getIn(['eventData', 'status']));
+    console.log(this.created$);
+  }
+  ngDoCheck(){
+    console.log(this.created$);
+  }
+
+	createEvent() {
+    var roundDateToISO = ":00.000Z";
+    console.log(this.startTime);
+    console.log(this.waitMins);
+		// if(!this.eventType) {
+		// 	return; 
+		// }
+		// if(!this.name) {
+		// 	return; 
+		// }
+		// if(!this.description) {
+		// 	return; 
+		// }
+		// if(!this.startTime) {
+		// 	return; 
+		// }
+		// if(!this.startDate) {
+		// 	return; 
+		// }
+		// if(!this.startLocation) {
+		// 	return; 
+		// }
+		// if(!this.endTime) {
+		// 	return; 
+		// }
+		// if(!this.endDate) {
+		// 	return; 
+		// }
+		// if(!this.endLocation) {
+		// 	return; 
+		// }
+		// if(!this.waitMins) {
+		// 	return; 
+		// }
+		var data = {
+			'Name'          : this.name,
+			'Description'   : this.description,
+			'EventType'     : {
+				'Name'          : this.eventType,
+			},
+			'DateTimeStart' : this.startDate+"T"+this.startTime + roundDateToISO,
+      'DateTimeEnd'   : this.endDate+"T"+this.endTime +  roundDateToISO,
+      'StartLocation' : {
+        'Country'  : 'Cape Town',//(string, optional),
+        'Province' : 'Western Cape', //(string, optional),
+        'Suburb' : 'Rondebosch', //(string, optional),
+        'PostCode' : '8000', //(string, optional),
+        'Address' : '3 Some Avenue', //(string, optional),
+        'Latitude' : '99', //(number, optional),
+        'Longitude' : '-99', 
+      },
+      'EndLocation' : {
+        'Country'  : 'Cape Town',         //(string, optional)
+        'Province' : 'Western Cape',      //(string, optional)
+        'Suburb' : 'Rondebosch',          //(string, optional)
+        'PostCode' : '8000',              //(string, optional)
+        'Address' : '3 Some Avenue',      //(string, optional)
+        'Latitude' : '98',                //(number, optional)
+        'Longitude' : '-98',              //(number, optional)
+      },
+      'OwnerUser' : {
+        'FirstNames'  : 'George',
+        'LastNames'   : 'Phillips',
+      },
+      'WaitMins'      : this.waitMins,
+		}
+    console.log(data);
+    this.ngRedux.dispatch(eventDataActions.createEvent(data));
+	}
+
+  onCreation(){
+  
+  }
 
 }
 
-//private eventService:EventService
- // shownGroup = null;
- //  options = {};
- //  eventData;
-//import {EventService} from "./EventService";
-  // searchEvents  () {
+//  private eventService:EventService
+//  shownGroup = null;
+//  options = {};
+//  eventData;
+//  import {EventService} from "./EventService";
+//  searchEvents  () {
 
 
 

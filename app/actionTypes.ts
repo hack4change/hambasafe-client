@@ -16,6 +16,8 @@ const actionTypes = keyMirror({
 
 //EVENTS
 
+  EVENTS_STATUS_SET            : undefined,
+
   EVENTS_CREATE_INIT           : undefined,
   EVENTS_CREATE_FAIL           : undefined,
   EVENTS_CREATE_SUCCESS        : undefined,
@@ -24,9 +26,9 @@ const actionTypes = keyMirror({
   EVENTS_DELETE_FAIL           : undefined,
   EVENTS_DELETE_SUCCESS        : undefined,
 
-  EVENTS_FETCH_INIT     : undefined,
-  EVENTS_FETCH_FAIL     : undefined,
-  EVENTS_FETCH_SUCCESS  : undefined,
+  EVENTS_FETCH_INIT            : undefined,
+  EVENTS_FETCH_FAIL            : undefined,
+  EVENTS_FETCH_SUCCESS         : undefined,
 
 //OTHER
   RATING_INIT                 : undefined,

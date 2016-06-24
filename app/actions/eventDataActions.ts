@@ -1,10 +1,15 @@
 import actionTypes from '../actionTypes.ts';
 import {fromJS} from 'immutable';
 import jsonRequest from '../utils/jsonRequest';
-import {EventDatum} from '../post';
+import {EventDatum} from '../eventDatum';
 
+const API_ROOT = 'http://hambasafetesting.azurewebsites.net';
+
+/*
+ * FETCHING
+ */
 // Success.
-const setSuccessState = (response) => {
+const setFetchSuccessState = (response) => {
   return {
     data: fromJS({
       items: response.data.children.map((p)=> EventDatum.fromJS(p.data)),
@@ -15,7 +20,7 @@ const setSuccessState = (response) => {
 };
 
 // Error.
-const setErrorState = (error) => {
+const setFetchErrorState = (error) => {
   return {
     data: fromJS({
       items: [],
@@ -26,7 +31,7 @@ const setErrorState = (error) => {
   };
 };
 
-const setLoadingState = () => {
+const setFetchLoadingState = () => {
   return {
     data: fromJS({
       items: [],
@@ -36,22 +41,84 @@ const setLoadingState = () => {
   };
 };
 
-const fetchPosts = ():any => {
+const fetchEvents = ():any => {
   return dispatch => {
     const url = 'https://www.reddit.com/top/.json?limit=10';
 
     // Set loading state.
-    dispatch(setLoadingState());
+    dispatch(setFetchLoadingState());
 
     // Do request.
     jsonRequest(
       url,
-      (error) => dispatch(setErrorState(error)),
-      (response) => dispatch(setSuccessState(response))
+      null,
+      (error) => dispatch(setFetchErrorState(error)),
+      (response) => dispatch(setFetchSuccessState(response))
     );
   };
 };
 
-export const postsActions = {
+/*
+ * Creating
+ */
+const setCreateSuccessState = (response) => {
+  return {
+    data: fromJS({
+      status: 'created',
+    }),
+    type: actionTypes.EVENTS_CREATE_SUCCESS,
+  };
+};
+
+// Error.
+const setCreateErrorState = (error) => {
+  return {
+    data: fromJS({
+      message: error,
+      status: 'error',
+    }),
+    type: actionTypes.EVENTS_CREATE_FAIL,
+  };
+};
+const setCreateLoadingState = () => {
+  console.log('loadingState');
+  return {
+    data: fromJS({
+      items: [],
+      status: 'loading',
+    }),
+    type: actionTypes.EVENTS_CREATE_INIT,
+  };
+}
+
+
+const createEvent = (data):any => {
+  return dispatch => {
+    const url = API_ROOT  + '/v1/Events/create-event';
+
+    // Set loading state.
+    dispatch(setCreateLoadingState());
+    dispatch(setIdle());
+
+    // Do request.
+    // jsonRequest(
+    //   url,
+    //   'POST',
+    //   (error) => dispatch(setCreateErrorState(error)),
+    //   (response) => dispatch(setCreateSuccessState(response))
+    // );
+  };
+};
+const setIdle = ():any => {
+  return {
+    data: fromJS({
+      status: 'idle',
+    }),
+    type: actionTypes.EVENTS_STATUS_SET,
+  };
+};
+
+export const eventDataActions = {
   fetchEvents,
+  createEvent,
 };
