@@ -54,6 +54,8 @@ export class CreatePage {
         case 'error': 
           if(this.createModal) {
           this.createModal.dismiss()
+          //TODO: REMOVE
+          this.nav.present(this.createModal);
         }
       }
     });
@@ -88,7 +90,7 @@ export class CreatePage {
 		}
 		if(!this.endDate) {
 			return; 
-		}l
+		}
 		if(!this.endLocation) {
 			return; 
 		}

@@ -7,6 +7,7 @@
     "@angular/platform-browser": "^2.0.0-rc.2",
     "@angular/platform-browser-dynamic": "^2.0.0-rc.2",
     "@angular/router": "^2.0.0-rc.2",
+    "cordova": "^6.2.0",
     "es6-shim": "^0.35.0",
     "gulp": "^3.5.6",
     "gulp-concat": "^2.2.0",
@@ -15,7 +16,7 @@
     "gulp-sass": "^2.2.0",
     "immutable": "^3.8.1",
     "ionic-angular": "2.0.0-beta.9",
-    "ionic-native": "1.3.0",
+    "ionic-native": "^1.3.0",
     "ionicons": "^3.0.0",
     "keymirror": "^0.1.1",
     "lodash": "^4.13.1",
@@ -58,6 +59,15 @@
     {
       "locator": "https://git-wip-us.apache.org/repos/asf/cordova-plugins.git#master:local-webserver",
       "id": "cordova-labs-local-webserver"
+    },
+    "cordova-plugin-x-toast",
+    {
+      "variables": {
+        "APP_ID": "1824765444411364",
+        "APP_NAME": "hambasafe"
+      },
+      "locator": "cordova-plugin-facebook4",
+      "id": "cordova-plugin-facebook4"
     }
   ],
   "cordovaPlatforms": [
@@ -65,7 +75,8 @@
       "platform": "ios",
       "version": "4.0.0",
       "locator": "ios@4.0.0"
-    }
+    },
+    "android"
   ],
   "scripts": {
     "lint": "tslint -s tslint/formatters -t color --config tslint.json 'app/**/*.ts'",
@@ -74,11 +85,5 @@
   "precommit.silent": true,
   "pre-commit": [
     "lint"
-  ],
-  "proxies": [
-    {
-      "path": "/v1",
-      "proxyUrl": "http://hambasafetesting.azurewebsites.net/v1"
-    }
   ]
 }

@@ -1,16 +1,24 @@
 import {Component} from '@angular/core';
 import {Platform, ionicBootstrap, MenuController} from 'ionic-angular';
 import {StatusBar} from 'ionic-native';
-import {CreatePage} from "./pages/create/CreatePage";
+import {Facebook} from 'ionic-native';
 import {provider, NgRedux} from 'ng2-redux';
+import {Observable} from 'rxjs';
 import store from './stores/store';
+
+/*
+ *  Pages
+ */
+import {CreatePage} from "./pages/create/CreatePage";
+import {HomePage} from "./pages/home/HomePage";
 
 @Component({
   templateUrl: 'build/pages/app.html',
 })
 export class MyApp {
 
-  private rootPage: any = CreatePage;
+  private rootPage: any = HomePage;
+  private authStatus$ : Observable<any>;
 
   constructor(private platform: Platform, private menu: MenuController, private ngRedux: NgRedux<any>) {
 
@@ -19,6 +27,15 @@ export class MyApp {
       // Here you can do any higher level native things you might need.
       StatusBar.styleDefault();
       this.setAnonymous();
+      this.authStatus$ = this.ngRedux.select(state=>state.getIn(['currentUser', 'status']));
+      this.authStatus$.subscribe(userStatus => {
+        console.log(userStatus);
+      })
+      // if(cordova && cordova.plugins && cordova.plugins.Facebook){
+      //   Facebook.getLoginStatus().then((result) => {
+      //     console.log(result)
+      //   })
+      // }
     });
   }
   NgOnInit() {
@@ -38,7 +55,7 @@ export class MyApp {
   goToEmergencyPage() {
   
   }
-  goToProfilePage() {
+  goToProfilePage(){
   
   }
   goToSharePage() {
