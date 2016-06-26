@@ -6,12 +6,10 @@
     -webkit-flex-direction: column;
     flex-direction: column;
     .emergency-header {
-      flex: 2;
+      flex: 1;
+      -webkit-flex-direction: column;
+      flex-direction: column;
       text-align:center;
-      .inner {
-        height:100%;
-        display:block;
-      }
     }  
     .emergency-numbers {
       flex:6;

@@ -30,7 +30,7 @@ import {AboutPage} from './pages/about/AboutPage';
 export class MyApp {
   @ViewChild('myNavRoot') nav: NavController;
 
-  private rootPage: any = SplashPage;
+  private rootPage: any = HomePage;
   private authStatus$ : Observable<any>;
 
   constructor(private platform: Platform, private menu: MenuController, private ngRedux: NgRedux<any>) {
@@ -84,10 +84,22 @@ export class MyApp {
     this.nav.push(EmergencyPage);
   }
   
-  goToProfile(){
-  
+  goToProfile() {
+
   }
   
+  goToFacebook() {
+    window.location.href= "https://www.facebook.com/hambasafe/"; 
+  }
+
+  goToTwitter() {
+    window.location.href= "https://twitter.com/hambasafe"; 
+  }
+
+  goToWebsite(){
+    window.location.href= "https://www.facebook.com/hambasafe/"; 
+  }
+
   goToShare() {
   
   }

@@ -1,0 +1,34 @@
+.home-page {
+	div.buttonbar4 {
+		text-align: center;
+		width: 100%;
+		white-space: nowrap;
+		button {
+			/* use width: 23% for 4 buttons, width: 18.2% for 5 buttons */
+display:inline-block;
+			width: 50%;
+			font-size: 11px;
+			height: 40px;
+			ion-col {
+				text-align: center;
+				ion-icon {
+					/* margin-bottom controls the space between the icons and text */
+					margin-bottom: 3px;   
+				}
+			}
+		}
+	}
+  .active {
+    background-color: $positive;
+    color: $light;
+  }
+  .not-active{
+    color: $dark;
+  }
+  ion-range{
+    padding:0px;
+    ion-icon{
+      font-family: DINPro;
+    }
+  }
+}

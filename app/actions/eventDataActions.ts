@@ -3,7 +3,7 @@ import {fromJS} from 'immutable';
 import jsonRequest from '../utils/jsonRequest';
 import {EventDatum} from '../eventDatum';
 
-const API_ROOT = 'http://hambasafetesting.azurewebsites.net';
+const API_ROOT = 'http://hambasafetesting.azurewebsites.net/v1';
 
 /*
  * FETCHING
@@ -41,17 +41,24 @@ const setFetchLoadingState = () => {
   };
 };
 
-const fetchEvents = ():any => {
+const fetchEvents = (distance: number, latitude: number, longitude: number):any => {
   return dispatch => {
-    const url = 'https://www.reddit.com/top/.json?limit=10';
+    const url = API_ROOT + '/Events/events-by-coordinates';
 
+    const options = {
+      query: {
+        distance  : distance,
+        latitude  : latitude,
+        longitude : longitude,
+      }
+    }
     // Set loading state.
     dispatch(setFetchLoadingState());
 
     // Do request.
     jsonRequest(
       url,
-      null,
+      options,
       (error) => dispatch(setFetchErrorState(error)),
       (response) => dispatch(setFetchSuccessState(response))
     );
@@ -93,7 +100,7 @@ const setCreateLoadingState = () => {
 
 const createEvent = (data):any => {
   return dispatch => {
-    const url = API_ROOT  + '/v1/Events/create-event';
+    const url = API_ROOT  + '/Events/create-event';
     console.log('event Create')
     const options = {
       method : 'POST',

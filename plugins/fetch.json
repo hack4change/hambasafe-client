@@ -65,5 +65,13 @@
             "APP_ID": "1824765444411364",
             "APP_NAME": "hambasafe"
         }
+    },
+    "plugin.google.maps": {
+        "source": {
+            "type": "registry",
+            "id": "cordova-plugin-googlemaps"
+        },
+        "is_top_level": true,
+        "variables": {}
     }
 }

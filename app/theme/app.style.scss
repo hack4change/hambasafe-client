@@ -54,3 +54,19 @@ ion-toolbar[position='bottom'] {
 ion-page {
   background-color: #FFF;
 }
+.main-bar {
+  [start] {
+    order: 3;
+  }
+  button{
+    padding-right: 15px;
+  }
+   
+}
+.square-corner {
+border-radius: 0px;
+}
+
+.no-border {
+  border: 0px;
+}
