@@ -74,5 +74,11 @@
   "precommit.silent": true,
   "pre-commit": [
     "lint"
+  ],
+  "proxies": [
+    {
+      "path": "/v1",
+      "proxyUrl": "http://hambasafetesting.azurewebsites.net/v1"
+    }
   ]
 }

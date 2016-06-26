@@ -1,12 +1,16 @@
 import actionTypes from '../actionTypes.ts';
 
 export default function eventData(state:any, action:any = {}) {
-  console.log(state.get('status'));
+  console.log('here');
   switch (action && action.type) {
     case actionTypes.EVENTS_STATUS_SET:
+      console.log(action.data.get('status'));
       return state.set('status', action.data.get('status'));
     case actionTypes.EVENTS_CREATE_INIT:
+      console.log(action.data.get('status'));
+      return state.set('status', action.data.get('status'));
     case actionTypes.EVENTS_CREATE_SUCCESS:
+      return state.set('status', action.data.get('status'));
     case actionTypes.EVENTS_CREATE_FAIL:
     case actionTypes.EVENTS_DELETE_INIT:
     case actionTypes.EVENTS_DELETE_SUCCESS:

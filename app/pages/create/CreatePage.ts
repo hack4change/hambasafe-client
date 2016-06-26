@@ -3,7 +3,15 @@ import {NavController} from 'ionic-angular';
 import {Observable} from 'rxjs';
 import {NgRedux} from 'ng2-redux';
 
+/*
+ * Actions
+ */
 import {eventDataActions} from '../../actions/eventDataActions';
+
+/*
+ *  Pages
+ */
+import { HomePage } from '../home/HomePage';
 
 @Component({
   templateUrl: 'build/pages/create/create.html'
@@ -26,11 +34,16 @@ export class CreatePage {
   ngOnInit(){
   
     this.created$ = this.ngRedux.select(state=>state.getIn(['eventData', 'status']));
+    this.created$.subscribe(eventStatus => {
+      console.log(eventStatus)
+      if(eventStatus === 'created'){
+        console.log('redirecting');
+        this.nav.setRoot(HomePage);
+      }
+    });
     console.log(this.created$);
   }
-  ngDoCheck(){
-    console.log(this.created$);
-  }
+    
 
 	createEvent() {
     var roundDateToISO = ":00.000Z";

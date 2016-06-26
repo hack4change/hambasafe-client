@@ -22,48 +22,47 @@
 			</ion-select>
     </ion-item>
     <ion-item class="">
-			<!-- <ion-label fixed>Name</ion-label> -->
-			<ion-input [(ngModel)]="name" type="text" placeholder="Name" required></ion-input>
+			<ion-label floating>Name</ion-label>
+			<ion-input [(ngModel)]="name" type="text" required></ion-input>
     </ion-item>
     <ion-item class="">
-			<!-- <ion-label >Description</ion-label> -->
-			<ion-input [(ngModel)]="description" placeholder="Description" type="text" required></ion-input>
+			<ion-label floating>Description</ion-label>
+			<ion-input [(ngModel)]="description" type="text" required></ion-input>
     </ion-item>
     <ion-item class="">
-			<!-- <ion-label >Place</ion-label> -->
-      <ion-input [(ngModel)]="startLocation" placeholder="Where does it start?" type="text" required></ion-input>
+			<ion-label floating>Where does it start?</ion-label>
+      <ion-input [(ngModel)]="startLocation"  type="text" required></ion-input>
     </ion-item>
     <ion-item class="">
-      <ion-label>
+      <ion-label floating>
         What time does it start?
       </ion-label>
       <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime"></ion-datetime>
     </ion-item>
     <ion-item class="">
-      <ion-label>
+      <ion-label floating>
         What day does it start?
       </ion-label>
       <ion-datetime displayFormat="DD/MMM/YY" pickerFormat="DD MMM YY" [(ngModel)]="startDate"></ion-datetime>
     </ion-item>
     <ion-item class="">
-      <ion-label>
+      <ion-label floating>
         What time does it end?
       </ion-label>
       <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="endTime"></ion-datetime>
     </ion-item>
     <ion-item class="">
-      <ion-label>
+      <ion-label floating>
         What day does it end?
       </ion-label>
       <ion-datetime displayFormat="DD/MMM/YY" pickerFormat="DD MMM YY" [(ngModel)]="endDate"></ion-datetime>
     </ion-item>
     <ion-item class="">
-			<!-- <ion-label >Place</ion-label> -->
-      <ion-input [(ngModel)]="endLocation" placeholder="Where does it end?" type="text" required></ion-input>
+			<ion-label  floating>Where does it end?</ion-label>
+      <ion-input [(ngModel)]="endLocation" type="text" required></ion-input>
     </ion-item>
     <ion-item class="">
-			<!-- <ion-label >Place</ion-label> -->
-      <ion-label>
+      <ion-label floating>
         Wait time(minutes)?
       </ion-label>
       <ion-input type="number "[(ngModel)]="waitMins"></ion-input>

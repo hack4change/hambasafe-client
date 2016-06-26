@@ -58,7 +58,7 @@ const fetchEvents = ():any => {
   };
 };
 
-/*
+/**
  * Creating
  */
 const setCreateSuccessState = (response) => {
@@ -84,8 +84,7 @@ const setCreateLoadingState = () => {
   console.log('loadingState');
   return {
     data: fromJS({
-      items: [],
-      status: 'loading',
+      status: 'creating',
     }),
     type: actionTypes.EVENTS_CREATE_INIT,
   };
@@ -95,18 +94,22 @@ const setCreateLoadingState = () => {
 const createEvent = (data):any => {
   return dispatch => {
     const url = API_ROOT  + '/v1/Events/create-event';
+    const options = {
+      method : 'POST',
+      body : data,
+    }
 
     // Set loading state.
     dispatch(setCreateLoadingState());
-    dispatch(setIdle());
 
+    console.log('event Create')
     // Do request.
-    // jsonRequest(
-    //   url,
-    //   'POST',
-    //   (error) => dispatch(setCreateErrorState(error)),
-    //   (response) => dispatch(setCreateSuccessState(response))
-    // );
+    jsonRequest(
+      url,
+      options,
+      (error) => dispatch(setCreateErrorState(error)),
+      (response) => dispatch(setCreateSuccessState(response))
+    );
   };
 };
 const setIdle = ():any => {
@@ -121,4 +124,5 @@ const setIdle = ():any => {
 export const eventDataActions = {
   fetchEvents,
   createEvent,
+  setIdle,
 };

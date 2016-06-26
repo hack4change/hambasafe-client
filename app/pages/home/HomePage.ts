@@ -1,14 +1,13 @@
-import {Page} from 'ionic-angular';
+import {Component, OnInit} from '@angular/core';
+import {NavController} from 'ionic-angular';
+import {Observable} from 'rxjs';
+import {NgRedux} from 'ng2-redux';
 
-@Page({
+@Component({
   templateUrl: 'build/pages/home/home.html'
 })
 export class HomePage{
-  events: Event[];
-  constructor() {
-
-  }
-
+  constructor() { }
   
 
   navigateTo(event) {

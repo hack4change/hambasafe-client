@@ -1,10 +1,12 @@
 const request = require('xhr-request');
 // import * as request from 'xhr-request';
 
-const jsonRequest = (url, method, errorCallback, successCallback) => {
+const jsonRequest = (url, opts, errorCallback, successCallback) => {
     const options = {
         json: true,
-        method : method || 'GET',
+        method : opts.method || 'GET',
+        body : opts.body || {},
+        query : opts.query || {},
     };
     request(url, options, (error, response) => {
         if (error) {

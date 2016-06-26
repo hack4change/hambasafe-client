@@ -4,11 +4,12 @@ import {User} from '../user';
 
 export const getInitialState = ()=> {
   return Map<string, any>({
-    eventData: Map<string, any>(fromJS({status: "loading", items: []})),
-    users: Map<string, any>(fromJS({status: "loading", items: []})),
+    eventData: Map<string, any>(fromJS({status: "idle", items: []})),
+    users: Map<string, any>(fromJS({status: "idle", items: []})),
     currentUser: {
-      status: "loading",
+      status: "ANONYMOUS",
       id : '',
+      accessToken: '',
       isLoggedIn: false,
       username: '',
     }
