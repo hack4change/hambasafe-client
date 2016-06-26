@@ -1,20 +1,30 @@
 import {Component} from '@angular/core';
 import {NavController} from 'ionic-angular';
-import {LandingPage} from '../home/landing/LandingPage';
+
+/**
+ *  Redux
+ */
+import {NgRedux} from 'ng2-redux';
+import {Observable} from 'rxjs';
+
+/*
+ *  Pages
+ */
+import {LandingPage} from '../landing/LandingPage';
+import {TermsPage} from '../terms/TermsPage';
 
 @Component({
   templateUrl: 'build/pages/splash/splash.html'
 })
 export class SplashPage 
 {
-  private $location;
   constructor(private nav: NavController) {};
-  goToLanding = function() {
+
+  goToLanding() {
     this.nav.setRoot(LandingPage);
   }
 
-  goToTerms = function() {
-
-    // $location.path("app/terms")
+  goToTerms() {
+    this.nav.push(TermsPage);
   }
 }

@@ -1,4 +1,17 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {NavController} from 'ionic-angular';
+
+/**
+ *  Redux
+ */
+import {Observable} from 'rxjs';
+import {NgRedux} from 'ng2-redux';
+
+/*
+ *  Pages
+ */
+import {TermsPage} from '../terms/TermsPage';
+
 @Component({
   templateUrl: 'build/pages/landing/landing.html'
 })
@@ -9,7 +22,7 @@ export class LandingPage
   private ProfileService;
   private $location;
 
-  constructor( ) { }
+  constructor(private nav: NavController) {};
 
   getLoginStatus  () {
     this.Facebook.logout();
@@ -24,10 +37,13 @@ export class LandingPage
   };
 
   fbLogin() {
-    this.Facebook.login(function (response) {
-      console.log(response);
-      this.ProfileService.setProfileFromFacebook(response);
-      this.$location.path('app/registration');
-    });
+    // this.Facebook.login(function (response) {
+    //   console.log(response);
+    //   this.ProfileService.setProfileFromFacebook(response);
+    //   this.$location.path('app/registration');
+    // });
+  }
+  goToTerms(){
+    this.nav.push(TermsPage);
   }
 }

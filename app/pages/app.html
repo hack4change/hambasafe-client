@@ -5,9 +5,9 @@
 
   <ion-content>
     <ion-list class="list-borderless">
-      <ion-item menuClose (click)="goToAboutPage()">
+      <ion-item menuClose (click)="goToAbout()">
         <ion-avatar item-left>
-          <img src="/img/hambasafe_app_icon_logo.png">
+          <img src="img/hambasafe_app_icon_logo.png">
         </ion-avatar>
         <!-- <div style="height:100%;" class="valign-outer"> -->
         <!--   <div class="valign-inner"> -->
@@ -17,9 +17,9 @@
           </h2>
         </div>
       </ion-item>
-      <ion-item menuClose (click)="goToEmergencyPage()">
+      <ion-item menuClose (click)="goToEmergency()">
         <ion-avatar item-left>
-          <img src="/img/twitter_01.png">
+          <img src="img/twitter_01.png">
         </ion-avatar>
         <div class="item-text-center">
           <h2>
@@ -27,9 +27,9 @@
           </h2>
         </div>
       </ion-item>
-      <ion-item menuClose (click)="goToFacebookPage()">
+      <ion-item menuClose (click)="goToFacebook()">
         <ion-avatar item-left>
-          <img src="/img/facebook_01.png">
+          <img src="img/facebook_01.png">
         </ion-avatar>
         <div class="item-text-center">
           <h2>
@@ -37,9 +37,9 @@
           </h2>
         </div>
       </ion-item>
-      <ion-item menuClose (click)="goToSharePage()">
+      <ion-item menuClose (click)="goToShare()">
         <ion-avatar item-left>
-          <img src="/img/twitter_01.png">
+          <img src="img/twitter_01.png">
         </ion-avatar>
         <div class="item-text-center">
           <h2>
@@ -49,7 +49,7 @@
       </ion-item>
       <ion-item menuClose (click)="goToWebsite()">
         <ion-avatar item-left>
-          <img src="/img/group-42.png">
+          <img src="img/group-42.png">
         </ion-avatar>
         <div class="item-text-center">
           <h2>
@@ -63,10 +63,12 @@
     <ion-title>
       <!-- <button clear fab-bottom> -->
       <!--   <ion-avatar> -->
-      <!--     <img src="/img/hambasafe_app_icon_logo.png"> -->
+      <!--     <img src="img/hambasafe_app_icon_logo.png"> -->
       <!--   </ion-avatar> -->
       <!-- </button> -->
-      Terms of Use
+      <a (click)="goToTerms()">
+        Terms of Use
+      </a> 
     </ion-title>
   </ion-toolbar>
 

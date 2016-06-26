@@ -1,64 +1,59 @@
-<ion-view hide-nav-bar="true" view-title="Registration">
-	<ion-header-bar class="top-toolbar">
-		<!-- <div class="valign-outer"> -->
-		<div>
-			<h4>
-				PROFILE
-			</h4>
-		</div>
-		<!-- </div> -->
-	</ion-header-bar>
-  <ion-content class="register-wrapper has-header">
-			<div class="register-container">
-				<form name="registrationForm" ng-submit="doRegister(signupForm.$valid)" novalidate>
-          <!--
-					<div class="row">
-						<input name="profile-picture" class="profile-pic" id="profile-picture" type="file" placeholder="Profile Picture" ng-model="user.profilePicture" required/>
-            <label for="profile-picture">Choose a file</label>
-          </div>
-          -->
-					<div class="row">
-						<input type="text" placeholder="Firstname" ng-model="user.firstName" required/>
-					</div>
-					<div class="row">
-						<input type="text" placeholder="Surname" ng-model="user.lastName" required/>
-					</div>
-					<div class="row" ng-click="openDatePicker()">
-						<input type="date" placeholder="Date of Birth"  ng-model="user.dateOfBirth" required>
-					</div>
-					<div class="row">
-        <ion-item class="item" ng-click="toggleGenderOpen()" ng-class="{active: isGenderOpen()}">
-					<div class="valign-outer">
+<ion-toolbar>
+  <ion-title>
+    PROFILE
+  </ion-title>
+</ion-toolbar>
+<ion-content class="register-wrapper has-header">
+  <div class="register-container">
+    <form name="registrationForm" ng-submit="doRegister(signupForm.$valid)" novalidate>
+      <!--
+        <div class="row">
+        <input name="profile-picture" class="profile-pic" id="profile-picture" type="file" placeholder="Profile Picture" ng-model="user.profilePicture" required/>
+        <label for="profile-picture">Choose a file</label>
+        </div>
+      -->
+      <ion-list>
+        <ion-item>
+          <ion-input type="text" placeholder="Firstname" ng-model="user.firstName" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input type="text" placeholder="Surname" ng-model="user.lastName" required></ion-input>
+        </ion-item>
+        <ion-item ng-click="openDatePicker()">
+          <ion-input type="date" placeholder="Date of Birth"  ng-model="user.dateOfBirth" required></ion-input>
+        </ion-item>
+        <ion-item ng-click="toggleGenderOpen()" ng-class="{active: isGenderOpen()}">
+          <div class="valign-outer">
             <div class="valign-inner">
               <p>Gender</p> <!-- replace tile with selected gender-->
               <i class="icon pull-right" ng-class="isGenderOpen() ? 'ion-chevron-up' : 'ion-chevron-down'"></i>
             </div>
           </div>
+          <div ng-repeat="gender in genders" ng-show="isGenderOpen()">
+            <ion-checkbox class="item-checkbox-right item-accordion gender-group">{{ gender }}</ion-checkbox>
+          </div>
         </ion-item>
-        </div>
-        <div class="row" ng-repeat="gender in genders" ng-show="isGenderOpen()">
-          <ion-checkbox class="item-checkbox-right item-accordion gender-group">{{ gender }}</ion-checkbox>
-        </div>
-
-					<div class="row">
-						<input type="text" placeholder="Location" ng-model="user.location" required/>
-					</div>
-					<div class="row">
-						<input type="tel" placeholder="Cell Number" ng-model="user.phoneNumber" required/>
-					</div>
-					<div class="row">
-            <input type="email" placeholder="Email" ng-model="user.email" required/>
-					</div>
-					<div class="row">
-            <input type="email" placeholder="Confirm Email" ng-model="user.confirmEmail" required>
-					</div>
-          <ion-footer-bar class="bottom-toolbar">
-            <button class="button button-positive" type="submit">Sign Up</button>
-          </ion-footer-bar>
-				</form>
-			</div>
-  </ion-content>
-</ion-view>
+        <ion-item>
+          <ion-input type="text" placeholder="Location" ng-model="user.location" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input type="tel" placeholder="Cell Number" ng-model="user.phoneNumber" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input type="email" placeholder="Email" ng-model="user.email" required></ion-input>
+        </ion-item>
+        <ion-item>
+          <ion-input type="email" placeholder="Confirm Email" ng-model="user.confirmEmail" required></ion-input>
+        </ion-item>
+      </ion-list>
+      <ion-toolbar position="bottom">
+        <button primary type="submit">
+          Sign Up
+        </button>
+      </ion-toolbar>
+    </form>
+  </div>
+</ion-content>
 
 <!--
         <label class="item item-input item-floating-label">

@@ -1,0 +1,20 @@
+.emergency-page {
+  .emergency-container {
+    height: 100%;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-flex-direction: column;
+    flex-direction: column;
+    .emergency-header {
+      flex: 2;
+      text-align:center;
+      .inner {
+        height:100%;
+        display:block;
+      }
+    }  
+    .emergency-numbers {
+      flex:6;
+    }
+  }
+}
