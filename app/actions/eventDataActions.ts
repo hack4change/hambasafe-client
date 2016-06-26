@@ -94,6 +94,7 @@ const setCreateLoadingState = () => {
 const createEvent = (data):any => {
   return dispatch => {
     const url = API_ROOT  + '/v1/Events/create-event';
+    console.log('event Create')
     const options = {
       method : 'POST',
       body : data,
@@ -102,7 +103,6 @@ const createEvent = (data):any => {
     // Set loading state.
     dispatch(setCreateLoadingState());
 
-    console.log('event Create')
     // Do request.
     jsonRequest(
       url,

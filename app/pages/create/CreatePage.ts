@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {NavController, Loading} from 'ionic-angular';
 import {Observable} from 'rxjs';
 import {NgRedux} from 'ng2-redux';
 
@@ -18,7 +18,7 @@ import { HomePage } from '../home/HomePage';
 })
 export class CreatePage {
   created$: Observable<any>;
-
+  createModal = null; 
   eventType;
   name;
   description
@@ -36,9 +36,25 @@ export class CreatePage {
     this.created$ = this.ngRedux.select(state=>state.getIn(['eventData', 'status']));
     this.created$.subscribe(eventStatus => {
       console.log(eventStatus)
-      if(eventStatus === 'created'){
-        console.log('redirecting');
+      switch (eventStatus) {
+        case 'created': 
+          if(this.createModal) {
+          this.createModal.dismiss()
+        }
         this.nav.setRoot(HomePage);
+        break;
+        case 'creating': 
+          this.createModal = Loading.create({
+          content: "Creating...",
+          spinner: 'crescent',
+          dismissOnPageChange : true,
+        })
+        this.nav.present(this.createModal);
+        break;
+        case 'error': 
+          if(this.createModal) {
+          this.createModal.dismiss()
+        }
       }
     });
     console.log(this.created$);
@@ -49,36 +65,36 @@ export class CreatePage {
     var roundDateToISO = ":00.000Z";
     console.log(this.startTime);
     console.log(this.waitMins);
-		// if(!this.eventType) {
-		// 	return; 
-		// }
-		// if(!this.name) {
-		// 	return; 
-		// }
-		// if(!this.description) {
-		// 	return; 
-		// }
-		// if(!this.startTime) {
-		// 	return; 
-		// }
-		// if(!this.startDate) {
-		// 	return; 
-		// }
-		// if(!this.startLocation) {
-		// 	return; 
-		// }
-		// if(!this.endTime) {
-		// 	return; 
-		// }
-		// if(!this.endDate) {
-		// 	return; 
-		// }
-		// if(!this.endLocation) {
-		// 	return; 
-		// }
-		// if(!this.waitMins) {
-		// 	return; 
-		// }
+		if(!this.eventType) {
+			return; 
+		}
+		if(!this.name) {
+			return; 
+		}
+		if(!this.description) {
+			return; 
+		}
+		if(!this.startTime) {
+			return; 
+		}
+		if(!this.startDate) {
+			return; 
+		}
+		if(!this.startLocation) {
+			return; 
+		}
+		if(!this.endTime) {
+			return; 
+		}
+		if(!this.endDate) {
+			return; 
+		}l
+		if(!this.endLocation) {
+			return; 
+		}
+		if(!this.waitMins) {
+			return; 
+		}
 		var data = {
 			'Name'          : this.name,
 			'Description'   : this.description,
