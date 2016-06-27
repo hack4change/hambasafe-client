@@ -137,6 +137,9 @@ export class CreatePage {
   onCreation(){
   
   }
+  goBack(){
+    this.nav.pop();
+  }
 
 }
 

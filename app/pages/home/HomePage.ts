@@ -17,6 +17,7 @@ import {NgRedux} from 'ng2-redux';
  *  Pages
  */
 import {TermsPage} from '../terms/TermsPage';
+import {CreatePage} from '../create/CreatePage';
 
 @Component({
   templateUrl: 'build/pages/home/home.html'
@@ -59,5 +60,8 @@ export class HomePage {
   }
   selectEvent(selected){
   
+  }
+  goToCreate(){
+    this.nav.push(CreatePage);
   }
 }
