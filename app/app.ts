@@ -19,10 +19,19 @@ import store from './stores/store';
  */
 import {CreatePage} from "./pages/create/CreatePage";
 import {HomePage} from "./pages/home/HomePage";
-import {EmergencyPage} from './pages/emergency/EmergencyPage';
 import {SplashPage} from "./pages/splash/SplashPage";
+import {EmergencyPage} from './pages/emergency/EmergencyPage';
 import {TermsPage} from './pages/terms/TermsPage';
 import {AboutPage} from './pages/about/AboutPage';
+// import {EventDetailPage} from './pages/event-detail/EventDetailPage';
+// import {EventRatingPage} from './pages/event-detail/EventRatingPage';
+import {InvitePage} from './pages/invite/InvitePage';
+import {LandingPage} from './pages/landing/LandingPage';
+import {LatestPage} from './pages/latest/LatestPage';
+import {ProfilePage} from './pages/profile/ProfilePage';
+import {RatingPage} from './pages/rating/RatingPage';
+// import {RegistrationPage} from './pages/registration/RegistrationPage';
+// import {SearchPage} from './pages/search/SearchPage';
 
 @Component({
   templateUrl: 'build/pages/app.html',
