@@ -13,57 +13,80 @@
     </button>
   </ion-buttons>
 </ion-toolbar>
+<ion-toolbar class="buttonbar">
+  <button (click)="toggleView('public')" class="square-corner" [ngClass]="{active: isActive('public'), 'not-active': !isActive('public')}" clear block ion-row center>
+    <ion-icon name="md-globe" item-left></ion-icon>
+    Public
+  </button>
+  <button (click)="toggleView('friends')" class="square-corner" [ngClass]="{active: isActive('friends'), 'not-active': !isActive('friends')}" clear block ion-row center>
+    <ion-icon name="md-people" item-left></ion-icon>
+    Friends
+  </button>
+</ion-toolbar>
+<ion-toolbar>
+  <ion-item class="no-border">
+    <ion-range min="0" max="20" step="4" snaps="true" pin="false" (ngModelChange)="sliderChange()" [(ngModel)]="sliderDistance" secondary>
+      <ion-icon range-left small>Closer</ion-icon>
+      <ion-icon range-right small>Farther</ion-icon>
+    </ion-range>
+  </ion-item>
+</ion-toolbar>
 
-<ion-content>
-<ion-row>
-    <button (click)="toggleView('public')" class="square-corner" [ngClass]="{active: isActive('public'), 'not-active': !isActive('public')}" clear block ion-row center>
-      <ion-icon name="md-globe" item-left></ion-icon>
-Public
-    </button>
-    <button (click)="toggleView('friends')" class="square-corner" [ngClass]="{active: isActive('friends'), 'not-active': !isActive('friends')}" clear block ion-row center>
-      <ion-icon name="md-people" item-left></ion-icon>
-Friends
-    </button>
-</ion-row>
-<ion-row>
-<ion-item class="no-border">
-  <ion-range min="0" max="20" step="4" snaps="true" pin="false" (ngModelChange)="sliderChange()" [(ngModel)]="sliderDistance" secondary>
-    <ion-icon range-left small>Closer</ion-icon>
-    <ion-icon range-right small>Father</ion-icon>
-  </ion-range>
-</ion-item>
-</ion-row>
+<ion-content [ngSwitch]="isEmpty">
+  <template ngSwitchWhen="false">
+  </template>
+  <template ngSwitchDefault>
+    <div class="home-container valign-outer">
+      <div class="valign-inner valign-mid-top">
+        <ion-row>
+          <div>
+          Their are no new events in your neighbourhood.
+          </div>
+        </ion-row>
+        <ion-row>
+          <div>
+          Would you like to create one.
+          </div>
+        </ion-row>
+        <ion-row>
+          <button large>
+            Sure!
+          </button>
+        </ion-row>
+      </div>
+    </div>
+  </template>
 </ion-content>
 
-  <!-- <div class="button-bar">  -->
-  <!--   <a class="button button-positive" > -->
-  <!--     <i class="icon ion-clock" ></i> -->
-  <!--   </a> -->
-  <!--     <a class="button" > -->
-  <!--       <i class="icon ion-ios-people" ></i> -->
-  <!--     </a> -->
-  <!-- </div> -->
-  <!-- <div class="tiled-list"> -->
-  <!--   <div class="list"> -->
-  <!--     <a class="item item-avatar" *ngFor="let event in events"> -->
-  <!--       <img src="http://ionicframework.com/img/docs/stantz.jpg"> -->
-  <!--       <div class="right"> -->
-  <!--         <h3>{{event.name}}</h3> -->
-  <!--         <h3>{{event.description}}</h3> -->
-  <!--         <h3>{{event.distance}}km</h3> -->
-  <!--         <h3>{{event.eventDateTimeEnd}}</h3> -->
-  <!--       </div> -->
-  <!--     </a> -->
-  <!--   </div> -->
-  <!--   <a class="icon ion-android-add-circle bottom add-button "  href="#/create"> </a> -->
-  <!-- </div> -->
+<!-- <div class="button-bar">  -->
+<!--   <a class="button button-positive" > -->
+<!--     <i class="icon ion-clock" ></i> -->
+<!--   </a> -->
+<!--     <a class="button" > -->
+<!--       <i class="icon ion-ios-people" ></i> -->
+<!--     </a> -->
+<!-- </div> -->
+<!-- <div class="tiled-list"> -->
+<!--   <div class="list"> -->
+<!--     <a class="item item-avatar" *ngFor="let event in events"> -->
+<!--       <img src="http://ionicframework.com/img/docs/stantz.jpg"> -->
+<!--       <div class="right"> -->
+<!--         <h3>{{event.name}}</h3> -->
+<!--         <h3>{{event.description}}</h3> -->
+<!--         <h3>{{event.distance}}km</h3> -->
+<!--         <h3>{{event.eventDateTimeEnd}}</h3> -->
+<!--       </div> -->
+<!--     </a> -->
+<!--   </div> -->
+<!--   <a class="icon ion-android-add-circle bottom add-button "  href="#/create"> </a> -->
+<!-- </div> -->
 <!-- 
-  
-          <h3 ng-show="event.PublicEvent">Public Event</h3>
-          <h3 ng-show="!event.PublicEvent">Private Event</h3>
-  
-  
-  
+
+  <h3 ng-show="event.PublicEvent">Public Event</h3>
+  <h3 ng-show="!event.PublicEvent">Private Event</h3>
+
+
+
   <div class="list">
   <div class="item" collection-repeat="event in events"
   collection-item-width="'100%'"

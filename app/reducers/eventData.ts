@@ -1,7 +1,6 @@
 import actionTypes from '../actionTypes.ts';
 
 export default function eventData(state:any, action:any = {}) {
-  console.log('here');
   switch (action && action.type) {
     case actionTypes.EVENTS_STATUS_SET:
       console.log(action.data.get('status'));

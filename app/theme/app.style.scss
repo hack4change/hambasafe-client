@@ -2,9 +2,13 @@ body {
 	font-family: DINPro !important;
 }
 ion-toolbar {
+  border:0px;
   ion-icon.menu-icon {
     padding: 0.5em;
     font-size: 2em;
+  }
+  ion-item > .item-inner{
+    border: 0;
   }
 }
 ion-toolbar[position='bottom'] {
@@ -35,9 +39,18 @@ ion-toolbar[position='bottom'] {
       background-color: $light;
     }
   }
+  ion-avatar {
+    border-radius: 50%;
+    background-color: $positive;
+    text-align: center;
+  }
   ion-toolbar[position='bottom'] {
     .toolbar-background {
       background-color: $energized;
+    }
+    a {
+      color: white;
+      cursor: pointer;
     }
   }
   ion-content{
@@ -55,6 +68,7 @@ ion-page {
   background-color: #FFF;
 }
 .main-bar {
+  min-height: 4.6rem;
   [start] {
     order: 3;
   }
@@ -62,11 +76,4 @@ ion-page {
     padding-right: 15px;
   }
    
-}
-.square-corner {
-border-radius: 0px;
-}
-
-.no-border {
-  border: 0px;
 }

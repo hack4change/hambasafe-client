@@ -1,13 +1,15 @@
 .home-page {
-	div.buttonbar4 {
+	.buttonbar {
+    padding: 0px;
 		text-align: center;
 		width: 100%;
 		white-space: nowrap;
 		button {
-			/* use width: 23% for 4 buttons, width: 18.2% for 5 buttons */
-display:inline-block;
+      margin: 0px;
+      /* use width: 23% for 4 buttons, width: 18.2% for 5 buttons */
+      display:inline-block;
 			width: 50%;
-			font-size: 11px;
+			font-size: 1.25em;
 			height: 40px;
 			ion-col {
 				text-align: center;
@@ -30,5 +32,8 @@ display:inline-block;
     ion-icon{
       font-family: DINPro;
     }
+  }
+  .home-container {
+    height: 100%;
   }
 }

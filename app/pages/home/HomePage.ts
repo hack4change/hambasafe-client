@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {AsyncPipe} from '@angular/common';
 import {NavController} from 'ionic-angular';
 
 /*
@@ -23,6 +24,7 @@ import {TermsPage} from '../terms/TermsPage';
 export class HomePage {
   isFiltered: string = 'public';
   events$: Observable<any>;
+  isEmpty: any;
   sliderDistance: number;
   greatestDistance: number;
   coordinates: any;
@@ -32,7 +34,9 @@ export class HomePage {
   NgOnInit(){
     this.sliderDistance = 4;
     this.greatestDistance = 4;
+    this.isEmpty = true;
     this.events$ = this.ngRedux.select(state=>state.getIn(['eventData', 'items']));
+    this.events$.subscribe(x=>{console.log('subscribed'); console.log(x)});
     navigator.geolocation.getCurrentPosition((pos)=> {
       console.log(pos);
       this.coordinates = pos.coords;
@@ -52,5 +56,8 @@ export class HomePage {
       this.ngRedux.dispatch(eventDataActions.fetchEvents(this.sliderDistance, this.coordinates.latitude, this.coordinates.longitude));
       this.greatestDistance = this.sliderDistance;
     }
+  }
+  selectEvent(selected){
+  
   }
 }
