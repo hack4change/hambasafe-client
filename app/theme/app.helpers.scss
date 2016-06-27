@@ -80,7 +80,7 @@ ion-list.list-borderless div {
   border: 0;
 }
 .borderless{
-  border: 0;
+  border: 0 !important;
 }
 
 .item-text-center
@@ -117,3 +117,6 @@ ion-toolbar{
   }
 }
 
+ion-item.borderless > .item-inner{
+  border: 0px;
+}

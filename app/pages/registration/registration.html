@@ -6,8 +6,7 @@
     PROFILE
   </ion-title>
 </ion-toolbar>
-<ion-content class="register-wrapper has-header">
-  <div class="register-container">
+<ion-content>
     <form name="registrationForm" ng-submit="doRegister(signupForm.$valid)" novalidate>
       <!--
         <div class="row">
@@ -15,48 +14,62 @@
         <label for="profile-picture">Choose a file</label>
         </div>
       -->
-      <ion-list>
-        <ion-item>
-          <ion-input type="text" placeholder="Firstname" ng-model="user.firstName" required></ion-input>
+      <ion-list class="borderless">
+        <ion-item class="borderless">
+          <ion-label floating>Firstname</ion-label>
+          <ion-input type="text" [(ngModel)]="firstName" required></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-input type="text" placeholder="Surname" ng-model="user.lastName" required></ion-input>
+        <ion-item class="borderless">
+          <ion-label floating>Surname</ion-label>
+          <ion-input type="text" [(ngModel)]="lastName" required></ion-input>
         </ion-item>
-        <ion-item ng-click="openDatePicker()">
-          <ion-input type="date" placeholder="Date of Birth"  ng-model="user.dateOfBirth" required></ion-input>
+        <ion-item class="borderless">
+          <ion-label floating>Date of Birth</ion-label>
+          <ion-datetime displayFormat="DD MMM YY" pickerFormat="DD MMM YY" [(ngModel)]="dateOfBirth"></ion-datetime>
         </ion-item>
-        <ion-item ng-click="toggleGenderOpen()" ng-class="{active: isGenderOpen()}">
-          <div class="valign-outer">
-            <div class="valign-inner">
-              <p>Gender</p> <!-- replace tile with selected gender-->
-              <i class="icon pull-right" ng-class="isGenderOpen() ? 'ion-chevron-up' : 'ion-chevron-down'"></i>
-            </div>
-          </div>
-          <div ng-repeat="gender in genders" ng-show="isGenderOpen()">
-            <ion-checkbox class="item-checkbox-right item-accordion gender-group">{{ gender }}</ion-checkbox>
-          </div>
+        <!-- <ion-item ng-click="toggleGenderOpen()" ng-class="{active: isGenderOpen()}"> -->
+        <!--   <div class="valign-outer"> -->
+        <!--     <div class="valign-inner"> -->
+        <!--       <p>Gender</p>  -->
+        <!--       <i class="icon pull-right" ng-class="isGenderOpen() ? 'ion-chevron-up' : 'ion-chevron-down'"></i> -->
+        <!--     </div> -->
+        <!--   </div> -->
+        <!--   <div ng-repeat="gender in genders" ng-show="isGenderOpen()"> -->
+        <!--     <ion-checkbox class="item-checkbox-right item-accordion gender-group">{{ gender }}</ion-checkbox> -->
+        <!--   </div> -->
+        <!-- </ion-item> -->
+        <ion-item class="borderless">
+          <ion-label floating>Location</ion-label>
+          <ion-input type="text" [(ngModel)]="location" required></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-input type="text" placeholder="Location" ng-model="user.location" required></ion-input>
+        <ion-item class="borderless">
+          <ion-label floating>Cell Number</ion-label>
+          <ion-input type="tel" [(ngModel)]="phoneNumber" required></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-input type="tel" placeholder="Cell Number" ng-model="user.phoneNumber" required></ion-input>
+        <ion-item class="borderless">
+          <ion-label floating>Email</ion-label>
+          <ion-input type="email"  [(ngModel)]="email" required></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-input type="email" placeholder="Email" ng-model="user.email" required></ion-input>
+        <ion-item class="borderless">
+          <ion-label floating>Confirm Email</ion-label>
+          <ion-input type="email"  [(ngModel)]="confirmEmail" required></ion-input>
         </ion-item>
-        <ion-item>
-          <ion-input type="email" placeholder="Confirm Email" ng-model="user.confirmEmail" required></ion-input>
+        <ion-item class="borderless">
+          <ion-label floating>Scan your ID or Driver's License</ion-label>
+          <ion-input [(ngModel)]="identification" required></ion-input>
+        </ion-item>
+        <ion-item class="borderless">
+          <ion-label floating>Read the Terms of Use</ion-label>
+          <ion-input  [(ngModel)]="terms" required></ion-input>
         </ion-item>
       </ion-list>
-      <ion-toolbar position="bottom">
-        <button primary type="submit">
-          Sign Up
-        </button>
-      </ion-toolbar>
     </form>
-  </div>
 </ion-content>
+<ion-toolbar position="bottom">
+  <button full primary [disabled]="!validForm">
+    Next
+  </button>
+</ion-toolbar>
 
 <!--
         <label class="item item-input item-floating-label">

@@ -12,6 +12,17 @@ import {Observable} from 'rxjs';
 })
 export class RegistrationPage {
 
+  validForm       :   boolean;
+  firstName       :   string;
+  lastName        :   string;
+  dateOfBirth     :   Date;
+  location        :   any;
+  phoneNumber     :   string;
+  email           :   string;
+  confirmEmail    :   string;
+  identification  :   string;
+  terms           :   string;
+
   constructor(private nav: NavController) {};
 	
 	goBack(){
