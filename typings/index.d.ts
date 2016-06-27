@@ -1,2 +1,1 @@
-/// <reference path="modules/lodash/index.d.ts" />
-/// <reference path="modules/redux-thunk/index.d.ts" />
+/// <reference path="globals/fbsdk/index.d.ts" />

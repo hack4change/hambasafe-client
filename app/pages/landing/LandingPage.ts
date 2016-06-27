@@ -8,6 +8,11 @@ import {Observable} from 'rxjs';
 import {NgRedux} from 'ng2-redux';
 
 /*
+ *  Actions
+ */
+import {authActions} from '../../actions/authActions';
+
+/*
  *  Pages
  */
 import {TermsPage} from '../terms/TermsPage';
@@ -22,21 +27,23 @@ export class LandingPage
   private ProfileService;
   private $location;
 
-  constructor(private nav: NavController) {};
+  constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
 
   getLoginStatus  () {
-    this.Facebook.logout();
-    this.Facebook.getLoginStatus(function (response) {
-      console.log(response);
-      if (response.status === 'connected') {
-        this.$location.path('app/home');
-      } else {
-        this.loggedIn = false;
-      }
-    });
+    // this.Facebook.logout();
+    // this.Facebook.getLoginStatus(function (response) {
+    //   console.log(response);
+    //   if (response.status === 'connected') {
+    //     this.$location.path('app/home');
+    //   } else {
+    //     this.loggedIn = false;
+    //   }
+    // });
   };
 
   fbLogin() {
+    this.ngRedux.dispatch(authActions.authUser());
+    
     // this.Facebook.login(function (response) {
     //   console.log(response);
     //   this.ProfileService.setProfileFromFacebook(response);

@@ -32,28 +32,39 @@ const setLoadingState = () => {
   return {
     data: fromJS({
       items: [],
-      status: 'loading',
+      status: 'attempting',
     }),
     type: actionTypes.USER_AUTH_INIT,
   };
 };
 
-const authhUser = ():any => {
+const authUser = ():any => {
   return dispatch => {
-    const url = 'https://www.reddit.com/top/.json?limit=10';
+    // const url = 'https://www.reddit.com/top/.json?limit=10';
 
+    //
     // Set loading state.
-    dispatch(setLoadingState());
-
-    // Do request.
-    jsonRequest(
-      url,
-      (error) => dispatch(setErrorState(error)),
-      (response) => dispatch(setSuccessState(response))
-    );
+    //
+    // dispatch(setLoadingState());
   };
 };
+const fbLogin(){
+  FB.getLoginStatus(function(response) {
+    if (response.status === 'connected') {
+      FB.login(function(response: any) {
+        if (response.authResponse) {
+          console.log('Welcome!  Fetching your information.... ');
+          FB.api('/me', function(response: any) {
+            console.log('Good to see you, ' + response.name + '.');
+          });
+        } else {
+          console.log('User cancelled login or did not fully authorize.');
+        }
+      }) 
+    }
+  })
+}
 
 export const authActions = {
-  authhUser,
+  authUser,
 };
