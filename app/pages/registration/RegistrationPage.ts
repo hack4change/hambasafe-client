@@ -10,7 +10,7 @@ import {Observable} from 'rxjs';
 @Component({
   templateUrl: 'build/pages/registration/registration.html'
 })
-export class RegisterPage {
+export class RegistrationPage {
 
   constructor(private nav: NavController) {};
 	

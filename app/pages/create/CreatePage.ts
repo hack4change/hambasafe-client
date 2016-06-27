@@ -34,6 +34,7 @@ export class CreatePage {
   ngOnInit(){
   
     this.created$ = this.ngRedux.select(state=>state.getIn(['eventData', 'status']));
+
     this.created$.subscribe(eventStatus => {
       console.log(eventStatus)
       switch (eventStatus) {

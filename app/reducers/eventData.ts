@@ -24,6 +24,8 @@ export default function eventData(state:any, action:any = {}) {
     case actionTypes.EVENTS_FETCH_INIT:
     case actionTypes.EVENTS_FETCH_SUCCESS:
     case actionTypes.EVENTS_FETCH_FAIL:
+         
+//RATING EVENTS
     case actionTypes.RATING_FETCH_INIT:
     case actionTypes.RATING_FETCH_SUCCESS:
     case actionTypes.RATING_FETCH_FAIL:

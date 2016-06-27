@@ -30,7 +30,7 @@ import {LandingPage} from './pages/landing/LandingPage';
 import {LatestPage} from './pages/latest/LatestPage';
 import {ProfilePage} from './pages/profile/ProfilePage';
 import {RatingPage} from './pages/rating/RatingPage';
-// import {RegistrationPage} from './pages/registration/RegistrationPage';
+import {RegistrationPage} from './pages/registration/RegistrationPage';
 // import {SearchPage} from './pages/search/SearchPage';
 
 @Component({
@@ -63,6 +63,7 @@ export class MyApp {
       this.setMenuAnonymous();
       this.authStatus$ = this.ngRedux.select(state=>state.getIn(['currentUser', 'status']));
       this.authStatus$.subscribe(userStatus => {
+        this.setMenuLoggedIn();
         console.log(userStatus);
       })
   }
