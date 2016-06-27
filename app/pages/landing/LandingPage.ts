@@ -15,6 +15,7 @@ import {authActions} from '../../actions/authActions';
 /*
  *  Pages
  */
+import {HomePage} from '../home/HomePage';
 import {TermsPage} from '../terms/TermsPage';
 
 @Component({
@@ -22,33 +23,31 @@ import {TermsPage} from '../terms/TermsPage';
 })
 export class LandingPage 
 {
-  loggedIn;
-  private Facebook;
-  private ProfileService;
-  private $location;
+  authStatus$: Observable<any>;
+  created$: Observable<any>;
 
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
 
-  getLoginStatus  () {
-    // this.Facebook.logout();
-    // this.Facebook.getLoginStatus(function (response) {
-    //   console.log(response);
-    //   if (response.status === 'connected') {
-    //     this.$location.path('app/home');
-    //   } else {
-    //     this.loggedIn = false;
-    //   }
-    // });
-  };
+  ngOnInit(){
+    this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
+    this.authStatus$.subscribe( userStatus => {
+      switch(userStatus){
+        case 'AUTHENTICATED':
+          this.nav.push(HomePage);
+          break;
+        case 'ATTEMPTING':
+          break;
+        case 'ERROR':
+          break;
+        default:
+          console.log('Unhandled authentication status');
+      }
+    })
+    this.ngRedux.dispatch(authActions.authUser());
+  }
 
   fbLogin() {
     this.ngRedux.dispatch(authActions.authUser());
-    
-    // this.Facebook.login(function (response) {
-    //   console.log(response);
-    //   this.ProfileService.setProfileFromFacebook(response);
-    //   this.$location.path('app/registration');
-    // });
   }
   goToTerms(){
     this.nav.push(TermsPage);

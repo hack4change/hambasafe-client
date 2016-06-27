@@ -56,7 +56,6 @@ export class CreatePage {
           if(this.createModal) {
           this.createModal.dismiss()
           //TODO: REMOVE
-          this.nav.present(this.createModal);
         }
       }
     });

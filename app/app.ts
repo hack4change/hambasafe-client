@@ -15,6 +15,12 @@ import {Observable} from 'rxjs';
 import store from './stores/store';
 
 /*
+ * Actions
+ */
+import {authActions} from './actions/authActions';
+
+
+/*
  *  Pages
  */
 import {CreatePage} from "./pages/create/CreatePage";
@@ -59,19 +65,26 @@ export class MyApp {
     });
   }
 
-  NgOnInit() {
+  ngOnInit() {
       this.setMenuAnonymous();
-      this.authStatus$ = this.ngRedux.select(state=>state.getIn(['currentUser', 'status']));
-      this.authStatus$.subscribe(userStatus => {
-        this.setMenuLoggedIn();
-        console.log(userStatus);
+      this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
+      this.authStatus$.subscribe( userStatus => {
+        console.log('Root userStatus');
+        switch(userStatus){
+          case 'AUTHENTICATED':
+            this.setMenuAuthenticated();
+          break;
+          default:
+            this.setMenuAnonymous();
+            console.log('Anonymous user');
+        }
       })
   }
 
   /*
    *  Sets active menu
    */
-	setMenuLoggedIn() {
+	setMenuAuthenticated() {
     this.menu.enable(true, 'authorised-menu');
     this.menu.enable(false, 'anonymous-menu');
   }
@@ -84,6 +97,10 @@ export class MyApp {
    *  Menu Navigation functions
    */
   
+  goToHome() {
+    this.nav.setRoot(HomePage);
+  }
+
   goToAbout() {
     this.menu.close();
     this.nav.push(AboutPage);
@@ -117,6 +134,9 @@ export class MyApp {
   goToTerms() {
     this.menu.close();
     this.nav.push(TermsPage);
+  }
+  logOut(){
+    this.ngRedux.dispatch(authActions.logoutUser());
   }
 }
 

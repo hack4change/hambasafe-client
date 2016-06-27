@@ -10,7 +10,6 @@ export const getInitialState = ()=> {
       status: "ANONYMOUS",
       id : '',
       accessToken: '',
-      isLoggedIn: false,
       username: '',
     }))
   })
