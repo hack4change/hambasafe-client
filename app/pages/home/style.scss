@@ -1,38 +1,4 @@
 .home-page {
-	.buttonbar {
-    padding: 0px;
-		text-align: center;
-		width: 100%;
-		white-space: nowrap;
-		button {
-      margin: 0px;
-      /* use width: 23% for 4 buttons, width: 18.2% for 5 buttons */
-      display:inline-block;
-			width: 50%;
-			font-size: 1.25em;
-			height: 40px;
-			ion-col {
-				text-align: center;
-				ion-icon {
-					/* margin-bottom controls the space between the icons and text */
-					margin-bottom: 3px;   
-				}
-			}
-		}
-	}
-  .active {
-    background-color: $positive;
-    color: $light;
-  }
-  .not-active{
-    color: $dark;
-  }
-  ion-range{
-    padding:0px;
-    ion-icon{
-      font-family: DINPro;
-    }
-  }
   .home-container {
     height: 100%;
   }

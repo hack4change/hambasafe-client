@@ -2,6 +2,10 @@ import * as keyMirror from 'keymirror';
 
 const actionTypes = keyMirror({
 //USER
+  USER_LOGOUT_INIT              : undefined,
+  USER_LOGOUT_SUCCESS           : undefined,
+  USER_LOGOUT_FAIL              : undefined,
+
   USER_AUTH_INIT              : undefined,
   USER_AUTH_SUCCESS           : undefined,
   USER_AUTH_FAIL              : undefined,

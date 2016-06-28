@@ -37,4 +37,5 @@
         <variable name="APP_ID" value="1824765444411364" />
         <variable name="APP_NAME" value="hambasafe" />
     </plugin>
+    <plugin name="cordova-plugin-inappbrowser" spec="~1.4.0" />
 </widget>

@@ -18,6 +18,7 @@ import {NgRedux} from 'ng2-redux';
  */
 import {TermsPage} from '../terms/TermsPage';
 import {CreatePage} from '../create/CreatePage';
+import {SearchPage} from '../search/SearchPage';
 
 @Component({
   templateUrl: 'build/pages/home/home.html'
@@ -38,7 +39,7 @@ export class HomePage {
     this.isEmpty = true;
     this.events$ = this.ngRedux.select(state=>state.getIn(['eventData', 'items']));
     this.events$.subscribe(x=>{console.log('subscribed'); console.log(x)});
-    navigator.geolocation.getCurrentPosition((pos)=> {
+    navigator.geolocation.getCurrentPosition((pos) => {
       console.log(pos);
       this.coordinates = pos.coords;
       this.ngRedux.dispatch(eventDataActions.fetchEvents(this.sliderDistance, this.coordinates.latitude, this.coordinates.longitude));
@@ -63,5 +64,10 @@ export class HomePage {
   }
   goToCreate(){
     this.nav.push(CreatePage);
+  }
+
+  loadSearch(){
+    console.log('goSearch');
+    this.nav.push(SearchPage);
   }
 }

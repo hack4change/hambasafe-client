@@ -1,8 +1,63 @@
+<ion-toolbar class="main-bar">
+  <ion-buttons class="order-left" start>
+    <button *ngIf="activeType != 'DISTANCE'" dark  menuToggle>
+      <ion-icon name="md-more"></ion-icon>
+    </button>
+    <button *ngIf="activeType=='DISTANCE'" dark clear>
+      <ion-icon name="ios-arrow-back-outline"></ion-icon>
+    </button>
+  </ion-buttons>
+  <ion-buttons end>
+    <button dark (click)="goHome()" class="indent">
+      <ion-icon name="md-pin"></ion-icon>
+    </button>
+    <button primary>
+      <ion-icon isActive="true" name="md-search"></ion-icon>
+    </button>
+  </ion-buttons>
+</ion-toolbar>
+<ion-toolbar primary>
+	<ion-title>
+		SEARCH
+	</ion-title>
+</ion-toolbar>
+<ion-content [ngSwitch]="activeType">
+  <template ngSwitchWhen="TIME">
+    <ion-item class="borderless">
+    </ion-item>
+  <ion-toolbar class="buttonbar">
+    <button (click)="toggleView('TIME')" class="square-corner" [ngClass]="{active: isActive('TIME'), 'not-active': !isActive('TIME')}" clear block ion-row center>
+      <ion-icon name="ios-time-outline" item-left></ion-icon>
+    </button>
+    <button (click)="toggleView('DISTANCE')" class="square-corner" clear block ion-row center>
+      <ion-icon name="md-pin" item-left></ion-icon>
+    </button>
+  </ion-toolbar>
+  </template>
+  <template ngSwitchWhen="DISTANCE">
+    <map-component #myMap [radius]="searchDistance"></map-component>
+  </template>
+  <template ngSwitchWhen="SEARCH">
+    <!-- <map-component [radius]="searchDistance"></map-component> -->
+    Hi
+  </template>
+</ion-content>
 
-<ion-content>
+<ion-toolbar *ngIf="activeType=='DISTANCE'" position="bottom">
+  <ion-item class="no-border">
+    <ion-range min="2" max="20" step="2" snaps="true" pin="false" value="{{searchDistance}}" [(ngModel)]="searchDistance" secondary>
+    </ion-range>
+  </ion-item>
+</ion-toolbar>
+<ion-toolbar *ngIf="activeType=='DISTANCE'" position="bottom">
+  <button full block primary (click)="searchRadius()">
+    Go!
+  </button>
+</ion-toolbar>
 
+<!--
   <div class="button-bar bar-positive">
-    <a class="button" ng-click="searchEvents()"><b>FIND</b></a>
+    <a class="button" ng-click="searchEvents()">Search</a>
   </div>
 
   <ion-list>
@@ -42,5 +97,4 @@
       </a>
     </div>
   </div>
-
-</ion-content>
+-->

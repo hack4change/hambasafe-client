@@ -18,6 +18,10 @@ import {authActions} from '../../actions/authActions';
 import {HomePage} from '../home/HomePage';
 import {TermsPage} from '../terms/TermsPage';
 
+//TODO: REMOVE
+import {SearchPage} from '../search/SearchPage';
+
+
 @Component({
   templateUrl: 'build/pages/landing/landing.html'
 })
@@ -33,7 +37,8 @@ export class LandingPage
     this.authStatus$.subscribe( userStatus => {
       switch(userStatus){
         case 'AUTHENTICATED':
-          this.nav.push(HomePage);
+          // this.nav.setRoot(HomePage);
+					this.nav.setRoot(SearchPage);
           break;
         case 'ATTEMPTING':
           break;
@@ -49,7 +54,7 @@ export class LandingPage
   fbLogin() {
     this.ngRedux.dispatch(authActions.authUser());
   }
-  goToTerms(){
+  goToTerms() {
     this.nav.push(TermsPage);
   }
 }

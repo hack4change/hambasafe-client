@@ -1,5 +1,6 @@
 body {
 	font-family: DINPro !important;
+  letter-spacing: 0.05em;
 }
 ion-toolbar {
   border:0px;
@@ -33,7 +34,30 @@ ion-toolbar[position='bottom'] {
 
   }
 }
-#anonymous-menu {
+#authorised-menu {
+  ion-toolbar{
+    .toolbar-background {
+      background-color: $light;
+    }
+  }
+  ion-avatar {
+    border-radius: 50%;
+    background-color: $positive;
+    text-align: center;
+  }
+  ion-toolbar[position='bottom'] {
+    .toolbar-background {
+      background-color: $energized;
+    }
+    a {
+      color: white;
+      cursor: pointer;
+    }
+  }
+  ion-content{
+    background-color: $light;
+  }
+}#anonymous-menu {
   ion-toolbar{
     .toolbar-background {
       background-color: $light;
@@ -76,4 +100,41 @@ ion-page {
     padding-right: 15px;
   }
    
+}
+.toolbar {
+  padding: 0;
+}
+.buttonbar {
+  padding: 0px;
+  text-align: center;
+  width: 100%;
+  white-space: nowrap;
+  button {
+    margin: 0px;
+    /* use width: 23% for 4 buttons, width: 18.2% for 5 buttons */
+    display:inline-block;
+    width: 50%;
+    font-size: 1.25em;
+    height: 40px;
+    ion-col {
+      text-align: center;
+      ion-icon {
+        /* margin-bottom controls the space between the icons and text */
+        margin-bottom: 3px;   
+      }
+    }
+  }
+}
+button.active {
+  background-color: $positive;
+  color: $light;
+}
+button.not-active{
+  color: $dark;
+}
+ion-range {
+  padding:0px;
+  ion-icon{
+    font-family: DINPro;
+  }
 }

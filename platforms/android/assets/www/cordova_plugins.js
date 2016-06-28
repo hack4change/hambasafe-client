@@ -46,6 +46,14 @@ module.exports = [
         "clobbers": [
             "window.StatusBar"
         ]
+    },
+    {
+        "file": "plugins/cordova-plugin-inappbrowser/www/inappbrowser.js",
+        "id": "cordova-plugin-inappbrowser.inappbrowser",
+        "clobbers": [
+            "cordova.InAppBrowser.open",
+            "window.open"
+        ]
     }
 ];
 module.exports.metadata = 
@@ -58,7 +66,8 @@ module.exports.metadata =
     "cordova-plugin-device": "1.1.2",
     "cordova-plugin-console": "1.0.3",
     "cordova-plugin-splashscreen": "3.1.0",
-    "cordova-plugin-statusbar": "2.1.3"
+    "cordova-plugin-statusbar": "2.1.3",
+    "cordova-plugin-inappbrowser": "1.4.0"
 };
 // BOTTOM OF METADATA
 });

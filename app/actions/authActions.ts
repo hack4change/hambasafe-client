@@ -9,17 +9,29 @@ const API_ROOT = 'http://hambasafetesting.azurewebsites.net';
 const fbLogin = (errorCallback, successCallback):any => {
   FB.getLoginStatus(function(response) {
     console.log(response);
-    var respJson: any = {};
     if (response.status !== 'connected') {
-      FB.login((loginResponse: any) => {
+      FB.login((response: any) => {
+        var respJson: any = {};
+          console.log(response);
         if (response.authResponse) {
           var respJson = _.pick(response.authResponse, ['accessToken', 'userID']);
           FB.api('/me', 'get', (apiResponse: any)=> {
             respJson.name = apiResponse.name;
-            successCallback(respJson);
+            
+            // jsonRequest(
+            //   API_ROOT + '/v1/Authentication/ExternalLogin',
+            //   {
+            //     method: 'POST',
+            //     body:  {
+            //       'accessToken' : respJson['accessToken']
+            //     }
+            //   },
+              successCallback(respJson);// ,
+              // errorCallback(loginResponse),
+            // )
           });
         } else {
-          errorCallback(loginResponse);
+          errorCallback(response);
         }
       }) 
     } else {

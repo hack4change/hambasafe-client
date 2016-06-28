@@ -47,6 +47,7 @@ export class MyApp {
 
   private rootPage: any = LandingPage;
   private authStatus$ : Observable<any>;
+  oldStatus: string;
 
   constructor(private platform: Platform, private menu: MenuController, private ngRedux: NgRedux<any>) {
 
@@ -65,20 +66,29 @@ export class MyApp {
     });
   }
 
+  /*
+   * init func
+   */
   ngOnInit() {
-      this.setMenuAnonymous();
-      this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
-      this.authStatus$.subscribe( userStatus => {
-        console.log('Root userStatus');
-        switch(userStatus){
-          case 'AUTHENTICATED':
-            this.setMenuAuthenticated();
-          break;
-          default:
-            this.setMenuAnonymous();
-            console.log('Anonymous user');
+    this.setMenuAnonymous();
+    this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
+    this.authStatus$.subscribe( userStatus => {
+      console.log('Root userStatus');
+      switch(userStatus){
+        case 'AUTHENTICATED':
+          this.setMenuAuthenticated();
+        break;
+        default:
+          if(this.menu.isEnabled('authorised-menu')){
+          this.setMenuAnonymous();
         }
-      })
+      }
+      if(this.oldStatus === 'AUTHENTICATED' && userStatus !== 'AUTHENTICATED') {
+        this.nav.push(LandingPage);
+      }
+      console.log(userStatus);
+      this.oldStatus = userStatus;
+    })
   }
 
   /*
@@ -88,6 +98,7 @@ export class MyApp {
     this.menu.enable(true, 'authorised-menu');
     this.menu.enable(false, 'anonymous-menu');
   }
+
 	setMenuAnonymous() {
     this.menu.enable(true, 'anonymous-menu');
     this.menu.enable(false, 'authorised-menu');
@@ -96,23 +107,20 @@ export class MyApp {
   /*
    *  Menu Navigation functions
    */
-  
   goToHome() {
     this.nav.setRoot(HomePage);
   }
 
   goToAbout() {
-    this.menu.close();
     this.nav.push(AboutPage);
   }
   
   goToEmergency() {
-    this.menu.close();
     this.nav.push(EmergencyPage);
   }
   
   goToProfile() {
-
+    this.nav.setRoot(ProfilePage);
   }
   
   goToFacebook() {
@@ -130,7 +138,6 @@ export class MyApp {
   goToShare() {
   
   }
-
   goToTerms() {
     this.menu.close();
     this.nav.push(TermsPage);
@@ -194,7 +201,7 @@ window.fbAsyncInit = function() {
   js = d.createElement('script');
   js.id = id;
   js.async = true;
-  js.src = "//connect.facebook.net/en_US/sdk.js";
+  js.src = "http://connect.facebook.net/en_US/sdk.js";
 
   ref.parentNode.insertBefore(js, ref);
 }(document));

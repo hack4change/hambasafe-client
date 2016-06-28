@@ -1,13 +1,19 @@
+import {Component} from '@angular/core';
+
 declare var google;
+
+@Component({
+  templateUrl: 'build/components/map/map.html',
+  selector: 'map',
+})
 export class MapComponent {
-  sliderDistance = 10;
-  loading;
-  $watch;
-  gCoords;
-  constructor(EventService, $state, $compile, private $ionicLoading, private $location) {
+  private sliderDistance = 10;
+  private marker;
 
-
-
+  constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
+  
+}
+/*
     this.loading = $ionicLoading.show({
       content: 'Getting current location...',
       showBackdrop: false
@@ -58,5 +64,4 @@ export class MapComponent {
 
     });
   }
-}
-
+*/
