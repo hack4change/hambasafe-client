@@ -3,7 +3,7 @@
     <button *ngIf="activeType != 'DISTANCE'" dark  menuToggle>
       <ion-icon name="md-more"></ion-icon>
     </button>
-    <button *ngIf="activeType=='DISTANCE'" dark clear>
+    <button *ngIf="activeType=='DISTANCE'" (click)="toggleView('TIME')" dark clear>
       <ion-icon name="ios-arrow-back-outline"></ion-icon>
     </button>
   </ion-buttons>

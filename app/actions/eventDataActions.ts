@@ -41,7 +41,7 @@ const setFetchLoadingState = () => {
   };
 };
 
-const fetchEvents = (distance: number, latitude: number, longitude: number):any => {
+const fetchEvents = (distance: number, latitude: number, longitude: number) : any => {
   return dispatch => {
     const url = API_ROOT + '/Events/events-by-coordinates';
 
@@ -108,17 +108,18 @@ const createEvent = (data):any => {
     }
 
     // Set loading state.
-    dispatch(setCreateLoadingState());
+    // dispatch(setCreateLoadingState());
 
     // Do request.
-    jsonRequest(
-      url,
-      options,
-      (error) => dispatch(setCreateErrorState(error)),
-      (response) => dispatch(setCreateSuccessState(response))
-    );
+    // jsonRequest(
+    //   url,
+    //   options,
+    //   (error) => dispatch(setCreateErrorState(error)),
+    //   (response) => dispatch(setCreateSuccessState(response))
+    // );
   };
 };
+
 const setIdle = ():any => {
   return {
     data: fromJS({

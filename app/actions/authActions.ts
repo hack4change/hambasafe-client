@@ -12,12 +12,11 @@ const fbLogin = (errorCallback, successCallback):any => {
     if (response.status !== 'connected') {
       FB.login((response: any) => {
         var respJson: any = {};
-          console.log(response);
         if (response.authResponse) {
           var respJson = _.pick(response.authResponse, ['accessToken', 'userID']);
           FB.api('/me', 'get', (apiResponse: any)=> {
             respJson.name = apiResponse.name;
-            
+
             // jsonRequest(
             //   API_ROOT + '/v1/Authentication/ExternalLogin',
             //   {
@@ -26,8 +25,8 @@ const fbLogin = (errorCallback, successCallback):any => {
             //       'accessToken' : respJson['accessToken']
             //     }
             //   },
-              successCallback(respJson);// ,
-              // errorCallback(loginResponse),
+            successCallback(respJson);// ,
+            // errorCallback(loginResponse),
             // )
           });
         } else {

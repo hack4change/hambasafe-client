@@ -48,6 +48,7 @@ export class SearchPage {
     this.nav.setRoot(HomePage);
   }
   goToMainSearch(){
+    this.nav.setRoot(SearchPage);
   }
   isActive(callingType) {
     return callingType === this.activeType;
@@ -55,13 +56,13 @@ export class SearchPage {
   toggleView(clickedType){
     this.activeType = clickedType ;
   }
-  searchRadius(){
+  searchRadius() {
     // this.activeType = 'SEARCH';
     console.log('searchRadius');
     var lat = this.mapChild.latLng.lat();
     var lng = this.mapChild.latLng.lng();
     if(!!lat && !!lng){
-      // this.ngRedux.dispatch(eventDataActions.);
+      this.ngRedux.dispatch(eventDataActions.fetchEvents(this.searchDistance, lat, lng));
     }
   }
 }
