@@ -18,7 +18,7 @@
     "cordova-plugin-whitelist": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-whitelist@~1.2.1"
+            "id": "cordova-plugin-whitelist@~1.2.2"
         },
         "is_top_level": true,
         "variables": {}
@@ -42,7 +42,7 @@
     "ionic-plugin-keyboard": {
         "source": {
             "type": "registry",
-            "id": "ionic-plugin-keyboard@~2.2.0"
+            "id": "ionic-plugin-keyboard@~2.2.1"
         },
         "is_top_level": true,
         "variables": {}
@@ -50,26 +50,7 @@
     "cordova-plugin-x-toast": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-x-toast"
-        },
-        "is_top_level": true,
-        "variables": {}
-    },
-    "cordova-plugin-facebook4": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-facebook4"
-        },
-        "is_top_level": true,
-        "variables": {
-            "APP_ID": "1824765444411364",
-            "APP_NAME": "hambasafe"
-        }
-    },
-    "plugin.google.maps": {
-        "source": {
-            "type": "registry",
-            "id": "cordova-plugin-googlemaps"
+            "id": "cordova-plugin-x-toast@~2.5.2"
         },
         "is_top_level": true,
         "variables": {}
@@ -77,7 +58,7 @@
     "cordova-plugin-inappbrowser": {
         "source": {
             "type": "registry",
-            "id": "cordova-plugin-inappbrowser"
+            "id": "cordova-plugin-inappbrowser@~1.4.0"
         },
         "is_top_level": true,
         "variables": {}

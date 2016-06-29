@@ -47,9 +47,6 @@ export class SearchPage {
   goHome(){
     this.nav.setRoot(HomePage);
   }
-  goToMainSearch(){
-    this.nav.setRoot(SearchPage);
-  }
   isActive(callingType) {
     return callingType === this.activeType;
   }
