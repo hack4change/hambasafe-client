@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, enableProdMode} from '@angular/core';
 import {Platform, ionicBootstrap, MenuController, NavController} from 'ionic-angular';
 
 /**
@@ -45,7 +45,7 @@ import {RegistrationPage} from './pages/registration/RegistrationPage';
 export class MyApp {
   @ViewChild('myNavRoot') nav: NavController;
 
-  private rootPage: any = LandingPage;
+  private rootPage: any = RegistrationPage;
   private authStatus$ : Observable<any>;
   oldStatus: string;
 
@@ -58,7 +58,7 @@ export class MyApp {
        *  Fetch and subscribe to auth status from redux store;
        */
       // TODO: Facebook Native plugin doesn't work in browser.
-      // if(cordova && cordova.plugins && cordova.plugins.Facebook){
+      // if(cordova && cordova.plugins && cordova.plugins.Facebook) {
       //   Facebook.getLoginStatus().then((result) => {
       //     console.log(result)
       //   })
@@ -78,6 +78,15 @@ export class MyApp {
         case 'AUTHENTICATED':
           this.setMenuAuthenticated();
         break;
+        case 'CREATE_SUCCESS':
+          this.nav.setRoot(HomePage);
+        setTimeout(()=> {
+
+          this.ngRedux.dispatch(authActions.setAuthenticated());
+        }, 0)
+        case 'NEW_USER':
+          this.nav.setRoot(RegistrationPage);
+        break;
         default:
           if(this.menu.isEnabled('authorised-menu')){
           this.setMenuAnonymous();
@@ -86,7 +95,6 @@ export class MyApp {
       if(this.oldStatus === 'AUTHENTICATED' && userStatus !== 'AUTHENTICATED') {
         this.nav.push(LandingPage);
       }
-      console.log(userStatus);
       this.oldStatus = userStatus;
     })
   }
@@ -184,7 +192,10 @@ window.fbAsyncInit = function() {
 
     version    : 'v2.6',
   });
-  ionicBootstrap(MyApp, [provider(store)], {})
+  // enableProdMode();
+  ionicBootstrap(MyApp, [provider(store)], {
+    backButtonText : '',
+  })
 };
 
 (function(d){

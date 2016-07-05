@@ -20,10 +20,12 @@ import {TermsPage} from '../terms/TermsPage';
 
 //TODO: REMOVE
 import {SearchPage} from '../search/SearchPage';
+import {RegistrationPage} from '../registration/RegistrationPage';
 
 
 @Component({
   templateUrl: 'build/pages/landing/landing.html'
+  
 })
 export class LandingPage 
 {
@@ -34,12 +36,12 @@ export class LandingPage
 
   ngOnInit(){
     this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
-    this.authStatus$.subscribe( userStatus => {
-      switch(userStatus){
+    this.authStatus$.subscribe( (userStatus) => {
+      switch(userStatus) {
         case 'AUTHENTICATED':
-          // this.nav.setRoot(HomePage);
-					this.nav.setRoot(SearchPage);
-          break;
+          this.nav.setRoot(HomePage);
+          // this.nav.setRoot(SearchPage);
+        break;
         case 'ATTEMPTING':
           break;
         case 'ERROR':

@@ -11,14 +11,14 @@
     </ion-item>
 		<ion-item>
 			<ion-label>Public</ion-label>
-			<ion-toggle checked="true"></ion-toggle>
+			<ion-toggle [(ngModel)]="isPublic" checked="true"></ion-toggle>
 		</ion-item>
 		<ion-item class="">
 			<ion-label>Event Type</ion-label> <!-- replace tile with selected gender-->
 			<ion-select [(ngModel)]="eventType" required>
-				<ion-option value="walk">Walk</ion-option>
-				<ion-option value="run">Run</ion-option>
-				<ion-option value="cycle">Cycle</ion-option>
+				<ion-option value="WALK">Walk</ion-option>
+				<ion-option value="RUN">Run</ion-option>
+				<ion-option value="CYCLE">Cycle</ion-option>
 			</ion-select>
     </ion-item>
     <ion-item class="">
@@ -28,6 +28,10 @@
     <ion-item class="">
 			<ion-label floating>Description</ion-label>
 			<ion-input [(ngModel)]="description" type="text" required></ion-input>
+    </ion-item>
+    <ion-item class="">
+			<ion-label floating>Estimated distance(kilometers)</ion-label>
+			<ion-input [(ngModel)]="distance" type="number" required></ion-input>
     </ion-item>
     <ion-item class="">
 			<ion-label floating>Where does it start?</ion-label>

@@ -38,6 +38,8 @@ const actionTypes = keyMirror({
   RATING_INIT                 : undefined,
   RATING_FAIL                 : undefined,
   RATING_SUCCESS              : undefined,
+
+  USER_SET_STATUS             : undefined,
 })
 
 export default actionTypes;

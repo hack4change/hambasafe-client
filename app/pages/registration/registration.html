@@ -1,20 +1,18 @@
-<ion-toolbar class="icon-only">
+<ion-toolbar class="icon-only" energized>
   <a class="clickable" menuToggle>
-    <ion-icon dark class="menu-icon" name="md-more"></ion-icon>
+    <ion-icon light class="menu-icon" name="md-more"></ion-icon>
   </a>
-  <ion-title>
+  <ion-title style="color:white;">
     PROFILE
   </ion-title>
 </ion-toolbar>
 <ion-content>
     <form name="registrationForm" ng-submit="doRegister(signupForm.$valid)" novalidate>
-      <!--
-        <div class="row">
-        <input name="profile-picture" class="profile-pic" id="profile-picture" type="file" placeholder="Profile Picture" ng-model="user.profilePicture" required/>
-        <label for="profile-picture">Choose a file</label>
-        </div>
-      -->
       <ion-list class="borderless">
+        <ion-item>
+          <input name="profile-picture" class="profile-pic" id="profile-picture" type="file" placeholder="Profile Picture" ng-model="user.profilePicture" required/>
+          <label for="profile-picture">Choose a file</label>
+        </ion-item>
         <ion-item class="borderless">
           <ion-label floating>Firstname</ion-label>
           <ion-input type="text" [(ngModel)]="firstName" required></ion-input>
@@ -44,7 +42,7 @@
         </ion-item>
         <ion-item class="borderless">
           <ion-label floating>Cell Number</ion-label>
-          <ion-input type="tel" [(ngModel)]="phoneNumber" required></ion-input>
+          <ion-input type="tel" [(ngModel)]="mobileNumber" required></ion-input>
         </ion-item>
         <ion-item class="borderless">
           <ion-label floating>Email</ion-label>
@@ -66,7 +64,8 @@
     </form>
 </ion-content>
 <ion-toolbar position="bottom">
-  <button full primary [disabled]="!validForm">
+  <button full primary (click)="createUser()">
+<!-- [disabled]="!validForm" -->
     Next
   </button>
 </ion-toolbar>

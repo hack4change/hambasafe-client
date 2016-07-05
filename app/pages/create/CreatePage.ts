@@ -18,10 +18,14 @@ import { HomePage } from '../home/HomePage';
 })
 export class CreatePage {
   created$: Observable<any>;
+  userId$: Observable<any>;
+  currentUserId: number;
   createModal = null; 
+  isPublic;
   eventType;
   name;
   description
+  distance
   startTime;
   startDate;
   startLocation;
@@ -34,6 +38,7 @@ export class CreatePage {
   ngOnInit(){
   
     this.created$ = this.ngRedux.select(state=>state.getIn(['eventData', 'status']));
+    this.userId$ = this.ngRedux.select(state=>state.getIn(['currentUser', 'id']));
 
     this.created$.subscribe(eventStatus => {
       console.log(eventStatus)
@@ -43,6 +48,9 @@ export class CreatePage {
           this.createModal.dismiss()
         }
         this.nav.setRoot(HomePage);
+        setTimeout(() => {
+          this.ngRedux.dispatch(eventDataActions.setIdle());
+        })
         break;
         case 'creating': 
           this.createModal = Loading.create({
@@ -59,6 +67,9 @@ export class CreatePage {
         }
       }
     });
+    this.userId$.subscribe(userId => {
+      this.currentUserId = userId;
+    })
     console.log(this.created$);
   }
     
@@ -66,74 +77,80 @@ export class CreatePage {
 	createEvent() {
     var roundDateToISO = ":00.000Z";
     console.log(this.startTime);
-    console.log(this.waitMins);
-		if(!this.eventType) {
-			return; 
-		}
-		if(!this.name) {
-			return; 
-		}
-		if(!this.description) {
-			return; 
-		}
-		if(!this.startTime) {
-			return; 
-		}
-		if(!this.startDate) {
-			return; 
-		}
-		if(!this.startLocation) {
-			return; 
-		}
-		if(!this.endTime) {
-			return; 
-		}
-		if(!this.endDate) {
-			return; 
-		}
-		if(!this.endLocation) {
-			return; 
-		}
-		if(!this.waitMins) {
-			return; 
-		}
+    console.log(this.eventType);
+		// if(!this.eventType) {
+		// 	return; 
+		// }
+		// if(!this.name) {
+		// 	return; 
+		// }
+		// if(!this.description) {
+		// 	return; 
+		// }
+		// if(!this.startTime) {
+		// 	return; 
+		// }
+		// if(!this.startDate) {
+		// 	return; 
+		// }
+		// if(!this.startLocation) {
+		// 	return; 
+		// }
+		// if(!this.endTime) {
+		// 	return; 
+		// }
+		// if(!this.endDate) {
+		// 	return; 
+		// }
+		// if(!this.endLocation) {
+		// 	return; 
+		// }
+		// if(!this.waitMins) {
+		// 	return; 
+		// }
 		var data = {
-			'Name'          : this.name,
-			'Description'   : this.description,
+			'Name'          : this.name || 'Cycling in Numbers',
+			'Description'   : this.description || 'howdy',
+			'Distance'      : this.distance|| 5,
 			'EventType'     : {
-				'Name'          : this.eventType,
+        'Id'          : 1,
+				'Name'          : this.eventType || 'RUN',
+        'Description' : 'hey'
 			},
-			'DateTimeStart' : this.startDate+"T"+this.startTime + roundDateToISO,
+			'DateTimeStart' : this.startDate+"T"+this.startTime + roundDateToISO ,
       'DateTimeEnd'   : this.endDate+"T"+this.endTime +  roundDateToISO,
       'StartLocation' : {
-        'Country'  : 'Cape Town',//(string, optional),
+        'Country'  : 'South Africa',//(string, optional),
+        'City'  : 'Cape Town',//(string, optional),
         'Province' : 'Western Cape', //(string, optional),
         'Suburb' : 'Rondebosch', //(string, optional),
         'PostCode' : '8000', //(string, optional),
-        'Address' : '3 Some Avenue', //(string, optional),
-        'Latitude' : '99', //(number, optional),
-        'Longitude' : '-99', 
+        'Address' : '3 McNuggets please', //(string, optional),
+        'Latitude' : -33.8786, //(number, optional),
+        'Longitude' : 18.6947, 
       },
       'EndLocation' : {
-        'Country'  : 'Cape Town',         //(string, optional)
+        'Country'  : 'South Africa',         //(string, optional)
         'Province' : 'Western Cape',      //(string, optional)
         'Suburb' : 'Rondebosch',          //(string, optional)
         'PostCode' : '8000',              //(string, optional)
         'Address' : '3 Some Avenue',      //(string, optional)
-        'Latitude' : '98',                //(number, optional)
-        'Longitude' : '-98',              //(number, optional)
+        'Latitude' : -33.9249, //(number, optional),
+        'Longitude' : 18.4241, 
       },
       'OwnerUser' : {
+        'Id'          : 10,
         'FirstNames'  : 'George',
         'LastNames'   : 'Phillips',
       },
-      'WaitMins'      : this.waitMins,
+      'WaitMins'      : this.waitMins || 10,
+      'IsPublic'    : this.isPublic,
 		}
     console.log(data);
     this.ngRedux.dispatch(eventDataActions.createEvent(data));
 	}
 
-  onCreation(){
+  onCreation() {
   
   }
   goBack(){

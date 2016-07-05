@@ -1,16 +1,21 @@
 import actionTypes from '../actionTypes.ts';
 
-export default function currentUser(state:any, action:any = {}) {
+export default function currentUser(state:any, action: any= {}) {
   console.log(action);
   switch (action && action.type) {
+    case actionTypes.USER_CREATE_INIT:
+      return state.set('status', action.data.get('status'));
+    case actionTypes.USER_CREATE_SUCCESS:
+      var retState = state.set('status', action.data.get('status'));
+      return retState.set('id', action.data.get('id'));
+    case actionTypes.USER_CREATE_FAIL:
+      return state.set('status', action.data.get('status'));
     case actionTypes.USER_AUTH_INIT:
       return state.set('status', action.data.get('status'));
     case actionTypes.USER_AUTH_SUCCESS:
-      let retState = state.set('accessToken', action.data.get('accessToken'))
+      var retState = state.set('accessToken', action.data.get('accessToken'))
       retState = retState.set('status', action.data.get('status'));
-      retState = retState.set('id', action.data.get('name'));
-      retState = retState.set('id', action.data.get('id'));
-      console.log(retState);
+      retState = retState.set('name', action.data.get('name'));
       return retState;
     case actionTypes.USER_AUTH_FAIL:
       return state.set('status', action.data.get('status'));
@@ -20,7 +25,24 @@ export default function currentUser(state:any, action:any = {}) {
       return state.set('status', action.data.get('status'));
     case actionTypes.USER_LOGOUT_FAIL:
       return state.set('status', action.data.get('status'));
+    case actionTypes.USER_SET_STATUS:
+      return state.set('status', action.data.get('status'));
     default:
       return state;
   }
 };
+/*
+ *
+ *
+ *   
+ *    interface actionsState<T>{
+ *    data:immutable<T>
+ *    }
+ *interface user{
+ name:string;
+ }
+ *
+ *
+ *
+ *
+ */

@@ -1,0 +1,55 @@
+activity-item {
+  cursor:pointer;
+  ion-item {
+    padding-left: 6px !important; 
+  }
+  ion-item.been-invited {
+    border-left: 12px solid $assertive !important;
+  }
+  ion-item.must-rate {
+    border-left: 12px solid $energized !important;
+  }
+  ion-label{
+    margin: 0px;
+  }
+  ion-avatar {
+    margin-right: 6px !important;
+    img {
+      max-width: 5.6rem;
+      max-height: 5.6rem;
+      border-radius: 50%;
+    }
+
+  }
+  ion-icon {
+    width: 5.6rem;
+    height: 5.6rem;
+    border-radius: 50%;
+    font-size: 3.6rem !important;
+  }
+  ion-icon.must-rate {
+    background-color: $energized;
+  }
+  ion-icon.must-rate:before {
+    position: relative;
+    left: 1.4rem;
+    top: 0.9rem;
+  }
+  ion-icon.been-invited {
+    background-color: $assertive;
+  }
+  ion-icon.been-invited:before {
+    position: relative;
+    left: 2.3rem;
+    top: 0.9rem;
+  }
+  .activity-location{
+    display: inline-block;
+    width: 50%;
+  }
+  .activity-date {
+    display: inline-block;
+    width: 50%;
+    text-align:right;
+  }
+}

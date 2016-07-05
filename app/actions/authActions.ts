@@ -14,7 +14,7 @@ const fbLogin = (errorCallback, successCallback):any => {
         var respJson: any = {};
         if (response.authResponse) {
           var respJson = _.pick(response.authResponse, ['accessToken', 'userID']);
-          FB.api('/me', 'get', (apiResponse: any)=> {
+          FB.api('/me', 'get', (apiResponse: any) => {
             respJson.name = apiResponse.name;
 
             // jsonRequest(
@@ -35,6 +35,9 @@ const fbLogin = (errorCallback, successCallback):any => {
       }) 
     } else {
       var respJson = _.pick(response.authResponse, ['accessToken', 'userID']);
+      //TODO:REMOVE, Only for testing while the api is down.
+      respJson.wasLoggedIn = true;
+
       FB.api('/me', 'get', (apiResponse: any)=> {
         respJson.name = apiResponse.name;
         successCallback(respJson);
@@ -68,13 +71,18 @@ const fbLogout = (errorCallback, successCallback):any => {
 const setAuthSuccess = (response) => {
   console.log('Auth Success')
   console.log(response);
+  if(!response['wasLoggedIn']){
+    response['status'] = 'NEW_USER';
+  } else {
+    response['status'] = 'AUTHENTICATED';
+  }
   return {
     data: fromJS({
       // 'username': response['name'],
       'accessToken' : response['accessToken'],
       'id'          : response['userID'],
       'name'        : response['name'],
-      'status'      : 'AUTHENTICATED',
+      'status'      : response['status'],
     }),
     type: actionTypes.USER_AUTH_SUCCESS,
   };
@@ -104,12 +112,8 @@ const setAuthTrying = () => {
 
 const authUser = ():any => {
   return dispatch => {
-    // const url = 'https://www.reddit.com/top/.json?limit=10';
 
-
-    //
     // Set loading state.
-    //
     dispatch(setAuthTrying());
     fbLogin(
       (error) => dispatch(setAuthError(error)),
@@ -119,12 +123,9 @@ const authUser = ():any => {
   };
 }
 
-
-
 /**
- *  Logout
+ *  Logout Success
  */
-// Success.
 const setLogoutSuccess = (response) => {
   console.log('Auth Success')
   console.log(response);
@@ -138,7 +139,9 @@ const setLogoutSuccess = (response) => {
   };
 };
 
-// Error.
+/**
+ *  Logout Error
+ */
 const setLogoutError = (error) => {
   return {
     data: fromJS({
@@ -149,6 +152,7 @@ const setLogoutError = (error) => {
     type: actionTypes.USER_LOGOUT_FAIL,
   };
 }
+
 const setLogoutTrying = () => {
   return {
     data: fromJS({
@@ -162,8 +166,6 @@ const setLogoutTrying = () => {
 const logoutUser = ():any => {
   return dispatch => {
     // const url = 'https://www.reddit.com/top/.json?limit=10';
-
-
     //
     // Set loading state.
     //
@@ -174,9 +176,19 @@ const logoutUser = ():any => {
     );
 
   };
-};;
+};
+
+const setAuthenticated = ():any => {
+  return {
+    data: fromJS({
+      status: 'AUTHENTICATED',
+    }),
+    type: actionTypes.USER_SET_STATUS,
+  }
+}
 
 export const authActions = {
   authUser,
   logoutUser,
+  setAuthenticated,
 };

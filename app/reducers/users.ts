@@ -2,18 +2,18 @@ import actionTypes from '../actionTypes.ts';
 
 export default function users(state:any, action:any = {}) {
   switch (action && action.type) {
-    case actionTypes.USER_CREATE_INIT:
-    case actionTypes.USER_CREATE_SUCCESS:
-    case actionTypes.USER_CREATE_FAIL:
-      return action.data;
     case actionTypes.USER_FETCH_INIT:
+      return state;
     case actionTypes.USER_FETCH_SUCCESS:
+      return state;
     case actionTypes.USER_FETCH_FAIL:
-      return action.data;
+      return state;
     case actionTypes.RATING_INIT:
+      return state;
     case actionTypes.RATING_SUCCESS:
+      return state;
     case actionTypes.RATING_FAIL:
-      return action.data;
+      return state;
     default:
       return state;
   }

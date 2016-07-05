@@ -6,10 +6,10 @@
   </ion-buttons>
   <ion-buttons end>
     <button primary class="indent">
-      <ion-icon name="pin"></ion-icon>
+      <ion-icon name="md-pin"></ion-icon>
     </button>
     <button dark (click)="loadSearch()">
-      <ion-icon name="search"></ion-icon>
+      <ion-icon name="md-search"></ion-icon>
     </button>
   </ion-buttons>
 </ion-toolbar>
@@ -25,7 +25,7 @@
 </ion-toolbar>
 <ion-toolbar>
   <ion-item class="no-border">
-    <ion-range min="2" max="20" step="2" snaps="true" pin="false" (ngModelChange)="sliderChange()" [(ngModel)]="sliderDistance" secondary>
+    <ion-range min="2" max="30" step="2" snaps="true" pin="false" (ngModelChange)="sliderChange()" [(ngModel)]="sliderDistance" secondary>
       <ion-icon range-left small>Closer</ion-icon>
       <ion-icon range-right small>Farther</ion-icon>
     </ion-range>
@@ -33,9 +33,7 @@
 </ion-toolbar>
 
 <ion-content [ngSwitch]="isEmpty">
-  <template ngSwitchWhen="false">
-  </template>
-  <template ngSwitchDefault>
+  <template ngSwitchCase="true">
     <div class="home-container valign-outer">
       <div class="valign-inner valign-mid-top">
         <ion-row>
@@ -44,7 +42,7 @@
           <ion-col width-60>
             <div class="text-center">
               <h5>
-              There are no new events in your neighbourhood.
+              There are no new activities in your neighbourhood.
               </h5>
             </div>
           </ion-col>
@@ -80,42 +78,10 @@
       </div>
     </div>
   </template>
+  <template ngSwitchDefault>
+    <activity-item *ngFor="let activity of activities$| async" [activity]="activity"></activity-item>
+      <button (click)="goToCreate()" style="position:fixed; bottom: 2%; right:2%;" fab>
+        <ion-icon name="add" style="font-size: 3.5em;"></ion-icon>
+      </button>
+  </template>
 </ion-content>
-
-<!-- <div class="button-bar">  -->
-<!--   <a class="button button-positive" > -->
-<!--     <i class="icon ion-clock" ></i> -->
-<!--   </a> -->
-<!--     <a class="button" > -->
-<!--       <i class="icon ion-ios-people" ></i> -->
-<!--     </a> -->
-<!-- </div> -->
-<!-- <div class="tiled-list"> -->
-<!--   <div class="list"> -->
-<!--     <a class="item item-avatar" *ngFor="let event in events"> -->
-<!--       <img src="http://ionicframework.com/img/docs/stantz.jpg"> -->
-<!--       <div class="right"> -->
-<!--         <h3>{{event.name}}</h3> -->
-<!--         <h3>{{event.description}}</h3> -->
-<!--         <h3>{{event.distance}}km</h3> -->
-<!--         <h3>{{event.eventDateTimeEnd}}</h3> -->
-<!--       </div> -->
-<!--     </a> -->
-<!--   </div> -->
-<!--   <a class="icon ion-android-add-circle bottom add-button "  href="#/create"> </a> -->
-<!-- </div> -->
-<!-- 
-
-  <h3 ng-show="event.PublicEvent">Public Event</h3>
-  <h3 ng-show="!event.PublicEvent">Private Event</h3>
-
-
-
-  <div class="list">
-  <div class="item" collection-repeat="event in events"
-  collection-item-width="'100%'"
-  collection-item-height="200">
-  <div>{{event.Name}}</div>
-  <div class="clear"></div>
-  </div>
-  </div> -->

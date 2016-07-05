@@ -7,6 +7,11 @@ import {NavController} from 'ionic-angular';
 import {NgRedux} from 'ng2-redux';
 import {Observable} from 'rxjs';
 
+/**
+ *  Actions
+ */
+import {usersActions} from '../../actions/usersActions';
+
 @Component({
   templateUrl: 'build/pages/registration/registration.html'
 })
@@ -17,17 +22,40 @@ export class RegistrationPage {
   lastName        :   string;
   dateOfBirth     :   Date;
   location        :   any;
-  phoneNumber     :   string;
-  email           :   string;
+  mobileNumber    :   string;
+  emailAddress    :   string;
   confirmEmail    :   string;
   identification  :   string;
   terms           :   string;
+	gender					: 	string = 'male';
 
-  constructor(private nav: NavController) {};
+  constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
 	
-	goBack(){
+	goBack() {
 		this.nav.pop();
 	}
+
+
+	guid() {
+		function s4() {
+			return Math.floor((1 + Math.random()) * 0x10000)
+		}
+		return s4() + s4() + '-' + s4() + '-' + s4() + '-' +
+			s4() + '-' + s4() + s4() + s4();
+	}
+	createUser() {
+    var userData = {
+      'Id'					  : Math.floor((Math.random() * 429496) + 1),
+			'Token'				  : this.guid(),
+			'FirstNames'	  : 'George',//this.firstName,
+			'LastName'		  : 'Phillips',//this.lastName,
+			'Gender'			  : 'Male',//this.gender,
+			'DateOfBirth'   :	(new Date).toISOString(),//this.dateOfBirth,
+      'MobileNumber'  : '0827643743',//this.mobileNumber,
+      'EmailAddress'  : 'George@sum.such',//this.emailAddress,
+    }
+    this.ngRedux.dispatch(usersActions.createUser(userData));
+  }
 }
 
 

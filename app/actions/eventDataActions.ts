@@ -10,10 +10,11 @@ const API_ROOT = 'http://hambasafetesting.azurewebsites.net/v1';
  */
 // Success.
 const setFetchSuccessState = (response) => {
+  console.log(response);
   return {
     data: fromJS({
-      items: response.data.children.map((p)=> EventDatum.fromJS(p.data)),
-      status: 'success',
+      items: response,
+      status: 'SUCCESS',
     }),
     type: actionTypes.EVENTS_FETCH_SUCCESS,
   };
@@ -25,7 +26,7 @@ const setFetchErrorState = (error) => {
     data: fromJS({
       items: [],
       message: error,
-      status: 'error',
+      status: 'ERROR',
     }),
     type: actionTypes.EVENTS_FETCH_FAIL,
   };
@@ -41,8 +42,50 @@ const setFetchLoadingState = () => {
   };
 };
 
-const fetchEvents = (distance: number, latitude: number, longitude: number) : any => {
+const fetchEvents = () : any => {
   return dispatch => {
+    console.log('dispatch');
+    const url = API_ROOT + '/Events/events';
+
+    const options = {
+    }
+    // Set loading state.
+    dispatch(setFetchLoadingState());
+
+    // Do request.
+    jsonRequest(
+      url,
+      options,
+      (error) => dispatch(setFetchErrorState(error)),
+      (response) => dispatch(setFetchSuccessState(response))
+    );
+  };
+};
+const fetchEventsBySuburb = (suburb: string) : any => {
+  return dispatch => {
+    console.log('dispatch');
+    const url = API_ROOT + '/Events/events-by-suburb';
+
+    const options = {
+      query: {
+        suburb: suburb
+      }
+    }
+    // Set loading state.
+    dispatch(setFetchLoadingState());
+
+    // Do request.
+    jsonRequest(
+      url,
+      options,
+      (error) => dispatch(setFetchErrorState(error)),
+      (response) => dispatch(setFetchSuccessState(response))
+    );
+  };
+};
+const fetchEventsByCoordinates = (distance: number, latitude: number, longitude: number) : any => {
+  return dispatch => {
+    console.log('dispatch');
     const url = API_ROOT + '/Events/events-by-coordinates';
 
     const options = {
@@ -108,15 +151,15 @@ const createEvent = (data):any => {
     }
 
     // Set loading state.
-    // dispatch(setCreateLoadingState());
+    dispatch(setCreateLoadingState());
 
     // Do request.
-    // jsonRequest(
-    //   url,
-    //   options,
-    //   (error) => dispatch(setCreateErrorState(error)),
-    //   (response) => dispatch(setCreateSuccessState(response))
-    // );
+    jsonRequest(
+      url,
+      options,
+      (error) => dispatch(setCreateErrorState(error)),
+      (response) => dispatch(setCreateSuccessState(response))
+    );
   };
 };
 
@@ -131,6 +174,8 @@ const setIdle = ():any => {
 
 export const eventDataActions = {
   fetchEvents,
+  fetchEventsBySuburb,
+  fetchEventsByCoordinates,
   createEvent,
   setIdle,
 };

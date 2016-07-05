@@ -1,4 +1,5 @@
 import actionTypes from '../actionTypes.ts';
+const _ = require('lodash');
 
 export default function eventData(state:any, action:any = {}) {
   switch (action && action.type) {
@@ -16,6 +17,7 @@ export default function eventData(state:any, action:any = {}) {
 
     case actionTypes.EVENTS_CREATE_FAIL:
       return state.set('status', action.data.get('status'));
+
 //DELETE EVENTS
     case actionTypes.EVENTS_DELETE_INIT:
     case actionTypes.EVENTS_DELETE_SUCCESS:
@@ -23,8 +25,9 @@ export default function eventData(state:any, action:any = {}) {
 //FETCH EVENTS
     case actionTypes.EVENTS_FETCH_INIT:
     case actionTypes.EVENTS_FETCH_SUCCESS:
+    let items = state.get('items').toSet().union(action.data.get('items').toSet()).toList();
+    return state.set('items', items);
     case actionTypes.EVENTS_FETCH_FAIL:
-         
 //RATING EVENTS
     case actionTypes.RATING_FETCH_INIT:
     case actionTypes.RATING_FETCH_SUCCESS:
