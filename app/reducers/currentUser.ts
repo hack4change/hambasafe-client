@@ -13,10 +13,7 @@ export default function currentUser(state:any, action: any= {}) {
     case actionTypes.USER_AUTH_INIT:
       return state.set('status', action.data.get('status'));
     case actionTypes.USER_AUTH_SUCCESS:
-      var retState = state.set('accessToken', action.data.get('accessToken'))
-      retState = retState.set('status', action.data.get('status'));
-      retState = retState.set('name', action.data.get('name'));
-      return retState;
+      return state.merge(action.data);
     case actionTypes.USER_AUTH_FAIL:
       return state.set('status', action.data.get('status'));
     case actionTypes.USER_LOGOUT_INIT:

@@ -14,8 +14,27 @@ const fbLogin = (errorCallback, successCallback):any => {
         var respJson: any = {};
         if (response.authResponse) {
           var respJson = _.pick(response.authResponse, ['accessToken', 'userID']);
-          FB.api('/me', 'get', (apiResponse: any) => {
-            respJson.name = apiResponse.name;
+          FB.api('/me', 'get', {
+            'fields' : [
+              'first_name',
+              'last_name',
+              'birthday',
+              'gender',
+              'email',
+              'picture',
+            ]
+          },
+          (apiResponse: any) => {
+            console.log(apiResponse);
+            var respJson = _.pick(apiResponse, [
+              'first_name',
+              'last_name',
+              'birthday',
+              'gender',
+              'email',
+            ]);
+            respJson.picture = respJson.picture && apiResponse.picture.data ? apiResponse.picture.data.url : '';
+            respJson.isSilhouette = respJson.picture && apiResponse.picture.data ? apiResponse.picture.data.is_silhouette : null;
 
             // jsonRequest(
             //   API_ROOT + '/v1/Authentication/ExternalLogin',
@@ -32,15 +51,45 @@ const fbLogin = (errorCallback, successCallback):any => {
         } else {
           errorCallback(response);
         }
-      }) 
+      } , {
+        scope: 'public_profile, email',
+        return_scopes: true,
+      })
+
     } else {
       var respJson = _.pick(response.authResponse, ['accessToken', 'userID']);
-      //TODO:REMOVE, Only for testing while the api is down.
-      respJson.wasLoggedIn = true;
+      console.log(response);
+      FB.api('/me', 'get', {
+        'fields' : [
+          'first_name',
+          'last_name',
+          'birthday',
+          'gender',
+          'email',
+          'picture',
+        ]
+      }, (apiResponse: any) => {
+            var respJson = _.pick(apiResponse, [
+              'first_name',
+              'last_name',
+              'birthday',
+              'gender',
+              'email',
+            ]);
+            respJson.picture = apiResponse.picture.data.url;
+            respJson.isSilhouette = apiResponse.picture.data.is_silhouette;
 
-      FB.api('/me', 'get', (apiResponse: any)=> {
-        respJson.name = apiResponse.name;
-        successCallback(respJson);
+        // jsonRequest(
+        //   API_ROOT + '/v1/Authentication/ExternalLogin',
+        //   {
+        //     method: 'POST',
+        //     body:  {
+        //       'accessToken' : respJson['accessToken']
+        //     }
+        //   },
+        successCallback(respJson);// ,
+        // errorCallback(loginResponse),
+        // )
       });
     }
   })
@@ -76,14 +125,11 @@ const setAuthSuccess = (response) => {
   } else {
     response['status'] = 'AUTHENTICATED';
   }
+  response = _.mapKeys(response, function(value, key) {
+    return _.camelCase(key);
+  });
   return {
-    data: fromJS({
-      // 'username': response['name'],
-      'accessToken' : response['accessToken'],
-      'id'          : response['userID'],
-      'name'        : response['name'],
-      'status'      : response['status'],
-    }),
+    data: fromJS(response),
     type: actionTypes.USER_AUTH_SUCCESS,
   };
 };
@@ -112,14 +158,12 @@ const setAuthTrying = () => {
 
 const authUser = ():any => {
   return dispatch => {
-
     // Set loading state.
     dispatch(setAuthTrying());
     fbLogin(
       (error) => dispatch(setAuthError(error)),
         (response) => dispatch(setAuthSuccess(response))
     );
-
   };
 }
 

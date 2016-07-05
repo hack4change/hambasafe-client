@@ -7,61 +7,65 @@
   </ion-title>
 </ion-toolbar>
 <ion-content>
-    <form name="registrationForm" ng-submit="doRegister(signupForm.$valid)" novalidate>
-      <ion-list class="borderless">
-        <ion-item>
-          <input name="profile-picture" class="profile-pic" id="profile-picture" type="file" placeholder="Profile Picture" ng-model="user.profilePicture" required/>
-          <label for="profile-picture">Choose a file</label>
-        </ion-item>
-        <ion-item class="borderless">
-          <ion-label floating>Firstname</ion-label>
-          <ion-input type="text" [(ngModel)]="firstName" required></ion-input>
-        </ion-item>
-        <ion-item class="borderless">
-          <ion-label floating>Surname</ion-label>
-          <ion-input type="text" [(ngModel)]="lastName" required></ion-input>
-        </ion-item>
-        <ion-item class="borderless">
-          <ion-label floating>Date of Birth</ion-label>
-          <ion-datetime displayFormat="DD MMM YY" pickerFormat="DD MMM YY" [(ngModel)]="dateOfBirth"></ion-datetime>
-        </ion-item>
-        <!-- <ion-item ng-click="toggleGenderOpen()" ng-class="{active: isGenderOpen()}"> -->
-        <!--   <div class="valign-outer"> -->
-        <!--     <div class="valign-inner"> -->
-        <!--       <p>Gender</p>  -->
-        <!--       <i class="icon pull-right" ng-class="isGenderOpen() ? 'ion-chevron-up' : 'ion-chevron-down'"></i> -->
-        <!--     </div> -->
-        <!--   </div> -->
-        <!--   <div ng-repeat="gender in genders" ng-show="isGenderOpen()"> -->
-        <!--     <ion-checkbox class="item-checkbox-right item-accordion gender-group">{{ gender }}</ion-checkbox> -->
-        <!--   </div> -->
-        <!-- </ion-item> -->
-        <ion-item class="borderless">
-          <ion-label floating>Location</ion-label>
-          <ion-input type="text" [(ngModel)]="location" required></ion-input>
-        </ion-item>
-        <ion-item class="borderless">
-          <ion-label floating>Cell Number</ion-label>
-          <ion-input type="tel" [(ngModel)]="mobileNumber" required></ion-input>
-        </ion-item>
-        <ion-item class="borderless">
-          <ion-label floating>Email</ion-label>
-          <ion-input type="email"  [(ngModel)]="email" required></ion-input>
-        </ion-item>
-        <ion-item class="borderless">
-          <ion-label floating>Confirm Email</ion-label>
-          <ion-input type="email"  [(ngModel)]="confirmEmail" required></ion-input>
-        </ion-item>
-        <ion-item class="borderless">
-          <ion-label floating>Scan your ID or Driver's License</ion-label>
-          <ion-input [(ngModel)]="identification" required></ion-input>
-        </ion-item>
-        <ion-item class="borderless">
-          <ion-label floating>Read the Terms of Use</ion-label>
-          <ion-input  [(ngModel)]="terms" required></ion-input>
-        </ion-item>
-      </ion-list>
-    </form>
+  <form name="registrationForm" ng-submit="doRegister(signupForm.$valid)" novalidate>
+    <ion-list class="borderless">
+      <ion-item>
+        <ion-icon *ngIf="!profilePicture || isSilhouette" item-left name="contact"></ion-icon>
+        <ion-avatar *ngIf="!!profilePicture && !isSilhouette" item-left>
+          <img src="{{ profilePicture }}">
+        </ion-avatar>
+        <input name="profile-picture" class="hidden-file-input" id="profile-picture" type="file" placeholder="Profile Picture" [(ngModel)]="uploadPicture" accept="image/*" required />
+        <label for="profile-picture">Choose a file</label>
+      </ion-item>
+      <ion-item class="borderless">
+        <ion-label floating>Firstname</ion-label>
+        <ion-input  type="text" [(ngModel)]="firstName" required></ion-input>
+      </ion-item>
+      <ion-item class="borderless">
+        <ion-label floating>Surname</ion-label>
+        <ion-input type="text" [(ngModel)]="lastName" required></ion-input>
+      </ion-item>
+      <ion-item class="borderless">
+        <ion-label floating>Date of Birth</ion-label>
+        <ion-datetime displayFormat="DD MMM YY" pickerFormat="DD MMM YY" [(ngModel)]="birthday"></ion-datetime>
+      </ion-item>
+      <!-- <ion-item ng-click="toggleGenderOpen()" ng-class="{active: isGenderOpen()}"> -->
+      <!--   <div class="valign-outer"> -->
+      <!--     <div class="valign-inner"> -->
+      <!--       <p>Gender</p>  -->
+      <!--       <i class="icon pull-right" ng-class="isGenderOpen() ? 'ion-chevron-up' : 'ion-chevron-down'"></i> -->
+      <!--     </div> -->
+      <!--   </div> -->
+      <!--   <div ng-repeat="gender in genders" ng-show="isGenderOpen()"> -->
+      <!--     <ion-checkbox class="item-checkbox-right item-accordion gender-group">{{ gender }}</ion-checkbox> -->
+      <!--   </div> -->
+      <!-- </ion-item> -->
+      <ion-item class="borderless" (click)="openLocation()">
+        Location
+      </ion-item>
+      <ion-item class="borderless">
+        <ion-label floating>Cell Number</ion-label>
+        <ion-input type="tel" [(ngModel)]="mobileNumber" required></ion-input>
+      </ion-item>
+      <ion-item class="borderless">
+        <ion-label floating>Email</ion-label>
+        <ion-input type="email"  [(ngModel)]="email" required></ion-input>
+      </ion-item>
+      <ion-item class="borderless">
+        <ion-label floating>Confirm Email</ion-label>
+        <ion-input type="email"  [(ngModel)]="confirmEmail" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <input name="identification" class="hidden-file-input" type="file" accept="image/*" id="identification" [(ngModel)]="identification" required />
+        <label for="identification">Scan my ID or Driver's License</label>
+      </ion-item>
+      <ion-item class="borderless">
+        <h2>
+        Read the Terms of Use
+        </h2>
+      </ion-item>
+    </ion-list>
+  </form>
 </ion-content>
 <ion-toolbar position="bottom">
   <button full primary (click)="createUser()">

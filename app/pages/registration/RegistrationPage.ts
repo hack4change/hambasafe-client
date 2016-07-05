@@ -1,5 +1,7 @@
-import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {Component, NgZone} from '@angular/core';
+import {AsyncPipe} from '@angular/common';
+import {Modal, NavController, ViewController} from 'ionic-angular';
+const _ = require('lodash');
 
 /**
  *  Redux
@@ -11,25 +13,62 @@ import {Observable} from 'rxjs';
  *  Actions
  */
 import {usersActions} from '../../actions/usersActions';
+import {authActions} from '../../actions/authActions';
+
+/*
+ * Components
+ */
+import {MapComponent} from '../../components/map/map.component.ts';
 
 @Component({
-  templateUrl: 'build/pages/registration/registration.html'
+  templateUrl: 'build/pages/registration/registration.html',
+  directives : [
+    MapComponent,
+  ]
 })
 export class RegistrationPage {
+  // @ViewChild('myMap') mapChild;
 
   validForm       :   boolean;
   firstName       :   string;
   lastName        :   string;
-  dateOfBirth     :   Date;
+  birthday        :   any;
   location        :   any;
   mobileNumber    :   string;
-  emailAddress    :   string;
+  email           :   string;
   confirmEmail    :   string;
   identification  :   string;
   terms           :   string;
-	gender					: 	string = 'male';
+  profilePicture  :   string;
+  uploadPicture   :   string;
+  isSilhouette    :   boolean;
+	gender					: 	string = 'Gender';
+  currentUser$    :   Observable<any>;
 
-  constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
+  constructor(private nav: NavController, private viewCtrl: ViewController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
+
+  ngOnInit() {
+    // this.ngRedux.dispatch(authActions.authUser());
+    this.currentUser$ = this.ngRedux.select((state)=> {
+      return state.get('currentUser').toJS()
+    })
+    this.currentUser$.subscribe((userData)=> {
+      this.zone.run(() => {
+        if(!!userData) {
+          this.firstName          = userData.firstName;
+          this.lastName           = userData.lastName;
+          if(userData.birthday !== '') {
+            this.birthday         = (new Date(userData.birthday)).toISOString();
+          }
+          this.email              = userData.email;
+          this.gender             = userData.gender;
+          this.profilePicture     = userData.picture;
+          this.isSilhouette       = userData.isSilhouette;
+        }
+      })
+
+    })
+  }
 	
 	goBack() {
 		this.nav.pop();
@@ -56,6 +95,14 @@ export class RegistrationPage {
     }
     this.ngRedux.dispatch(usersActions.createUser(userData));
   }
+  // onInputFocus(e){
+  //   var selected = e.target.parentNode.parentNode.parentNode.parentNode;
+  //   console.log(docselected);
+  // }
+  openLocation(){
+    console.log('openy');
+  }
+  
 }
 
 

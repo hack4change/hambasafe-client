@@ -15,8 +15,17 @@ export const getInitialState = ()=> {
     currentUser: Map<string, any>(fromJS({
       status: "ANONYMOUS",
       id : '',
+      fbId : '',
       accessToken: '',
-      username: '',
+      firstName: '',
+      lastName: '',
+      gender: '',
+      birthday: '',
+      location: '',
+      cellNumber: '',
+      email : '',
+      picture: '',
+      isSilhouette: null,
     }))
   })
 }

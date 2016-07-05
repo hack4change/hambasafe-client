@@ -139,3 +139,24 @@ ion-range {
     font-family: DINPro;
   }
 }
+
+.hidden-file-input {
+  width: 0.1px;
+  height: 0.1px;
+  opacity: 0;
+  overflow: hidden;
+  position: absolute;
+  z-index: -1;
+}
+.hidden-file-input + label {
+  // font-size: 1.25em;
+  // font-weight: 700;
+  color: #999;
+  display: inline-block;
+  cursor: pointer;
+}
+
+.hidden-file-input:focus + label,
+.hidden-file-input + label:hover {
+  // background-color: $energized;
+}
