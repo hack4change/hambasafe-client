@@ -45,7 +45,7 @@ export class RegistrationPage {
 	gender					: 	string = 'Gender';
   currentUser$    :   Observable<any>;
 
-  constructor(private nav: NavController, private viewCtrl: ViewController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
+  constructor(private nav: NavController,private viewCtrl: ViewController private ngRedux: NgRedux<any>, private zone: NgZone) { }
 
   ngOnInit() {
     this.ngRedux.dispatch(authActions.authUser());
