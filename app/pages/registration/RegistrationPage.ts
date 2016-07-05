@@ -48,7 +48,7 @@ export class RegistrationPage {
   constructor(private nav: NavController, private viewCtrl: ViewController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
 
   ngOnInit() {
-    // this.ngRedux.dispatch(authActions.authUser());
+    this.ngRedux.dispatch(authActions.authUser());
     this.currentUser$ = this.ngRedux.select((state)=> {
       return state.get('currentUser').toJS()
     })
