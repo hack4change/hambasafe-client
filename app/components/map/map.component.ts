@@ -19,19 +19,21 @@ export class MapComponent {
 
   @Input() radius;
   //Holds map reference.
-  private gMap: any;
+  private gMap            : any;
   //Holds marker reference.
-  private gMarker: any;
+  private gMarker         : any;
   //Holds all coordinate data, from navigator.
-  private gCoords: any = {};
+  private gCoords         : any = {};
   //Hold lat and lng of clicks and initial position. (google.maps.LatLng)
-  private latLng: any;
+  private latLng          : any;
   //Holds the reference to the google maps circle
-  private locationCircle: any;
-  // public sliderChange;
+  private locationCircle  : any;
+  private geoCoder        : any;
+
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
 
   ngOnInit() {
+    this.geoCoder = new google.maps.Geocoder;
   }
   ngAfterContentInit() {
     console.log(this.mapNode.nativeElement.valueOf());
@@ -45,13 +47,12 @@ export class MapComponent {
       });
 
       // this.gMap.setCenter(new google.maps.LatLng(this.gCoords.latitude, this.gCoords.longitude));
-			this.gMap.addListener('click', this.mapClick);
 
       // this.gMap.setCenter(new google.maps.LatLng(this.gCoords.latitude, this.gCoords.longitude));
       this.gMarker = new google.maps.Marker({ 
         position: this.latLng,
         map: this.gMap,
-        title: 'You!',
+        animation: google.maps.Animation.BOUNCE,
       });
 
       this.locationCircle = new google.maps.Circle({
@@ -64,6 +65,8 @@ export class MapComponent {
         center: this.latLng,
         radius: this.radius * 1000
       });
+			this.gMap.addListener('click', this.mapClick);
+			this.locationCircle.addListener('click', this.mapClick);
     })
   }
 
@@ -75,46 +78,8 @@ export class MapComponent {
 
 	mapClick = (event, a) => {
 		this.latLng = event.latLng
-		this.gMap.setCenter(this.latLng);
+    this.gMap.setCenter(this.latLng);
 		this.gMarker.setPosition(this.latLng);
 		this.locationCircle.setCenter(this.latLng);
 	}
 }
-/*
-    this.loading = $ionicLoading.show({
-      content: 'Getting current location...',
-      showBackdrop: false
-    });
-  }
-  searchByLocation() {
-    console.log("Hey");
-    if (!!this.gCoords && !!this.radius) {
-      console.log(this.radius);
-      console.log(this.gCoords.lat() + " " + this.gCoords.lng());
-      this.$location.path('app/search?lat=' + this.gCoords.lat() + "&lng" + this.gCoords.lng() + "&dist=" + this.radius);
-    }
-  }
-  init() {
-    var mapOptions = {
-    };
-    var map = new google.maps.Map(document.getElementById("map"),
-      mapOptions);
-    navigator.geolocation.getCurrentPosition(function (pos) {
-      console.log(pos);
-      let gCoords = new google.maps.LatLng(pos.coords.latitude, pos.coords.longitude);
-      this.$ionicLoading.hide();
-    }, function (error) {
-      alert('Unable to get location: ' + error.message);
-    });
-
-    this.$watch('radius', function (newValue, oldValue) {
-        console.log(this.map)
-        if (this.map && this.locationCircle) {
-          this.locationCircle.setOptions({
-            radius: this.radius * 1000
-          });
-        }
-
-    });
-  }
-*/

@@ -45,7 +45,7 @@ import {RegistrationPage} from './pages/registration/RegistrationPage';
 export class MyApp {
   @ViewChild('myNavRoot') nav: NavController;
 
-  private rootPage: any = SplashPage;
+  private rootPage: any = LandingPage;
   private authStatus$ : Observable<any>;
   oldStatus: string;
 
@@ -67,7 +67,7 @@ export class MyApp {
   }
 
   /*
-   * init func
+   * Init func
    */
   ngOnInit() {
     this.setMenuAnonymous();

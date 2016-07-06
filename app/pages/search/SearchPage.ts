@@ -109,11 +109,17 @@ export class SearchPage {
     this.activeType = 'SEARCH';
     var lat = this.mapChild.latLng.lat();
     var lng = this.mapChild.latLng.lng();
+    var geoCoder = this.mapChild.geoCoder;
+
     this.coordinates = {
       latitude: lat,
       longitude: lng,
     }
     if(!!lat && !!lng){
+      geoCoder.geocode({'location' : this.mapChild.latLng}, function(results, status){
+        console.log(results);
+        console.log(status);
+      })
       console.log(this.searchDistance);
       this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.latitude, this.coordinates.latitude));
     }

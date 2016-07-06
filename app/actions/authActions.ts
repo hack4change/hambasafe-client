@@ -28,13 +28,13 @@ const fbLogin = (errorCallback, successCallback):any => {
           },
           (apiResponse: any) => {
             console.log(apiResponse);
-            var respJson = _.pick(apiResponse, [
+             _.merge(respJson,  _.pick(apiResponse, [
               'first_name',
               'last_name',
               'birthday',
               'gender',
               'email',
-            ]);
+            ]));
             respJson.picture = respJson.picture && apiResponse.picture.data ? apiResponse.picture.data.url : '';
             respJson.isSilhouette = respJson.picture && apiResponse.picture.data ? apiResponse.picture.data.is_silhouette : null;
 
@@ -61,6 +61,10 @@ const fbLogin = (errorCallback, successCallback):any => {
 
     } else {
       var respJson = _.pick(response.authResponse, ['accessToken', 'userID']);
+      respJson.fbId = respJson.userID;
+      respJson.userID = undefined;
+      //TODO: Remove
+      respJson['wasLoggedIn'] = true;
       console.log(response);
       FB.api('/me', 'get', {
         'fields' : [
@@ -72,13 +76,13 @@ const fbLogin = (errorCallback, successCallback):any => {
           'picture',
         ]
       }, (apiResponse: any) => {
-            var respJson = _.pick(apiResponse, [
+             _.merge(respJson,  _.pick(apiResponse, [
               'first_name',
               'last_name',
               'birthday',
               'gender',
               'email',
-            ]);
+            ]));
             respJson.picture = apiResponse.picture.data.url;
             respJson.isSilhouette = apiResponse.picture.data.is_silhouette;
 

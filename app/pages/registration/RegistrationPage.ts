@@ -50,8 +50,8 @@ import {MapComponent} from '../../components/map/map.component.ts';
         // transform: 'scale(1)'
         height: '*',
       })),
-      transition('inactive => active', animate('500ms ease-in', style({height: '*'}))),
-      transition('active => inactive', animate('500ms ease-out', style({ height: 0})))
+      transition('inactive => active', animate('250ms ease-in')),
+      transition('active => inactive', animate('500ms ease-out'))
     ])
   ]
 })
@@ -109,6 +109,14 @@ export class RegistrationPage {
           }
           this.email              = userData.email;
           this.gender             = userData.gender;
+          if(this.gender) {
+            var genderIndex = _.findIndex(this.genderOptions, {'name' : _.capitalize(this.gender)});
+            if(genderIndex != -1) {
+              this.genderOptions[genderIndex].selected = true;
+            } else {
+              this.genderOptions[this.genderOptions.length -1 ].selected = true;
+            }
+          }
           this.profilePicture     = userData.picture;
           this.isSilhouette       = userData.isSilhouette;
         }
@@ -151,8 +159,8 @@ export class RegistrationPage {
     console.log('openy');
   }
   toggleGenderOpen() {
-    this.aniState = 'active';
     this.genderSelectOpen = !this.genderSelectOpen;
+    this.aniState = this.aniState == 'active' ? 'inactive' : 'active';
   }
   isGenderOpen() {
     return this.genderSelectOpen;
@@ -167,6 +175,8 @@ export class RegistrationPage {
         this.genderOptions[i].selected =  !this.genderOptions[i].selected;
         if(!this.genderOptions[i].selected){
           this.genderHeader = 'Gender';
+        } else {
+          // this.genderSelectOpen = false;
         }
 			}
 		}
@@ -176,7 +186,6 @@ export class RegistrationPage {
   }
   openTerms(){
     this.termsAccepted = true;
-    console.log('hi');
     this.nav.push(TermsPage);
   }
 }
