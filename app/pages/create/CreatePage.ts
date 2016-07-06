@@ -21,7 +21,7 @@ export class CreatePage {
   userId$: Observable<any>;
   currentUserId: number;
   createModal = null; 
-  isPublic;
+  isPublic : boolean = true;
   eventType;
   name;
   description
@@ -32,6 +32,7 @@ export class CreatePage {
   endTime;
   endDate;
   endLocation;
+  intensity;
   waitMins;
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) { }
 
@@ -41,7 +42,6 @@ export class CreatePage {
     this.userId$ = this.ngRedux.select(state=>state.getIn(['currentUser', 'id']));
 
     this.created$.subscribe(eventStatus => {
-      console.log(eventStatus)
       switch (eventStatus) {
         case 'created': 
           if(this.createModal) {
@@ -109,44 +109,46 @@ export class CreatePage {
 		// 	return; 
 		// }
 		var data = {
-			'Name'          : this.name || 'Cycling in Numbers',
-			'Description'   : this.description || 'howdy',
-			'Distance'      : this.distance|| 5,
-			'EventType'     : {
-        'Id'          : 1,
-				'Name'          : this.eventType || 'RUN',
-        'Description' : 'hey'
+			'name'          : this.name         || 'Cycling in Numbers',
+			'description'   : this.description  || 'howdy',
+			'distance'      : this.distance     || 5,
+      'intensity'     : this.intensity    || 'NOVICE',
+			'eventType'     : {
+        'id'          : 1,
+				'name'          : this.eventType  || 'RUN',
+        'description' : 'hey'
 			},
-			'DateTimeStart' : this.startDate+"T"+this.startTime + roundDateToISO ,
-      'DateTimeEnd'   : this.endDate+"T"+this.endTime +  roundDateToISO,
-      'StartLocation' : {
-        'Country'  : 'South Africa',//(string, optional),
-        'City'  : 'Cape Town',//(string, optional),
-        'Province' : 'Western Cape', //(string, optional),
-        'Suburb' : 'Rondebosch', //(string, optional),
-        'PostCode' : '8000', //(string, optional),
-        'Address' : '3 McNuggets please', //(string, optional),
-        'Latitude' : -33.8786, //(number, optional),
-        'Longitude' : 18.6947, 
+			'dateTimeStart' : this.startDate+"T"+this.startTime + roundDateToISO ,
+      'startLocation' : {
+        'id'        : 13,
+        'country'  : 'South Africa',//(string, optional),
+        'city'  : 'Cape Town',//(string, optional),
+        'province' : 'Western Cape', //(string, optional),
+        'suburb' : 'Rondebosch', //(string, optional),
+        'postCode' : '8000', //(string, optional),
+        'address' : '3 McNuggets please', //(string, optional),
+        'latitude' : -33.8786, //(number, optional),
+        'longitude' : 18.6947, 
       },
-      'EndLocation' : {
-        'Country'  : 'South Africa',         //(string, optional)
-        'Province' : 'Western Cape',      //(string, optional)
-        'Suburb' : 'Rondebosch',          //(string, optional)
-        'PostCode' : '8000',              //(string, optional)
-        'Address' : '3 Some Avenue',      //(string, optional)
-        'Latitude' : -33.9249, //(number, optional),
-        'Longitude' : 18.4241, 
+      'dateTimeEnd'   : this.endDate+"T"+this.endTime +  roundDateToISO,
+      'endLocation' : {
+        'id'        : 14,
+        'country'  : 'South Africa',         //(string, optional)
+        'province' : 'Western Cape',      //(string, optional)
+        'suburb' : 'Rondebosch',          //(string, optional)
+        'postCode' : '8000',              //(string, optional)
+        'address' : '3 Some Avenue',      //(string, optional)
+        'latitude' : -33.9249, //(number, optional),
+        'longitude' : 18.4241, 
       },
-      'OwnerUser' : {
-        'Id'          : 10,
-        'FirstNames'  : 'George',
-        'LastNames'   : 'Phillips',
+      'ownerUser' : {
+        'id'          : 10,
+        'firstNames'  : 'George',
+        'lastNames'   : 'Phillips',
       },
-      'WaitMins'      : this.waitMins || 10,
-      'IsPublic'    : this.isPublic,
+      'maxWaitingMinutes'      : this.waitMins || 10,
+      'isPublic'    : this.isPublic,
 		}
-    console.log(data);
     this.ngRedux.dispatch(eventDataActions.createEvent(data));
 	}
 

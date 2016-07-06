@@ -36,7 +36,7 @@ export class LandingPage
 
   ngOnInit(){
     this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
-    this.authStatus$.subscribe( (userStatus) => {
+    this.authStatus$.subscribe((userStatus) => {
       switch(userStatus) {
         case 'AUTHENTICATED':
           this.nav.setRoot(HomePage);

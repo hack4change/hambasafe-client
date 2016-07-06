@@ -32,7 +32,6 @@ export class MapComponent {
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
 
   ngOnInit() {
-    console.log(this.radius);
   }
   ngAfterContentInit() {
     console.log(this.mapNode.nativeElement.valueOf());

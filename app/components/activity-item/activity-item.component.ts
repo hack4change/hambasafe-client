@@ -20,7 +20,7 @@ import { ActivityDetailPage } from '../../pages/activity-detail/ActivityDetailPa
 export class ActivityItemComponent {
   @Input() activity: any;
   startFormatted : any;
-  actionType : string=Math.floor(Math.random()*2) ? 'RATE' : 'VIEW';
+  actionType : string = Math.floor(Math.random()*2) ? 'RATE' : 'VIEW';
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
 
   ngOnInit() {
@@ -28,16 +28,16 @@ export class ActivityItemComponent {
      
     // this.actionType = ;
     
-    this.startFormatted = new Date(this.activity.DateTimeStart);
+    this.startFormatted = new Date(this.activity.dateTimeStart);
     this.startFormatted = this.startFormatted.getUTCDate() + "-"+(this.startFormatted.getUTCMonth()+1) + "-" + this.startFormatted.getUTCFullYear();
   }
   getActivityType(){
-    return !! this.activity.EventType ? this.activity.EventType : '';
+    return !! this.activity.eventType ? this.activity.eventType : '';
   }
   viewActivity(){
-    console.log(this.activity.Id);
+    console.log(this.activity['id']);
     this.nav.push(ActivityDetailPage, {
-      'activityId' : this.activity.Id,
+      'activityId' : this.activity['id'],
     }) 
   }
   getClasses(){

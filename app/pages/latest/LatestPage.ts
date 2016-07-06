@@ -14,10 +14,10 @@ export class LatestPage{
   constructor(private nav: NavController) {};
 
   goCreateAnEvent = function () {
-    this.$location.path('app/registration');
+    // this.$location.path('app/registration');
   }
 
   goHambaSafe = function () {
-    this.$location.path('app/eventdetail/TEMP');
+    // this.$location.path('app/eventdetail/TEMP');
   }
 }

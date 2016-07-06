@@ -36,11 +36,11 @@ export class ActivityDetailPage {
       state => 
         state.getIn(['eventData', 'items'])
         .find(item =>  
-          item.get('Id') === this.activityId
+          item.get('id') === this.activityId
         ).toJS()
     );
     this.activity$.subscribe(x => {
-      this.description = x.Description;
+      this.description = x.description;
     })
   }
   goBack(){

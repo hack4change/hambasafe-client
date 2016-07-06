@@ -21,7 +21,12 @@ import {Observable} from 'rxjs';
  *  Actions
  */
 import {usersActions} from '../../actions/usersActions';
-import {authActions} from '../../actions/authActions';
+// import {authActions} from '../../actions/authActions';
+
+/*
+ * Pages
+ */
+import {TermsPage} from '../terms/TermsPage';
 
 /*
  * Components
@@ -45,7 +50,7 @@ import {MapComponent} from '../../components/map/map.component.ts';
         // transform: 'scale(1)'
         height: '*',
       })),
-      transition('inactive => active', animate('500ms ease-in', style({ height: '*'}))),
+      transition('inactive => active', animate('500ms ease-in', style({height: '*'}))),
       transition('active => inactive', animate('500ms ease-out', style({ height: 0})))
     ])
   ]
@@ -53,6 +58,7 @@ import {MapComponent} from '../../components/map/map.component.ts';
 export class RegistrationPage {
   // @ViewChild('myMap') mapChild;
 
+  currentUser$      :   Observable<any>;
   validForm         :   boolean;
   aniState          :   string  = 'inactive';
   firstName         :   string;
@@ -63,7 +69,7 @@ export class RegistrationPage {
   email             :   string;
   confirmEmail      :   string;
   identification    :   string;
-  terms             :   string;
+  termsAccepted     :   boolean = false;
   profilePicture    :   string;
   uploadPicture     :   string;
   isSilhouette      :   boolean;
@@ -85,7 +91,6 @@ export class RegistrationPage {
       'selected'  : false,
     },
   ];
-  currentUser$      :   Observable<any>;
 
   constructor(private nav: NavController, private viewCtrl: ViewController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
 
@@ -129,12 +134,13 @@ export class RegistrationPage {
 			'token'				  :   this.guid(),
 			'firstNames'	  :   this.firstName || 'George',//this.firstName,
 			'lastName'		  :   this.lastName || 'Phillips',//this.lastName,
-			'gender'			  :   this.gender || 'Male',//this.gender,
+			'gender'			  :   _.find(this.gender, {'selected': true}) ? _.find(this.gender, {'selected': true}).name : 'Male',
 			'dateOfBirth'   :	  this.birthday || (new Date).toISOString(),//this.dateOfBirth,
       'status'        :   '',
       'mobileNumber'  :   this.mobileNumber || '0827643743',
       'emailAddress'  :   this.email || 'George@sum.such',
     }
+    //TODO: Validation
     this.ngRedux.dispatch(usersActions.createUser(userData));
   }
   // onInputFocus(e) {
@@ -154,9 +160,7 @@ export class RegistrationPage {
 	selectGender(option:string) {
     this.gender = option;
     this.genderHeader = option;
-    console.log(option);
 		for(var i = 0 ; i < this.genderOptions.length; i++){
-     console.log(this.genderOptions[i].name);
 			if(this.genderOptions[i].name !== option){
 				_.set(this.genderOptions[i], 'selected', false);
 			} else {
@@ -167,6 +171,14 @@ export class RegistrationPage {
 			}
 		}
 	}
+  genderSelected(){
+    return this.genderHeader === 'Gender';
+  }
+  openTerms(){
+    this.termsAccepted = true;
+    console.log('hi');
+    this.nav.push(TermsPage);
+  }
 }
 
 

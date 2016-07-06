@@ -154,6 +154,7 @@ ion-range {
   color: #999;
   display: inline-block;
   cursor: pointer;
+  width: 100%;
 }
 
 .hidden-file-input:focus + label,
@@ -161,4 +162,10 @@ ion-range {
   // background-color: $energized;
 }
 
-
+.input-modal-button {
+  color: #999; 
+  .input-modal.dirty {
+    color: auto;
+  }
+  cursor: pointer;
+}

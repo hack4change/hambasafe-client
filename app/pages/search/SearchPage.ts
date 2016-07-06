@@ -63,7 +63,7 @@ export class SearchPage {
         console.log(this.activityType);
         if(this.activityType !== '' && this.activeType === 'TIME') {
           console.log(this.activeType);
-          return item && item.get('EventType') ? this.activeType === item.get('EventType').get('Name'): false;
+          return item && item.get('eventType') ? this.activeType === item.get('eventType').get('name'): false;
         }
         //XXX: Time sorting;
         return true;
@@ -73,8 +73,8 @@ export class SearchPage {
             return distanceCalculator(
               this.coordinates.latitude,
               this.coordinates.longitude,
-              item.get('StartLocation').get('Latitude'),
-              item.get('StartLocation').get('Longitude')
+              item.get('startLocation').get('latitude'),
+              item.get('startLocation').get('longitude')
             ) <= this.searchDistance;
         }
         //XXX: Time sorting;

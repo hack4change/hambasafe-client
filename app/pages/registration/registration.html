@@ -25,11 +25,7 @@
         <ion-label floating>Surname</ion-label>
         <ion-input type="text" [(ngModel)]="lastName" required></ion-input>
       </ion-item>
-      <ion-item class="borderless">
-        <ion-label floating>Date of Birth</ion-label>
-        <ion-datetime displayFormat="DD MMM YY" pickerFormat="DD MMM YY" [(ngModel)]="birthday"></ion-datetime>
-      </ion-item>
-      <ion-item (click)="toggleGenderOpen()" [ngClass]="{active: isGenderOpen()}">
+      <ion-item (click)="toggleGenderOpen()" [ngClass]="{clean: genderSelected(), active: isGenderOpen()}">
         {{ genderHeader }}
         <ion-icon name="ios-arrow-up" *ngIf="isGenderOpen()" item-right></ion-icon>
         <ion-icon name="ios-arrow-down" *ngIf="!isGenderOpen()" item-right></ion-icon>
@@ -40,8 +36,12 @@
           <ion-checkbox primary (click)="selectGender(genderOpt.name)" checked="{{ genderOpt.selected }}"></ion-checkbox>
         </ion-item>
       </div>
-      <ion-item class="borderless" (click)="openLocation()">
+      <ion-item class="borderless input-modal-button" (click)="openLocation()">
         Location
+      </ion-item>
+      <ion-item class="borderless">
+        <ion-label floating>Date of Birth</ion-label>
+        <ion-datetime displayFormat="DD MMM YY" pickerFormat="DD MMM YY" [(ngModel)]="birthday"></ion-datetime>
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Cell Number</ion-label>
@@ -59,9 +59,12 @@
         <input name="identification" class="hidden-file-input" type="file" accept="image/*" id="identification" [(ngModel)]="identification" required />
         <label for="identification">Scan my ID or Driver's License</label>
       </ion-item>
-      <ion-item class="borderless">
-        <h2>
+      <ion-item class="borderless" (click)="openTerms()">
+        <h2 *ngIf="!termsAccepted">
         Accept the Terms of Use
+        </h2>
+        <h2 *ngIf="termsAccepted">
+          Thank you!
         </h2>
       </ion-item>
     </ion-list>

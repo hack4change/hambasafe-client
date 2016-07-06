@@ -4,7 +4,7 @@
     </ion-avatar>
   <ion-row>
     <div class="activity-location">
-    {{  activity.StartLocation.City }}, {{  activity.StartLocation.Suburb }}
+    {{  activity.startLocation.city }}, {{  activity.startLocation.suburb }}
     </div>
     <div *ngIf="!actionType" class="activity-date">
     {{  startFormatted }}
@@ -13,16 +13,16 @@
   <ion-row>
     <ion-item class="borderless">
     <h1 style="font-size: 2rem;">
-      {{ activity.Name }}
+      {{ activity.name }}
     </h1>
     </ion-item>
   </ion-row>
   <ion-row>
     {{ getActivityType() }}
     &bull;
-    {{ activity.Distance }}
+    {{ activity.distance }}
     &bull;
-    {{ activity.Intensity }}
+    {{ activity.intensity }}
   </ion-row>
   <ion-icon *ngIf="actionType == 'RATE'" class="must-rate" name="md-star" light item-right></ion-icon>
   <ion-icon *ngIf="actionType == 'VIEW'" class="been-invited" name="ios-arrow-forward" light item-right></ion-icon>

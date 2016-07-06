@@ -14,6 +14,8 @@ const fbLogin = (errorCallback, successCallback):any => {
         var respJson: any = {};
         if (response.authResponse) {
           var respJson = _.pick(response.authResponse, ['accessToken', 'userID']);
+          respJson.fbId = respJson.userID;
+          respJson.userID = undefined;
           FB.api('/me', 'get', {
             'fields' : [
               'first_name',
@@ -44,6 +46,7 @@ const fbLogin = (errorCallback, successCallback):any => {
             //       'accessToken' : respJson['accessToken']
             //     }
             //   },
+            console.log(respJson);
             successCallback(respJson);// ,
             // errorCallback(loginResponse),
             // )

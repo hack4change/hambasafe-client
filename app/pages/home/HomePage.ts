@@ -41,7 +41,6 @@ export class HomePage {
   isFiltered: string = 'public';
   activities$: Observable<any>;
   isEmpty: any = 'true';
-
   sliderDistance: number = 2;
   greatestDistance: number = 2;
   coordinates: any;
@@ -58,8 +57,8 @@ export class HomePage {
             return distanceCalculator(
               this.coordinates.latitude,
               this.coordinates.longitude,
-              item.get('StartLocation').get('Latitude'),
-              item.get('StartLocation').get('Longitude')
+              item.get('startLocation').get('latitude'),
+              item.get('startLocation').get('longitude')
             ) <= this.sliderDistance;
           })
           .toJS()
