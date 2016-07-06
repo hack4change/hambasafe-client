@@ -34,17 +34,19 @@ import {MapComponent} from '../../components/map/map.component.ts';
     MapComponent,
   ],
   animations: [
-    trigger('genderVisiState', [
+    trigger('genderCollapseState', [
       state('inactive', style({
-        backgroundColor: '#eee',
-        transform: 'scale(0)'
+        // backgroundColor: '#eee',
+         height: '0',
+        // transform: 'scale(0)'
       })),
       state('active',   style({
-        backgroundColor: '#cfd8dc',
-        transform: 'scale(1)'
+        // backgroundColor: '#cfd8dc',
+        // transform: 'scale(1)'
+        height: '*',
       })),
-      transition('inactive => active', animate('100ms ease-in')),
-      transition('active => inactive', animate('100ms ease-out'))
+      transition('inactive => active', animate('500ms ease-in', style({ height: '*'}))),
+      transition('active => inactive', animate('500ms ease-out', style({ height: 0})))
     ])
   ]
 })
@@ -52,6 +54,7 @@ export class RegistrationPage {
   // @ViewChild('myMap') mapChild;
 
   validForm         :   boolean;
+  aniState          :   string  = 'inactive';
   firstName         :   string;
   lastName          :   string;
   birthday          :   any;
@@ -67,6 +70,7 @@ export class RegistrationPage {
   genderSelectOpen  :   boolean = false;
   genderHeader      :   string  = "Gender";
 	gender					  : 	string;
+  accessToken       :   string;
   genderOptions     :   any = [ 
     {
       'name'      : 'Male',
@@ -86,7 +90,7 @@ export class RegistrationPage {
   constructor(private nav: NavController, private viewCtrl: ViewController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
 
   ngOnInit() {
-    this.ngRedux.dispatch(authActions.authUser());
+    // this.ngRedux.dispatch(authActions.authUser());
     this.currentUser$ = this.ngRedux.select((state)=> {
       return state.get('currentUser').toJS()
     })
@@ -121,18 +125,19 @@ export class RegistrationPage {
 
 	createUser() {
     var userData = {
-      'Id'					  : Math.floor((Math.random() * 429496) + 1),
-			'Token'				  : this.guid(),
-			'FirstNames'	  : this.firstName || 'George',//this.firstName,
-			'LastName'		  : this.lastName || 'Phillips',//this.lastName,
-			'Gender'			  : 'Male',//this.gender,
-			'DateOfBirth'   :	this.birthday || (new Date).toISOString(),//this.dateOfBirth,
-      'MobileNumber'  : '0827643743',//this.mobileNumber,
-      'EmailAddress'  : 'George@sum.such',//this.emailAddress,
+      'id'					  :   Math.floor((Math.random() * 429496) + 1),
+			'token'				  :   this.guid(),
+			'firstNames'	  :   this.firstName || 'George',//this.firstName,
+			'lastName'		  :   this.lastName || 'Phillips',//this.lastName,
+			'gender'			  :   this.gender || 'Male',//this.gender,
+			'dateOfBirth'   :	  this.birthday || (new Date).toISOString(),//this.dateOfBirth,
+      'status'        :   '',
+      'mobileNumber'  :   this.mobileNumber || '0827643743',
+      'emailAddress'  :   this.email || 'George@sum.such',
     }
     this.ngRedux.dispatch(usersActions.createUser(userData));
   }
-  // onInputFocus(e){
+  // onInputFocus(e) {
   //   var selected = e.target.parentNode.parentNode.parentNode.parentNode;
   //   console.log(docselected);
   // }
@@ -140,6 +145,7 @@ export class RegistrationPage {
     console.log('openy');
   }
   toggleGenderOpen() {
+    this.aniState = 'active';
     this.genderSelectOpen = !this.genderSelectOpen;
   }
   isGenderOpen() {

@@ -1,6 +1,6 @@
 0 info it worked if it ends with ok
 1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'start' ]
-2 info using npm@3.10.2
+2 info using npm@3.10.3
 3 info using node@v6.2.2
 4 verbose stack Error: missing script: start
 4 verbose stack     at run (/usr/lib/node_modules/npm/lib/run-script.js:151:19)
@@ -17,7 +17,7 @@
 6 error Linux 4.6.3-1-ARCH
 7 error argv "/usr/bin/node" "/usr/bin/npm" "start"
 8 error node v6.2.2
-9 error npm  v3.10.2
+9 error npm  v3.10.3
 10 error missing script: start
 11 error If you need help, you may report this error at:
 11 error     <https://github.com/npm/npm/issues>

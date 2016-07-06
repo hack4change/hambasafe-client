@@ -45,7 +45,7 @@ import {RegistrationPage} from './pages/registration/RegistrationPage';
 export class MyApp {
   @ViewChild('myNavRoot') nav: NavController;
 
-  private rootPage: any = RegistrationPage;
+  private rootPage: any = SplashPage;
   private authStatus$ : Observable<any>;
   oldStatus: string;
 
@@ -74,27 +74,26 @@ export class MyApp {
     this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
     this.authStatus$.subscribe( userStatus => {
       console.log('Root userStatus');
-      // switch(userStatus){
-      //   case 'AUTHENTICATED':
+      switch(userStatus){
+        case 'AUTHENTICATED':
           this.setMenuAuthenticated();
-      //   break;
-      //   case 'CREATE_SUCCESS':
-      //     this.nav.setRoot(HomePage);
-      //   setTimeout(()=> {
-
-      //     this.ngRedux.dispatch(authActions.setAuthenticated());
-      //   }, 0)
-      //   case 'NEW_USER':
-      //     this.nav.setRoot(RegistrationPage);
-      //   break;
-      //   default:
-      //     if(this.menu.isEnabled('authorised-menu')){
-      //     this.setMenuAnonymous();
-      //   }
-      // }
-      // if(this.oldStatus === 'AUTHENTICATED' && userStatus !== 'AUTHENTICATED') {
-      //   this.nav.push(LandingPage);
-      // }
+        break;
+        case 'CREATE_SUCCESS':
+          this.nav.setRoot(HomePage);
+        setTimeout(()=> {
+          this.ngRedux.dispatch(authActions.setAuthenticated());
+        }, 0)
+        case 'NEW_USER':
+          this.nav.setRoot(RegistrationPage);
+        break;
+        default:
+          if(this.menu.isEnabled('authorised-menu')){
+          this.setMenuAnonymous();
+        }
+      }
+      if(this.oldStatus === 'AUTHENTICATED' && userStatus !== 'AUTHENTICATED') {
+        this.nav.push(LandingPage);
+      }
       this.oldStatus = userStatus;
     })
   }
