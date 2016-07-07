@@ -7,6 +7,12 @@ import {NavController, Loading} from 'ionic-angular';
 import {NgRedux} from 'ng2-redux';
 import {Observable} from 'rxjs';
 
+/*
+ *  Pages
+ */
+import {CreatePage} from '../create/CreatePage';
+import {SearchPage} from '../search/SearchPage';
+
 @Component({
   templateUrl: 'build/pages/profile/profile.html'
 })
@@ -24,11 +30,14 @@ export class ProfilePage {
     });
   }
 	
-	goFindEvent() {
-		this.nav.setRoot();
+	goHome() {
+    this.nav.setRoot(SearchPage);
 	}
-	goCreateEvent() {
-		this.nav.setRoot();
+	goSearch() {
+    this.nav.setRoot(SearchPage);
+	}
+	goCreate() {
+    this.nav.push(CreatePage);
 	}
 	goBack() {
 		this.nav.pop();

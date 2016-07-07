@@ -24,6 +24,7 @@
     </ion-title>
   </ion-toolbar>
 </ion-header>
+
 <ion-content [ngSwitch]="activeType">
   <template ngSwitchCase="TIME">
     <ion-item class="borderless">
@@ -55,14 +56,16 @@
   </template>
 </ion-content>
 
-<ion-toolbar *ngIf="activeType=='DISTANCE'" position="bottom">
-  <ion-item class="no-border">
-    <ion-range min="2" max="20" step="2" snaps="true" pin="false" value="{{searchDistance}}" [(ngModel)]="searchDistance" secondary>
-    </ion-range>
-  </ion-item>
-</ion-toolbar>
-<ion-toolbar *ngIf="activeType=='DISTANCE'" position="bottom">
-  <button full block primary (click)="searchRadius()">
-    Go!
-  </button>
-</ion-toolbar>
+<ion-footer *ngIf="activeType=='DISTANCE'">
+  <ion-toolbar>
+    <ion-item class="no-border">
+      <ion-range min="2" max="20" step="2" snaps="true" pin="false" value="{{searchDistance}}" [(ngModel)]="searchDistance" secondary>
+      </ion-range>
+    </ion-item>
+  </ion-toolbar>
+  <ion-toolbar>
+    <button full block primary (click)="searchRadius()">
+      Go!
+    </button>
+  </ion-toolbar>
+</ion-footer>

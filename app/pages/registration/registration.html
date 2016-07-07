@@ -72,12 +72,14 @@
     </ion-list>
   </form>
 </ion-content>
-<ion-toolbar position="bottom">
-  <button full primary (click)="createUser()">
-<!-- [disabled]="!validForm" -->
-    Next
-  </button>
-</ion-toolbar>
+<ion-footer>
+  <ion-toolbar position="bottom">
+    <button full primary (click)="createUser()">
+      <!-- [disabled]="!validForm" -->
+      Next
+    </button>
+  </ion-toolbar>
+</ion-footer>
 
 <!--
         <label class="item item-input item-floating-label">
