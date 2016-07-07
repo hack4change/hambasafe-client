@@ -1,43 +1,82 @@
-<ion-toolbar class="main-bar">
-  <ion-buttons class="order-left" start>
-    <button dark menuToggle>
-      <ion-icon name="md-more"></ion-icon>
-    </button>
-  </ion-buttons>
-  <ion-buttons end>
-    <button dark class="indent">
-      <ion-icon name="pin"></ion-icon>
-    </button>
-    <button dark>
-      <ion-icon name="search"></ion-icon>
-    </button>
-  </ion-buttons>
-</ion-toolbar>
-<ion-content>
-
-</ion-content>
-<!--
-  <form name="registrationForm" ng-submit="doRegistration(signupForm.$valid)" novalidate>
-    <div class="list">
-      <div class="item ">
-        {{user.FirstNames}}
+<ion-header>
+  <ion-toolbar class="main-bar">
+    <ion-buttons class="order-left" start>
+      <button dark menuToggle>
+        <ion-icon name="md-more"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons end>
+      <button dark class="indent">
+        <ion-icon name="md-pin"></ion-icon>
+      </button>
+      <button dark>
+        <ion-icon name="ios-search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar class="profile-details">
+    <ion-item no-lines>
+      <ion-avatar item-left> 
+        <img src="{{ (currentUser$| async)?.picture}}"/>
+      </ion-avatar>
+      <div>
+        <ion-item  no-lines class="profile-row profile-name">
+          {{(currentUser$| async)?.firstName}} {{(currentUser$| async)?.lastName}}
+          <ion-icon item-right class="pull-right" name="md-create"></ion-icon>
+        </ion-item>
+        <ion-item  no-lines class="profile-row">
+          <ion-icon *ngFor="let i of maxStars" [ngClass]="getIsRated(i)" name="star"></ion-icon>
+          <ion-icon item-right name="ios-checkmark-circle"></ion-icon>
+        </ion-item>
       </div>
-      <div class="item">
-        {{user.LastName}}
-      </div>
-      <div class="item ">
-        {{user.DateOfBirth|date :'shortDate'}}
-      </div>
-      <div class="item ">
-        {{user.EmailAddress}}
-      </div>
-      <div class="item ">
-        {{user.MobileNumber}}
-      </div>
-      <div class="item">
-        {{user.Gender}}
-      </div>
-      <div  class="item item-divider item-positive"  >My Events </div>
+    </ion-item>
+  </ion-toolbar>
+  <ion-toolbar no-padding class="buttonbar event-actions">
+    <ion-buttons>
+      <button class="square-corner font-positive" block>
+      <ion-icon name="md-search"></ion-icon>
+      Find an event
+      </button>
+      <button class="square-corner font-energized" block>
+      <ion-icon name="md-add"></ion-icon>
+      Create an event
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+  <ion-toolbar primary no-padding>
+    <div style="text-align:center; color:white;">
+      My Events
     </div>
-  </form>
-  -->
+  </ion-toolbar>
+  <ion-toolbar class="action-bar">
+    <ion-buttons class="split-three">
+      <button class="square-corner" block>
+        <div class="button-number">
+          24
+        </div>
+        <div class="button-title">
+          Upcoming
+        </div>
+      </button>
+      <button class="square-corner" block>
+        <div class="button-number">
+          102
+        </div>
+        <div class="button-title">
+          Joined
+        </div>
+      </button>
+      <button class="square-corner" block>
+        <div class="button-number">
+          2
+        </div>
+        <div class="button-title">
+          Created
+        </div>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+  </ion-header>
+  <ion-content>
+
+  </ion-content>

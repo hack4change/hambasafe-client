@@ -92,9 +92,7 @@ export class SearchPage {
   }
 
   ngOnChanges(changes: {[propertyName: string]: SimpleChange}) {
-    console.log('ngOnChanges')
-    console.log(changes);
-    this.activityConnector()
+    // this.activityConnector()
   }
 
   isActive(callingType) {
@@ -105,7 +103,6 @@ export class SearchPage {
   }
 
   searchRadius() {
-    console.log('searchRadius');
     this.activeType = 'SEARCH';
     var lat = this.mapChild.latLng.lat();
     var lng = this.mapChild.latLng.lng();
@@ -119,9 +116,8 @@ export class SearchPage {
       geoCoder.geocode({'location' : this.mapChild.latLng}, function(results, status){
         console.log(results);
         console.log(status);
+        this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.latitude, this.coordinates.latitude));
       })
-      console.log(this.searchDistance);
-      this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.latitude, this.coordinates.latitude));
     }
   }
 

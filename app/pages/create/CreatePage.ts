@@ -1,7 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {NavController, Loading} from 'ionic-angular';
-import {Observable} from 'rxjs';
+
+/**
+ *  Redux
+ */
 import {NgRedux} from 'ng2-redux';
+import {Observable} from 'rxjs';
 
 /*
  * Actions
@@ -34,7 +38,7 @@ export class CreatePage {
   endLocation;
   intensity;
   waitMins;
-  constructor(private nav: NavController, private ngRedux: NgRedux<any>) { }
+  constructor(private nav: NavController, private ngRedux: NgRedux<any>) {}
 
   ngOnInit(){
   
@@ -55,7 +59,7 @@ export class CreatePage {
         case 'creating': 
           this.createModal = Loading.create({
           content: "Creating...",
-          spinner: 'crescent',
+          // spinner: 'crescent',
           dismissOnPageChange : true,
         })
         this.nav.present(this.createModal);

@@ -169,3 +169,18 @@ ion-range {
   }
   cursor: pointer;
 }
+.rating-grey {
+  color: #CCC;
+}
+.rating-gold {
+  color: $energized;
+  // color: #FFD700;
+}
+.font-positive {
+  color: $positive;
+  font-weight: bold;
+}
+.font-energized {
+  color: $energized;
+  font-weight: bold;
+}

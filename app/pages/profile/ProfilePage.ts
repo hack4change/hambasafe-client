@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {Component, OnInit} from '@angular/core';
+import {NavController, Loading} from 'ionic-angular';
 
 /**
  *  Redux
@@ -11,10 +11,35 @@ import {Observable} from 'rxjs';
   templateUrl: 'build/pages/profile/profile.html'
 })
 export class ProfilePage {
+  currentUser$: Observable<any>;
+  maxStars : Object = [1, 2, 3, 4, 5];
+  userRating : number = 3;
 
-  constructor(private nav: NavController) {};
+  constructor(private nav: NavController, private ngRedux: NgRedux<any>) {}
+
+  ngOnInit() {
+    this.currentUser$ = this.ngRedux.select(state=> {
+      console.log(state.get('currentUser').toJS());
+      return state.get('currentUser').toJS();
+    });
+  }
 	
-	goBack(){
+	goFindEvent() {
+		this.nav.setRoot();
+	}
+	goCreateEvent() {
+		this.nav.setRoot();
+	}
+	goBack() {
 		this.nav.pop();
 	}
+
+  getIsRated(starNumber: number) {
+    console.log(starNumber);
+    if(starNumber <= this.userRating) {
+      return 'rating-gold';
+    } else {
+      return 'rating-grey';
+    }
+  }
 }

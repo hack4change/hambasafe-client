@@ -21,6 +21,8 @@ import {TermsPage} from '../terms/TermsPage';
 //TODO: REMOVE
 import {SearchPage} from '../search/SearchPage';
 import {RegistrationPage} from '../registration/RegistrationPage';
+import {ProfilePage} from '../profile/ProfilePage';
+
 
 
 @Component({
@@ -39,8 +41,8 @@ export class LandingPage
     this.authStatus$.subscribe((userStatus) => {
       switch(userStatus) {
         case 'AUTHENTICATED':
-          this.nav.setRoot(HomePage);
-          // this.nav.setRoot(SearchPage);
+          this.nav.setRoot(ProfilePage);
+          // this.nav.setRoot(HomePage);
         break;
         case 'ATTEMPTING':
           break;
