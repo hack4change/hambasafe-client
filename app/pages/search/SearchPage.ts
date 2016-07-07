@@ -113,7 +113,7 @@ export class SearchPage {
       longitude: lng,
     }
     if(!!lat && !!lng){
-      geoCoder.geocode({'location' : this.mapChild.latLng}, function(results, status){
+      geoCoder.geocode({'location' : this.mapChild.latLng}, (results, status) => {
         console.log(results);
         console.log(status);
         this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.latitude, this.coordinates.latitude));

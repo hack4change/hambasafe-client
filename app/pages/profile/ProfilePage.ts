@@ -12,6 +12,7 @@ import {Observable} from 'rxjs';
  */
 import {CreatePage} from '../create/CreatePage';
 import {SearchPage} from '../search/SearchPage';
+ import {ActivityListPage} from '../activity-list/ActivityListPage';
 
 @Component({
   templateUrl: 'build/pages/profile/profile.html'
