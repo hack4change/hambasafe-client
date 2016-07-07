@@ -18,6 +18,7 @@ import {eventDataActions} from '../../actions/eventDataActions';
  * Pages
  */
 import {HomePage} from '../home/HomePage';
+import {ActivityListPage} from '../activity-list/ActivityListPage';
 
 /*
  * Components
@@ -56,7 +57,7 @@ export class SearchPage {
     this.ngRedux.dispatch(eventDataActions.fetchEvents());
   }
 
-  activityConnector(){
+  activityConnector() {
     this.activities$ = this.ngRedux.select((state) => {
       return state.getIn(['eventData', 'items'])
       .filter((item) => {
@@ -69,7 +70,7 @@ export class SearchPage {
         return true;
       })
       .filter((item) => {
-        if(this.activeType == 'SEARCH'){
+        if(this.activeType == 'SEARCH') {
             return distanceCalculator(
               this.coordinates.latitude,
               this.coordinates.longitude,

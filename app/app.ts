@@ -191,11 +191,13 @@ window.fbAsyncInit = function() {
 
     version    : 'v2.6',
   });
-  // enableProdMode();
+  console.log(FB);
+  enableProdMode();
   ionicBootstrap(MyApp, [provider(store)], {
     backButtonText : '',
   })
 };
+
 
 (function(d){
   // load the Facebook javascript SDK

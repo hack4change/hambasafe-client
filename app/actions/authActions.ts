@@ -7,8 +7,11 @@ import {User} from '../user';
 const API_ROOT = 'http://hambasafetesting.azurewebsites.net';
 
 const fbLogin = (errorCallback, successCallback):any => {
+  console.log('fbLogin');
+  console.log(typeof(FB.getLoginStatus));
   FB.getLoginStatus(function(response) {
-    console.log(response);
+    console.log('Status');
+    console.log(JSON.stringify(response));
     if (response.status !== 'connected') {
       FB.login((response: any) => {
         var respJson: any = {};

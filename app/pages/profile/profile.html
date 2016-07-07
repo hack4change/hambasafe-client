@@ -50,7 +50,7 @@
   </ion-toolbar>
   <ion-toolbar class="action-bar">
     <ion-buttons class="split-three">
-      <button class="square-corner borderless" block>
+      <button class="square-corner borderless" (click)="goActivityList(0)" block>
         <div class="button-number">
           24
         </div>
@@ -58,7 +58,7 @@
           Upcoming
         </div>
       </button>
-      <button class="square-corner" block>
+      <button class="square-corner" (click)="goActivityList(1)" block>
         <div class="button-number">
           102
         </div>
@@ -66,7 +66,7 @@
           Joined
         </div>
       </button>
-      <button class="square-corner" block>
+      <button class="square-corner" (click)="goActivityList(2)" block>
         <div class="button-number">
           2
         </div>
