@@ -5,7 +5,7 @@ var Parse = require('parse').Parse;
 Parse.initialize('test1234');
 Parse.serverURL = 'https://163.172.144.224/parse'
 
-export class ParseManager{
+export class ParseManager {
     ActivityClass: any;
     UserClass: any;
     Parse: any;
@@ -51,6 +51,45 @@ export class ParseManager{
 			});
 
 		}
+    fbInit(){
+      FB.init({
+
+        /*
+           The app id of the web app;
+           To register a new app visit Facebook App Dashboard
+           ( https://developers.facebook.com/apps/ )
+         */
+        appId: '1824765444411364',//'289482390688',
+
+        /*
+           Adding a Channel File improves the performance
+           of the javascript SDK, by addressing issues
+           with cross-domain communication in certain browsers.
+         */
+
+        // channelUrl: 'app/channel.html',
+
+        /*
+           Set if you want to check the authentication status
+           at the start up of the app
+         */
+        status: true,
+
+        /*
+           Enable cookies to allow the server to access
+           the session
+         */
+        cookie: true,
+
+        /* Parse XFBML */
+        xfbml: true,
+
+        version    : 'v2.6',
+      });
+    }
+    facebookLogin(perms, opts){
+      this.Parse.FacebookUtils.logIn(perms, opts);
+    }
     // logInFacebook(success: (user: Parse.User) => void, error: (user: Parse.User, error: any) => void)
     // {
     //     // this.Parse.FacebookUtils.logIn(null, {

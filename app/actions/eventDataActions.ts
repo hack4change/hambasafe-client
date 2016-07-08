@@ -2,12 +2,12 @@ import actionTypes from '../actionTypes.ts';
 import {fromJS} from 'immutable';
 import jsonRequest from '../utils/jsonRequest';
 import {EventDatum} from '../eventDatum';
-import {ParseManager} from '../models/parseManager';
+ import {ParseManager} from '../models/parseManager';
 
 const API_ROOT = 'http://hambasafetesting.azurewebsites.net/v1';
 
 
-const parseManager = new ParseManager();
+// const parseManager =  ParseManager();
 
 /*
  * FETCHING
@@ -102,7 +102,7 @@ const fetchEventsByCoordinates = (distance: number, latitude: number, longitude:
     }
     // Set loading state.
     dispatch(setFetchLoadingState());
-    parseManager.getActivities();
+    window.parseManager.getActivities();
 
     // Do request.
     jsonRequest(
@@ -155,7 +155,7 @@ const createEvent = (data):any => {
       method : 'POST',
       body : data,
     }
-    parseManager.createActivity('Simon', null);
+    window.parseManager.createActivity('Simon', null);
 
     // Set loading state.
     dispatch(setCreateLoadingState());

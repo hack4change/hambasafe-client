@@ -8,6 +8,9 @@ const API_ROOT = 'http://hambasafetesting.azurewebsites.net';
 
 const fbLogin = (errorCallback, successCallback):any => {
   console.log('fbLogin');
+  // window.parseManager.facebookLogin('public_profile, email', function(response){
+  //   console.log(response);
+  // })
   console.log(typeof(FB.getLoginStatus));
   FB.getLoginStatus(function(response) {
     console.log('Status');

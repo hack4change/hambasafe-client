@@ -180,12 +180,14 @@ interface FBSDK{
     Canvas : FBSDKCanvas;
 }
 
-interface Window{
+interface Window {
     fbAsyncInit() : any;
+    parseManager : any;
 }
 
 declare module "FB" {
     export = FB;
+
 }
 
 declare var FB : FBSDK;

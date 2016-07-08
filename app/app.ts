@@ -1,6 +1,5 @@
 import {Component, ViewChild, enableProdMode} from '@angular/core';
 import {Platform, ionicBootstrap, MenuController, NavController} from 'ionic-angular';
-import {ParseManager} from './models/parseManager'
 
 
 /**
@@ -41,6 +40,10 @@ import {RatingPage} from './pages/rating/RatingPage';
 import {RegistrationPage} from './pages/registration/RegistrationPage';
 // import {SearchPage} from './pages/search/SearchPage';
 
+import {ParseManager} from './models/parseManager';
+
+window.parseManager = new ParseManager();
+
 @Component({
   templateUrl: 'build/pages/app.html',
 })
@@ -72,6 +75,7 @@ export class MyApp {
    * Init func
    */
   ngOnInit() {
+    window.parseManager.fbInit();
     this.setMenuAnonymous();
     this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
     this.authStatus$.subscribe( userStatus => {
@@ -159,40 +163,6 @@ export class MyApp {
 window.fbAsyncInit = function() {
   // Executed when the SDK is loaded
 
-  FB.init({
-
-    /*
-       The app id of the web app;
-       To register a new app visit Facebook App Dashboard
-       ( https://developers.facebook.com/apps/ )
-     */
-    appId: '1824765444411364',//'289482390688',
-
-    /*
-       Adding a Channel File improves the performance
-       of the javascript SDK, by addressing issues
-       with cross-domain communication in certain browsers.
-     */
-
-    // channelUrl: 'app/channel.html',
-
-    /*
-       Set if you want to check the authentication status
-       at the start up of the app
-     */
-    status: true,
-
-    /*
-       Enable cookies to allow the server to access
-       the session
-     */
-    cookie: true,
-
-    /* Parse XFBML */
-    xfbml: true,
-
-    version    : 'v2.6',
-  });
   // console.log(FB);
   enableProdMode();
   ionicBootstrap(MyApp, [provider(store), ParseManager], {
