@@ -1,5 +1,7 @@
 import {Component, ViewChild, enableProdMode} from '@angular/core';
 import {Platform, ionicBootstrap, MenuController, NavController} from 'ionic-angular';
+import {ParseManager} from './models/parseManager'
+
 
 /**
  *  Native Plugins
@@ -87,7 +89,7 @@ export class MyApp {
           this.nav.setRoot(RegistrationPage);
         break;
         default:
-          if(this.menu.isEnabled('authorised-menu')){
+          if(this.menu.isEnabled('authorised-menu')) {
           this.setMenuAnonymous();
         }
       }
@@ -138,7 +140,7 @@ export class MyApp {
     window.location.href= "https://twitter.com/hambasafe"; 
   }
 
-  goToWebsite(){
+  goToWebsite() {
     window.location.href= "https://www.facebook.com/hambasafe/"; 
   }
 
@@ -149,7 +151,7 @@ export class MyApp {
     this.menu.close();
     this.nav.push(TermsPage);
   }
-  logOut(){
+  logOut() {
     this.ngRedux.dispatch(authActions.logoutUser());
   }
 }
@@ -191,9 +193,9 @@ window.fbAsyncInit = function() {
 
     version    : 'v2.6',
   });
-  console.log(FB);
+  // console.log(FB);
   enableProdMode();
-  ionicBootstrap(MyApp, [provider(store)], {
+  ionicBootstrap(MyApp, [provider(store), ParseManager], {
     backButtonText : '',
   })
 };

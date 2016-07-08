@@ -7,6 +7,9 @@
     "es6-shim": "registry:dt/es6-shim#0.31.2+20160317120654"
   },
   "globalDependencies": {
-    "fbsdk": "registry:dt/fbsdk#0.0.0+20160524084205"
+    "fbsdk": "registry:dt/fbsdk#0.0.0+20160524084205",
+    "jquery": "registry:dt/jquery#1.10.0+20160704162008",
+    "jquery-ajax-chain": "registry:dt/jquery-ajax-chain#1.0.4+20160317120654",
+    "parse": "registry:dt/parse#1.2.19+20160316155526"
   }
 }

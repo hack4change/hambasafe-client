@@ -22,6 +22,8 @@
     "lodash": "^4.13.1",
     "ng2-redux": "^2.3.3",
     "node-sass": "^3.4.2",
+    "parse": "^1.9.0",
+    "parse-sdk": "^1.5.0",
     "redux": "^3.5.2",
     "redux-immutable": "^3.0.6",
     "redux-thunk": "^2.1.0",

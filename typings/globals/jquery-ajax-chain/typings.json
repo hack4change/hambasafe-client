@@ -1,0 +1,8 @@
+{
+  "resolution": "main",
+  "tree": {
+    "src": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/7de6c3dd94feaeb21f20054b9f30d5dabc5efabd/jquery-ajax-chain/jquery-ajax-chain.d.ts",
+    "raw": "registry:dt/jquery-ajax-chain#1.0.4+20160317120654",
+    "typings": "https://raw.githubusercontent.com/DefinitelyTyped/DefinitelyTyped/7de6c3dd94feaeb21f20054b9f30d5dabc5efabd/jquery-ajax-chain/jquery-ajax-chain.d.ts"
+  }
+}
