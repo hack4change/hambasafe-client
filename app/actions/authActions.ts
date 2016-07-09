@@ -2,110 +2,111 @@ import actionTypes from '../actionTypes.ts';
 import {fromJS} from 'immutable';
 import jsonRequest from '../utils/jsonRequest';
 const _ = require('lodash');
-import {User} from '../user';
 
 const API_ROOT = 'http://hambasafetesting.azurewebsites.net';
 
 const fbLogin = (errorCallback, successCallback):any => {
   console.log('fbLogin');
-  // window.parseManager.facebookLogin('public_profile, email', function(response){
-  //   console.log(response);
+  // window.parseManager.facebookLogin(
+  //   'public_profile, email',
+  //   successCallback(response),
+  //   errorCallback(response)
+  // )
+  // console.log(typeof(FB.getLoginStatus));
+  // FB.getLoginStatus(function(response) {
+  //   console.log('Status');
+  //   console.log(JSON.stringify(response));
+  //   if (response.status !== 'connected') {
+  //     FB.login((response: any) => {
+  //       var respJson: any = {};
+  //       if (response.authResponse) {
+  //         var respJson = _.pick(response.authResponse, ['accessToken', 'userID']);
+  //         respJson.fbId = respJson.userID;
+  //         respJson.userID = undefined;
+  //         FB.api('/me', 'get', {
+  //           'fields' : [
+  //             'first_name',
+  //             'last_name',
+  //             'birthday',
+  //             'gender',
+  //             'email',
+  //             'picture',
+  //           ]
+  //         },
+  //         (apiResponse: any) => {
+  //           console.log(apiResponse);
+  //            _.merge(respJson,  _.pick(apiResponse, [
+  //             'first_name',
+  //             'last_name',
+  //             'birthday',
+  //             'gender',
+  //             'email',
+  //           ]));
+  //           respJson.picture = respJson.picture && apiResponse.picture.data ? apiResponse.picture.data.url : '';
+  //           respJson.isSilhouette = respJson.picture && apiResponse.picture.data ? apiResponse.picture.data.is_silhouette : null;
+
+  //           // jsonRequest(
+  //           //   API_ROOT + '/v1/Authentication/ExternalLogin',
+  //           //   {
+  //           //     method: 'POST',
+  //           //     body:  {
+  //           //       'accessToken' : respJson['accessToken']
+  //           //     }
+  //           //   },
+  //           console.log(respJson);
+  //           successCallback(respJson);// ,
+  //           // errorCallback(loginResponse),
+  //           // )
+  //         });
+  //       } else {
+  //         errorCallback(response);
+  //       }
+  //     } , {
+  //       scope: 'public_profile, email',
+  //       return_scopes: true,
+  //     })
+
+  //   } else {
+  //     var respJson = _.pick(response.authResponse, ['accessToken', 'userID']);
+  //     respJson.fbId = respJson.userID;
+  //     respJson.userID = undefined;
+  //     //TODO: Remove
+  //     respJson['wasLoggedIn'] = true;
+  //     console.log(response);
+  //     FB.api('/me', 'get', {
+  //       'fields' : [
+  //         'first_name',
+  //         'last_name',
+  //         'birthday',
+  //         'gender',
+  //         'email',
+  //         'picture',
+  //       ]
+  //     }, (apiResponse: any) => {
+  //            _.merge(respJson,  _.pick(apiResponse, [
+  //             'first_name',
+  //             'last_name',
+  //             'birthday',
+  //             'gender',
+  //             'email',
+  //           ]));
+  //           respJson.picture = apiResponse.picture.data.url;
+  //           respJson.isSilhouette = apiResponse.picture.data.is_silhouette;
+
+  //       // jsonRequest(
+  //       //   API_ROOT + '/v1/Authentication/ExternalLogin',
+  //       //   {
+  //       //     method: 'POST',
+  //       //     body:  {
+  //       //       'accessToken' : respJson['accessToken']
+  //       //     }
+  //       //   },
+  //       successCallback(respJson);// ,
+  //       // errorCallback(loginResponse),
+  //       // )
+  //     });
+  //   }
   // })
-  console.log(typeof(FB.getLoginStatus));
-  FB.getLoginStatus(function(response) {
-    console.log('Status');
-    console.log(JSON.stringify(response));
-    if (response.status !== 'connected') {
-      FB.login((response: any) => {
-        var respJson: any = {};
-        if (response.authResponse) {
-          var respJson = _.pick(response.authResponse, ['accessToken', 'userID']);
-          respJson.fbId = respJson.userID;
-          respJson.userID = undefined;
-          FB.api('/me', 'get', {
-            'fields' : [
-              'first_name',
-              'last_name',
-              'birthday',
-              'gender',
-              'email',
-              'picture',
-            ]
-          },
-          (apiResponse: any) => {
-            console.log(apiResponse);
-             _.merge(respJson,  _.pick(apiResponse, [
-              'first_name',
-              'last_name',
-              'birthday',
-              'gender',
-              'email',
-            ]));
-            respJson.picture = respJson.picture && apiResponse.picture.data ? apiResponse.picture.data.url : '';
-            respJson.isSilhouette = respJson.picture && apiResponse.picture.data ? apiResponse.picture.data.is_silhouette : null;
-
-            // jsonRequest(
-            //   API_ROOT + '/v1/Authentication/ExternalLogin',
-            //   {
-            //     method: 'POST',
-            //     body:  {
-            //       'accessToken' : respJson['accessToken']
-            //     }
-            //   },
-            console.log(respJson);
-            successCallback(respJson);// ,
-            // errorCallback(loginResponse),
-            // )
-          });
-        } else {
-          errorCallback(response);
-        }
-      } , {
-        scope: 'public_profile, email',
-        return_scopes: true,
-      })
-
-    } else {
-      var respJson = _.pick(response.authResponse, ['accessToken', 'userID']);
-      respJson.fbId = respJson.userID;
-      respJson.userID = undefined;
-      //TODO: Remove
-      respJson['wasLoggedIn'] = true;
-      console.log(response);
-      FB.api('/me', 'get', {
-        'fields' : [
-          'first_name',
-          'last_name',
-          'birthday',
-          'gender',
-          'email',
-          'picture',
-        ]
-      }, (apiResponse: any) => {
-             _.merge(respJson,  _.pick(apiResponse, [
-              'first_name',
-              'last_name',
-              'birthday',
-              'gender',
-              'email',
-            ]));
-            respJson.picture = apiResponse.picture.data.url;
-            respJson.isSilhouette = apiResponse.picture.data.is_silhouette;
-
-        // jsonRequest(
-        //   API_ROOT + '/v1/Authentication/ExternalLogin',
-        //   {
-        //     method: 'POST',
-        //     body:  {
-        //       'accessToken' : respJson['accessToken']
-        //     }
-        //   },
-        successCallback(respJson);// ,
-        // errorCallback(loginResponse),
-        // )
-      });
-    }
-  })
 }
 
 const fbLogout = (errorCallback, successCallback):any => {
@@ -133,11 +134,11 @@ const fbLogout = (errorCallback, successCallback):any => {
 const setAuthSuccess = (response) => {
   console.log('Auth Success')
   console.log(response);
-  if(!response['wasLoggedIn']){
-    response['status'] = 'NEW_USER';
-  } else {
+  // if(!response['wasLoggedIn']){
+  //   response['status'] = 'NEW_USER';
+  // } else {
     response['status'] = 'AUTHENTICATED';
-  }
+  // }
   response = _.mapKeys(response, function(value, key) {
     return _.camelCase(key);
   });
@@ -173,10 +174,11 @@ const authUser = ():any => {
   return dispatch => {
     // Set loading state.
     dispatch(setAuthTrying());
-    fbLogin(
-      (error) => dispatch(setAuthError(error)),
-        (response) => dispatch(setAuthSuccess(response))
-    );
+    window.parseManager.facebookLogin(
+      'public_profile, email',
+      (response) => dispatch(setAuthSuccess(response)),
+      (error) => dispatch(setAuthError(error))
+    )
   };
 }
 

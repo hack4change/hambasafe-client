@@ -1,7 +1,6 @@
 import actionTypes from '../actionTypes.ts';
 import {fromJS} from 'immutable';
 import jsonRequest from '../utils/jsonRequest';
-import {User} from '../user';
 
 const API_ROOT = 'http://hambasafetesting.azurewebsites.net/v1/Users';
 

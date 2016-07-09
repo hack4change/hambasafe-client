@@ -42,6 +42,9 @@ import {RegistrationPage} from './pages/registration/RegistrationPage';
 
 import {ParseManager} from './models/parseManager';
 
+/*
+ * TODO: Alternative method to defining parseManager Globally
+ */
 window.parseManager = new ParseManager();
 
 @Component({

@@ -1,4 +1,3 @@
-
 declare var Parse: any;
 
 var Parse = require('parse').Parse;
@@ -7,15 +6,66 @@ Parse.serverURL = 'https://163.172.144.224/parse'
 
 export class ParseManager {
     ActivityClass: any;
-    UserClass: any;
+    LocationClass: any;
     Parse: any;
     constructor() {
       console.log('CONSTRUCTOR')
       this.Parse = Parse;
       this.ActivityClass = this.Parse.Object.extend("Activity");
+      this.LocationClass = this.Parse.Object.extend("Location");
+      // this.Location = this.Parse.Object.extend("Location", {
+      //   getAddress: function(){
+        
+      //   },
+      //   getCoordinates: function(){
+        
+      //   },
+      // });
+      // this.Parse.User.extend({}, {
+      //   isModelComplete: function() {
+      //     console.log(this.get(''));
+      //   },
+      //   getProfileData: function()(){
+        
+      //   },
+      //   getFirstName: function(){
+         
+      //   },
+      //   getLastName: function(){
+        
+      //   },
+      //   getEmail: function(){
+        
+      //   },
+      //   getEmailVerified: function(){
+        
+      //   },
+      //   getMobileNumber: function(){
+        
+      //   },
+      //   getLocation: function(){
+        
+      //   },
+      //   getVerified: function(){
+        
+      //   },
+      //   getJoined: function(){
+        
+      //   },
+      //   getRating: function(){
+        
+      //   },
+      //   getProfilePicture: function(){
+        
+      //   },
+      // })
       this.Parse.Object.registerSubclass('Activity', this.ActivityClass);
+      this.Parse.Object.registerSubclass('Location', this.LocationClass);
     }
     
+    createUser(success:(res)=>void)
+    {
+    }
     createActivity(name: String, success:(res)=>void)
     {
         var activity = new this.ActivityClass();
@@ -52,7 +102,7 @@ export class ParseManager {
 
 		}
     fbInit(){
-      FB.init({
+      this.Parse.FacebookUtils.init({
 
         /*
            The app id of the web app;
@@ -87,8 +137,20 @@ export class ParseManager {
         version    : 'v2.6',
       });
     }
-    facebookLogin(perms, opts){
-      this.Parse.FacebookUtils.logIn(perms, opts);
+    facebookLogin(perms, success:(res)=>void, error:(res)=>void) {
+      this.Parse.FacebookUtils.logIn(perms, {
+        success: (response)=>{
+          console.log('success');
+          console.log(response);
+          // console.log(this.Parse.User.isModelComplete())
+          success(response);
+        },
+        error: (response)=>{
+          console.log('error');
+          console.log(response);
+          error(response);
+        }
+      });
     }
     // logInFacebook(success: (user: Parse.User) => void, error: (user: Parse.User, error: any) => void)
     // {
