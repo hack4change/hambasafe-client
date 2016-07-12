@@ -58,12 +58,12 @@ const fetchEvents = () : any => {
     dispatch(setFetchLoadingState());
 
     // Do request.
-    jsonRequest(
-      url,
-      options,
-      (error) => dispatch(setFetchErrorState(error)),
-      (response) => dispatch(setFetchSuccessState(response))
-    );
+    // jsonRequest(
+    //   url,
+    //   options,
+    //   (error) => dispatch(setFetchErrorState(error)),
+    //   (response) => dispatch(setFetchSuccessState(response))
+    // );
   };
 };
 const fetchEventsBySuburb = (suburb: string) : any => {
@@ -80,12 +80,12 @@ const fetchEventsBySuburb = (suburb: string) : any => {
     dispatch(setFetchLoadingState());
 
     // Do request.
-    jsonRequest(
-      url,
-      options,
-      (error) => dispatch(setFetchErrorState(error)),
-      (response) => dispatch(setFetchSuccessState(response))
-    );
+    // jsonRequest(
+    //   url,
+    //   options,
+    //   (error) => dispatch(setFetchErrorState(error)),
+    //   (response) => dispatch(setFetchSuccessState(response))
+    // );
   };
 };
 const fetchEventsByCoordinates = (distance: number, latitude: number, longitude: number) : any => {
@@ -93,23 +93,15 @@ const fetchEventsByCoordinates = (distance: number, latitude: number, longitude:
     console.log('dispatch');
     const url = API_ROOT + '/Events/events-by-coordinates';
 
-    const options = {
-      query: {
-        distance  : distance,
-        latitude  : latitude,
-        longitude : longitude,
-      }
-    }
     // Set loading state.
     dispatch(setFetchLoadingState());
-    window.parseManager.getActivities();
-
     // Do request.
-    jsonRequest(
-      url,
-      options,
+    window.parseManager.getActivitiesByLocation(
+      distance,
+      latitude,
+      longitude,
       (error) => dispatch(setFetchErrorState(error)),
-      (response) => dispatch(setFetchSuccessState(response))
+        (response) => dispatch(setFetchSuccessState(response))
     );
   };
 };
@@ -140,33 +132,25 @@ const setCreateLoadingState = () => {
   console.log('loadingState');
   return {
     data: fromJS({
-      status: 'creating',
+      status: 'CREATING',
     }),
     type: actionTypes.EVENTS_CREATE_INIT,
   };
 }
 
 
-const createEvent = (data):any => {
+const createActivity = (data):any => {
   return dispatch => {
-    const url = API_ROOT  + '/Events/create-event';
     console.log('event Create')
-    const options = {
-      method : 'POST',
-      body : data,
-    }
-    window.parseManager.createActivity('Simon', null);
-
-    // Set loading state.
     dispatch(setCreateLoadingState());
-
-    // Do request.
-    jsonRequest(
-      url,
-      options,
+    window.parseManager.createActivity(
+      data,
       (error) => dispatch(setCreateErrorState(error)),
       (response) => dispatch(setCreateSuccessState(response))
     );
+    // Set loading state.
+
+    // Do request.
   };
 };
 
@@ -183,6 +167,6 @@ export const eventDataActions = {
   fetchEvents,
   fetchEventsBySuburb,
   fetchEventsByCoordinates,
-  createEvent,
+  createActivity,
   setIdle,
 };

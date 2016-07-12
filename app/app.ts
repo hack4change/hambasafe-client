@@ -45,7 +45,6 @@ import {ParseManager} from './models/parseManager';
 /*
  * TODO: Alternative method to defining parseManager Globally
  */
-window.parseManager = new ParseManager();
 
 @Component({
   templateUrl: 'build/pages/app.html',
@@ -53,11 +52,12 @@ window.parseManager = new ParseManager();
 export class MyApp {
   @ViewChild('myNavRoot') nav: NavController;
 
-  private rootPage: any = LandingPage;
+  private rootPage: any = SplashPage;
   private authStatus$ : Observable<any>;
   oldStatus: string;
 
-  constructor(private platform: Platform, private menu: MenuController, private ngRedux: NgRedux<any>) {
+  constructor(public platform: Platform, private menu: MenuController, private ngRedux: NgRedux<any>) {
+    window.parseManager = new ParseManager();
 
     platform.ready().then(() => {
       //Sets status bar to default style;
@@ -67,10 +67,8 @@ export class MyApp {
        */
       // TODO: Facebook Native plugin doesn't work in browser.
       // if(cordova && cordova.plugins && cordova.plugins.Facebook) {
-      //   Facebook.getLoginStatus().then((result) => {
-      //     console.log(result)
-      //   })
       // }
+      
     });
   }
 

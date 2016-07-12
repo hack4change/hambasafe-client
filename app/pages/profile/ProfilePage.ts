@@ -24,20 +24,20 @@ export class ProfilePage {
   userRating : number = 3;
   listTypes : any =  [
     {
-      'header' : '{Upcoming}',
+      'header' : '{ Upcoming }',
       'filterExpression' : (activity) => {
         console.log(this);
         return activity.get('dateTimeStart') >= Date.now();
       }
     },
     {
-      'header' : '{Joined}',
+      'header' : '{ Joined }',
       'filterExpression' : (activity) => {
         return activity.get('attendees').includes(this.currentUser$['id']);
       }
     },
     {
-      'header' : '{Created}',
+      'header' : '{ Created }',
       'filterExpression' : (activity) => {
         return activity.get('ownerUser').get('id') === this.currentUser$['id'];
       }

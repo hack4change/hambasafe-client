@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {Platform, NavController} from 'ionic-angular';
 
 /**
  *  Redux
@@ -34,7 +34,7 @@ export class LandingPage
   authStatus$: Observable<any>;
   created$: Observable<any>;
 
-  constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
+  constructor(private platform: Platform, private nav: NavController, private ngRedux: NgRedux<any>) {};
 
   ngOnInit(){
     this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
@@ -52,11 +52,19 @@ export class LandingPage
           console.log('Unhandled authentication status');
       }
     })
-    this.ngRedux.dispatch(authActions.authUser());
+    if(this.platform.is('cordova')) {
+      this.ngRedux.dispatch(authActions.authDevice());
+    } else {
+      this.ngRedux.dispatch(authActions.authUser());
+    }
   }
 
   fbLogin() {
-    this.ngRedux.dispatch(authActions.authUser());
+    if(this.platform.is('cordova')) {
+      this.ngRedux.dispatch(authActions.authDevice());
+    } else {
+      this.ngRedux.dispatch(authActions.authUser());
+    }
   }
   goToTerms() {
     this.nav.push(TermsPage);

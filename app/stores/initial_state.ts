@@ -20,12 +20,12 @@ export const getInitialState = ()=> {
       firstName: '',
       lastName: '',
       gender: '',
-      birthday: '',
+      dateOfBirth: '',
       location: '',
-      cellNumber: '',
+      mobileNumber: '',
       email : '',
-      picture: '',
-      isSilhouette: null,
+      profilePicture: '',
+      // isSilhouette: null,
     }))
   })
 }

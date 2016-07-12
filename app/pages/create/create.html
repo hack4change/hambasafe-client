@@ -7,81 +7,99 @@
   </ion-toolbar>
 </ion-header>
 -->
-<ion-content>
-  <ion-list>
-    <ion-item class="list-title">
-      <ion-icon (click)="goBack()" name="md-close-circle" item-left></ion-icon>
-      CREATE AN EVENT
-    </ion-item>
-		<ion-item>
-			<ion-label>Public</ion-label>
-      <ion-toggle [(ngModel)]="isPublic" checked="{{isPublic}}"></ion-toggle>
-		</ion-item>
-		<ion-item class="">
-			<ion-label>Event Type</ion-label> <!-- replace tile with selected gender-->
-			<ion-select [(ngModel)]="eventType" required>
-				<ion-option value="WALK">Walk</ion-option>
-				<ion-option value="RUN">Run</ion-option>
-				<ion-option value="CYCLE">Cycle</ion-option>
-			</ion-select>
-    </ion-item>
-    <ion-item class="">
-			<ion-label floating>Name</ion-label>
-			<ion-input [(ngModel)]="name" type="text" required></ion-input>
-    </ion-item>
-    <ion-item class="">
-			<ion-label floating>Description</ion-label>
-			<ion-input [(ngModel)]="description" type="text" required></ion-input>
-    </ion-item>
-    <ion-item class="">
-			<ion-label floating>Estimated distance(kilometers)</ion-label>
-			<ion-input [(ngModel)]="distance" type="number" required></ion-input>
-    </ion-item>
-    <ion-item class="">
-			<ion-label floating>Where does it start?</ion-label>
-      <ion-input [(ngModel)]="startLocation"  type="text" required></ion-input>
-    </ion-item>
-    <ion-item class="">
-      <ion-label floating>
-        What time does it start?
-      </ion-label>
-      <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime"></ion-datetime>
-    </ion-item>
-    <ion-item class="">
-      <ion-label floating>
-        What day does it start?
-      </ion-label>
-      <ion-datetime displayFormat="DD/MMM/YY" pickerFormat="DD MMM YY" [(ngModel)]="startDate"></ion-datetime>
-    </ion-item>
-    <ion-item class="">
-      <ion-label floating>
-        What time does it end?
-      </ion-label>
-      <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="endTime"></ion-datetime>
-    </ion-item>
-    <ion-item class="">
-      <ion-label floating>
-        What day does it end?
-      </ion-label>
-      <ion-datetime displayFormat="DD/MMM/YY" pickerFormat="DD MMM YY" [(ngModel)]="endDate"></ion-datetime>
-    </ion-item>
-    <ion-item class="">
-			<ion-label  floating>Where does it end?</ion-label>
-      <ion-input [(ngModel)]="endLocation" type="text" required></ion-input>
-    </ion-item>
-    <ion-item class="">
-      <ion-label floating>
-        Wait time(minutes)?
-      </ion-label>
-      <ion-input type="number "[(ngModel)]="waitMins"></ion-input>
-    </ion-item>
-  </ion-list>
+<ion-content [ngSwitch]="activeType">
+  <template ngSwitchCase="START_LOCATION">
+    <map-component #startMap [radius]="0"></map-component>
+  </template>
+  <template ngSwitchCase="END_LOCATION">
+    <map-component #endMap [radius]="0"></map-component>
+  </template>
+  <template ngSwitchDefault>
+    <ion-list>
+      <ion-item class="list-title">
+        <ion-icon (click)="goBack()" name="md-close-circle" item-left></ion-icon>
+        CREATE AN EVENT
+      </ion-item>
+      <ion-item>
+        <ion-label>Public</ion-label>
+        <ion-toggle [(ngModel)]="isPublic" checked="{{isPublic}}"></ion-toggle>
+      </ion-item>
+      <ion-item class="">
+        <ion-label>Event Type</ion-label> <!-- replace tile with selected gender-->
+        <ion-select [(ngModel)]="eventType" required>
+          <ion-option value="WALK">Walk</ion-option>
+          <ion-option value="RUN">Run</ion-option>
+          <ion-option value="CYCLE">Cycle</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>Name</ion-label>
+        <ion-input [(ngModel)]="name" type="text" required></ion-input>
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>Description</ion-label>
+        <ion-input [(ngModel)]="description" type="text" required></ion-input>
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>Estimated distance(kilometers)</ion-label>
+        <ion-input [(ngModel)]="distance" type="number" required></ion-input>
+      </ion-item>
+      <ion-item *ngIf="!startLocation" (click)="openMap('START_LOCATION')" class="">
+        Where does it start?
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>
+          What time does it start?
+        </ion-label>
+        <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime"></ion-datetime>
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>
+          What day does it start?
+        </ion-label>
+        <ion-datetime displayFormat="DD/MMM/YY" pickerFormat="DD MMM YY" [(ngModel)]="startDate"></ion-datetime>
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>
+          What time does it end?
+        </ion-label>
+        <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="endTime"></ion-datetime>
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>
+          What day does it end?
+        </ion-label>
+        <ion-datetime displayFormat="DD/MMM/YY" pickerFormat="DD MMM YY" [(ngModel)]="endDate"></ion-datetime>
+      </ion-item>
+      <ion-item (click)="openMap('END_LOCATION')" class="">
+        Where does it end?
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>
+          Wait time(minutes)?
+        </ion-label>
+        <ion-input type="number "[(ngModel)]="waitMins"></ion-input>
+      </ion-item>
+    </ion-list>
+  </template>
 </ion-content>
 <ion-footer>
-  <ion-toolbar>
-    <button primary (click)="createEvent()" full>
-      Post
-    </button>
+  <ion-toolbar [ngSwitch]="activeType">
+    <template ngSwitchCase="START_LOCATION">
+      <button primary (click)="closeMap('START_LOCATION')" full>
+        Start Here!
+      </button>
+    </template>
+    <template ngSwitchCase="END_LOCATION">
+      <button primary (click)="closeMap('END_LOCATION')" full>
+        End Here!
+      </button>
+    </template>
+    <template ngSwitchDefault>
+      <button primary (click)="createActivity()" full>
+        Post!
+      </button>
+    </template>
   </ion-toolbar>
 </ion-footer>
 <!--

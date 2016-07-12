@@ -12,8 +12,10 @@
   <form name="registrationForm" ng-submit="doRegister(signupForm.$valid)" novalidate>
     <ion-list class="borderless">
       <ion-item>
-        <ion-icon *ngIf="!profilePicture || isSilhouette" item-left name="contact"></ion-icon>
-        <ion-avatar *ngIf="!!profilePicture && !isSilhouette" item-left>
+        <!-- || isSilhouette-->
+        <ion-icon *ngIf="!profilePicture" item-left name="contact"></ion-icon>
+        <!-- && !isSilhouette-->
+        <ion-avatar *ngIf="!!profilePicture" item-left>
           <img src="{{ profilePicture }}">
         </ion-avatar>
         <input name="profile-picture" class="hidden-file-input" id="profile-picture" type="file" placeholder="Profile Picture" [(ngModel)]="uploadPicture" accept="image/*" required />
@@ -43,7 +45,7 @@
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Date of Birth</ion-label>
-        <ion-datetime displayFormat="DD MMM YY" pickerFormat="DD MMM YY" [(ngModel)]="birthday"></ion-datetime>
+        <ion-datetime displayFormat="DD MMM YY" pickerFormat="DD MMM YY" [(ngModel)]="dateOfBirth"></ion-datetime>
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Cell Number</ion-label>

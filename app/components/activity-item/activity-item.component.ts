@@ -43,11 +43,11 @@ export class ActivityItemComponent {
   getClasses(){
     let classes = {
     }
-    if( this.actionType === 'RATE' ) {
-      classes['must-rate'] = true;
-    } else if( this.actionType === 'VIEW' ) {
-      classes['been-invited'] = true;
-    }
+    // if( this.actionType === 'RATE' ) {
+    //   classes['must-rate'] = true;
+    // } else if( this.actionType === 'VIEW' ) {
+    //   classes['been-invited'] = true;
+    // }
     return classes;
   }
 }

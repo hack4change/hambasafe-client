@@ -31,7 +31,6 @@ export class ActivityDetailPage {
   };
 
   ngOnInit() {
-    console.log(this.activityId);
     this.activity$ = this.ngRedux.select(
       state => 
         state.getIn(['eventData', 'items'])

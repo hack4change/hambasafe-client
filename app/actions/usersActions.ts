@@ -76,13 +76,12 @@ const createUserError = (error) => {
   };
 }
 
-const createUserSuccess = (response) => {
+const createUserSuccess = () => {
   console.log('success');
-  console.log(response);
   return {
     data: fromJS({
       'status': 'CREATE_SUCCESS',
-      'id' : response,
+      // 'id' : response,
     }),
     type: actionTypes.USER_CREATE_SUCCESS,
   };
@@ -111,13 +110,19 @@ const createUser = (data):any => {
     // Set loading state.
     dispatch(setUsersCreating());
 
+    window.parseManager.signUp(
+      data, 
+     (response) => dispatch(createUserSuccess()),
+     (error) => dispatch(createUserError(error))
+    )
+    
     // Do request.
-    jsonRequest(
-      url,
-      options,
-      (error) => dispatch(createUserError(error)),
-      (response) => dispatch(createUserSuccess(response))
-    );
+    // jsonRequest(
+    //   url,
+    //   options,
+    //   (error) => dispatch(createUserError(error)),
+    //   (response) => dispatch(createUserSuccess(response))
+    // );
   };
 };
 

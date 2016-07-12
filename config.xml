@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ionicframework.myapp632552" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
-    <name>myApp</name>
+<widget id="com.ionicframework.hambasafe" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+    <name>HambaSafe</name>
     <description>An Ionic Framework and Cordova project.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
     <content src="index.html" />
@@ -13,10 +13,31 @@
     <allow-intent href="geo:*" />
     <platform name="android">
         <allow-intent href="market:*" />
+				<string name="facebook_app_id">1824765444411364</string>
     </platform>
     <platform name="ios">
         <allow-intent href="itms:*" />
         <allow-intent href="itms-apps:*" />
+				<key>CFBundleURLTypes</key>
+				<array>
+					<dict>
+						<key>CFBundleURLSchemes</key>
+						<array>
+							<string>fb1824765444411364</string>
+						</array>
+					</dict>
+				</array>
+				<key>FacebookAppID</key>
+				<string>1824765444411364</string>
+				<key>FacebookDisplayName</key>
+				<string>hambasafe</string>
+				<key>LSApplicationQueriesSchemes</key>
+				<array>
+					<string>fbapi</string>
+					<string>fb-messenger-api</string>
+					<string>fbauth2</string>
+					<string>fbshareextension</string>
+				</array>
     </platform>
     <preference name="webviewbounce" value="false" />
     <preference name="UIWebViewBounce" value="false" />

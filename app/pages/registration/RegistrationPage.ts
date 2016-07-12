@@ -61,22 +61,23 @@ export class RegistrationPage {
   currentUser$      :   Observable<any>;
   validForm         :   boolean;
   aniState          :   string  = 'inactive';
+  profilePicture    :   string;
   firstName         :   string;
   lastName          :   string;
-  birthday          :   any;
-  location          :   any;
+  address           :   any;
+  dateOfBirth       :   any;
   mobileNumber      :   string;
   email             :   string;
   confirmEmail      :   string;
   identification    :   string;
   termsAccepted     :   boolean = false;
-  profilePicture    :   string;
   uploadPicture     :   string;
   isSilhouette      :   boolean;
+  accessToken       :   string;
+
   genderSelectOpen  :   boolean = false;
   genderHeader      :   string  = "Gender";
 	gender					  : 	string;
-  accessToken       :   string;
   genderOptions     :   any = [ 
     {
       'name'      : 'Male',
@@ -104,8 +105,8 @@ export class RegistrationPage {
         if(!!userData) {
           this.firstName          = userData.firstName;
           this.lastName           = userData.lastName;
-          if(userData.birthday !== '') {
-            this.birthday         = (new Date(userData.birthday)).toISOString();
+          if(!!userData.dateOfBirth) {
+            this.dateOfBirth         = (new Date(userData.dateOfBirth)).toISOString();
           }
           this.email              = userData.email;
           this.gender             = userData.gender;
@@ -138,16 +139,16 @@ export class RegistrationPage {
 
 	createUser() {
     var userData = {
-      'id'					  :   Math.floor((Math.random() * 429496) + 1),
-			'token'				  :   this.guid(),
-			'firstNames'	  :   this.firstName || 'George',//this.firstName,
-			'lastName'		  :   this.lastName || 'Phillips',//this.lastName,
-			'gender'			  :   _.find(this.gender, {'selected': true}) ? _.find(this.gender, {'selected': true}).name : 'Male',
-			'dateOfBirth'   :	  this.birthday || (new Date).toISOString(),//this.dateOfBirth,
-      'status'        :   '',
-      'mobileNumber'  :   this.mobileNumber || '0827643743',
-      'emailAddress'  :   this.email || 'George@sum.such',
+      'profilePicture'  :   this.profilePicture,
+			'firstName'	      :   this.firstName || 'George',//this.firstName,
+			'lastName'		    :   this.lastName || 'Phillips',//this.lastName,
+			'gender'			    :   _.find(this.gender, {'selected': true}) ? _.find(this.gender, {'selected': true}).name : 'Male',
+      'address'         :   this.address || 'temp',
+			'dateOfBirth'     :	  this.dateOfBirth || (new Date).toISOString(),//this.dateOfBirth,
+      'mobileNumber'    :   this.mobileNumber || '0827643743',
+      'email'           :   this.email || 'George@sum.such',
     }
+    console.log(userData);
     //TODO: Validation
     this.ngRedux.dispatch(usersActions.createUser(userData));
   }
@@ -155,7 +156,7 @@ export class RegistrationPage {
   //   var selected = e.target.parentNode.parentNode.parentNode.parentNode;
   //   console.log(docselected);
   // }
-  openLocation(){
+  openLocation() {
     console.log('openy');
   }
   toggleGenderOpen() {
@@ -181,10 +182,10 @@ export class RegistrationPage {
 			}
 		}
 	}
-  genderSelected(){
+  genderSelected() {
     return this.genderHeader === 'Gender';
   }
-  openTerms(){
+  openTerms() {
     this.termsAccepted = true;
     this.nav.push(TermsPage);
   }

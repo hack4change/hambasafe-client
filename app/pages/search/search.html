@@ -18,8 +18,12 @@
     </ion-buttons>
   </ion-toolbar>
   <ion-toolbar primary>
+    <ion-buttons *ngIf="activeType == 'SEARCH'" start>
+      <button (click)="toggleView('DISTANCE')">
+        <ion-icon light name="close-circle"></ion-icon>
+      </button>
+    </ion-buttons>
     <ion-title>
-      <ion-icon *ngIf="activeType == 'SEARCH'" (click)="toggleView('DISTANCE')" name="md-close-circle" item-left></ion-icon>
       Search
     </ion-title>
   </ion-toolbar>

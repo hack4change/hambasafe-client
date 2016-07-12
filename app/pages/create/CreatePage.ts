@@ -1,4 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+declare var google;
+
+import {Component, ViewChild, OnInit} from '@angular/core';
 import {NavController, Loading} from 'ionic-angular';
 
 /**
@@ -17,30 +19,44 @@ import {eventDataActions} from '../../actions/eventDataActions';
  */
 import { HomePage } from '../home/HomePage';
 
+/*
+ * Components
+ */
+import {MapComponent} from '../../components/map/map.component.ts';
+
 @Component({
-  templateUrl: 'build/pages/create/create.html'
+  templateUrl: 'build/pages/create/create.html',
+  directives : [
+    MapComponent,
+  ]
 })
 export class CreatePage {
+  @ViewChild('startMap') startMap;
+  @ViewChild('endMap') endMap;
+
   created$: Observable<any>;
   userId$: Observable<any>;
+  activeType: string= '';
   currentUserId: number;
   createModal = null; 
-  isPublic : boolean = true;
-  eventType;
-  name;
-  description
-  distance
-  startTime;
-  startDate;
-  startLocation;
-  endTime;
-  endDate;
-  endLocation;
-  intensity;
-  waitMins;
+  private isPublic : boolean = true;
+  private eventType;
+  private name;
+  private description
+  private distance
+  private startTime;
+  private startDate;
+  private startLocation;
+  private endTime;
+  private endDate;
+  private endLocation;
+  private intensity;
+  private waitMins;
+  private geoCoder        : any;
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) {}
 
   ngOnInit(){
+    this.geoCoder = new google.maps.Geocoder;
   
     this.created$ = this.ngRedux.select(state=>state.getIn(['eventData', 'status']));
     this.userId$ = this.ngRedux.select(state=>state.getIn(['currentUser', 'id']));
@@ -56,7 +72,7 @@ export class CreatePage {
           this.ngRedux.dispatch(eventDataActions.setIdle());
         })
         break;
-        case 'creating': 
+        case 'CREATING': 
           this.createModal = Loading.create({
           content: "Creating...",
           // spinner: 'crescent',
@@ -78,7 +94,7 @@ export class CreatePage {
   }
     
 
-	createEvent() {
+	createActivity() {
     var roundDateToISO = ":00.000Z";
     console.log(this.startTime);
     console.log(this.eventType);
@@ -112,52 +128,39 @@ export class CreatePage {
 		// if(!this.waitMins) {
 		// 	return; 
 		// }
-		var data = {
-			'name'          : this.name         || 'Cycling in Numbers',
-			'description'   : this.description  || 'howdy',
-			'distance'      : this.distance     || 5,
+    var data = {
+      'name'          : this.name         || 'Cycling in Numbers',
+      'description'   : this.description  || 'howdy',
+      'distance'      : Number(this.distance)     || 5,
       'intensity'     : this.intensity    || 'NOVICE',
-			'eventType'     : {
-        'id'          : 1,
-				'name'          : this.eventType  || 'RUN',
-        'description' : 'hey'
-			},
-			'dateTimeStart' : this.startDate+"T"+this.startTime + roundDateToISO ,
+      'eventType'     : this.eventType    || 'RUN',
+      'startDate'     : this.startDate  + "T" + this.startTime + roundDateToISO ,
+      'endDate'       : this.endDate  +  "T"+this.endTime + roundDateToISO,
+      'waitTime'      : Number(this.waitMins) || 10,
+      'isPublic'      : this.isPublic,
       'startLocation' : {
-        'id'        : 13,
-        'country'  : 'South Africa',//(string, optional),
-        'city'  : 'Cape Town',//(string, optional),
-        'province' : 'Western Cape', //(string, optional),
-        'suburb' : 'Rondebosch', //(string, optional),
-        'postCode' : '8000', //(string, optional),
-        'address' : '3 McNuggets please', //(string, optional),
-        'latitude' : -33.8786, //(number, optional),
-        'longitude' : 18.6947, 
+        longitude: this.startLocation.lng(),
+        latitude: this.startLocation.lat(),
       },
-      'dateTimeEnd'   : this.endDate+"T"+this.endTime +  roundDateToISO,
-      'endLocation' : {
-        'id'        : 14,
-        'country'  : 'South Africa',         //(string, optional)
-        'province' : 'Western Cape',      //(string, optional)
-        'suburb' : 'Rondebosch',          //(string, optional)
-        'postCode' : '8000',              //(string, optional)
-        'address' : '3 Some Avenue',      //(string, optional)
-        'latitude' : -33.9249, //(number, optional),
-        'longitude' : 18.4241, 
-      },
-      'ownerUser' : {
-        'id'          : 10,
-        'firstNames'  : 'George',
-        'lastNames'   : 'Phillips',
-      },
-      'maxWaitingMinutes'      : this.waitMins || 10,
-      'isPublic'    : this.isPublic,
-		}
-    this.ngRedux.dispatch(eventDataActions.createEvent(data));
+      // 'endLocation' : {
+      //   longitude: this.endLocation.lng(),
+      //   latitude: this.endLocation.lat(),
+      // },
+    }
+    this.ngRedux.dispatch(eventDataActions.createActivity(data));
 	}
-
+  openMap(type: string) {
+    this.activeType = type;
+  }
+  closeMap(type: string) {
+    if(type=='START_LOCATION'){
+      this.startLocation = this.startMap.latLng;
+    } else if(type=='END_LOCATION'){
+      this.endLocation = this.endMap.latLng;
+    }
+      this.activeType = '';
+  }
   onCreation() {
-  
   }
   goBack(){
     this.nav.pop();

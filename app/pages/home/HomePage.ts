@@ -54,6 +54,7 @@ export class HomePage {
         state => {
           return state.getIn(['eventData', 'items'])
           .filter((item) => {
+            console.log(this.sliderDistance);
             return distanceCalculator(
               this.coordinates.latitude,
               this.coordinates.longitude,
@@ -82,10 +83,10 @@ export class HomePage {
   }
 
   sliderChange() {
-    // if(this.sliderDistance > this.greatestDistance && this.coordinates) {
+    if(this.sliderDistance > this.greatestDistance && this.coordinates) {
       this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.sliderDistance, this.coordinates.latitude, this.coordinates.longitude));
-      // this.greatestDistance = this.sliderDistance;
-    // }
+      this.greatestDistance = this.sliderDistance;
+    }
   }
 
   checkEmpty() {
