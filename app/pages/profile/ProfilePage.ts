@@ -47,7 +47,7 @@ export class ProfilePage {
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) {}
 
   ngOnInit() {
-    this.currentUser$ = this.ngRedux.select(state=> {
+    this.currentUser$ = this.ngRedux.select((state)=> {
       return state.get('currentUser').toJS();
     });
   }

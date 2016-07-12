@@ -1,5 +1,6 @@
 import {Component, ViewChild, OnInit, Input} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {NavController, Platform} from 'ionic-angular';
+import {Geolocation} from 'ionic-native';
 const _ = require('lodash');
 
 /**
@@ -30,46 +31,57 @@ export class MapComponent {
   private locationCircle  : any;
   private geoCoder        : any;
 
-  constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
+  constructor(private platform: Platform, private nav: NavController, private ngRedux: NgRedux<any>) {};
 
   ngOnInit() {
     this.geoCoder = new google.maps.Geocoder;
   }
   ngAfterContentInit() {
     console.log(this.mapNode.nativeElement.valueOf());
-    navigator.geolocation.getCurrentPosition((pos) => {
-       _.merge(this.gCoords, pos.coords);
-      this.latLng = new google.maps.LatLng(this.gCoords.latitude, this.gCoords.longitude) 
-      this.gMap = new google.maps.Map(this.mapNode.nativeElement.valueOf(), {
-        center: this.latLng,
-        zoom: 10,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+    if(this.platform.is('cordova')) {
+      Geolocation.getCurrentPosition().then((res) => {
+        console.log(res);
+        this.createMapAtCoords(res)
       });
-
-      // this.gMap.setCenter(new google.maps.LatLng(this.gCoords.latitude, this.gCoords.longitude));
-
-      // this.gMap.setCenter(new google.maps.LatLng(this.gCoords.latitude, this.gCoords.longitude));
-      this.gMarker = new google.maps.Marker({ 
-        position: this.latLng,
-        map: this.gMap,
-        animation: google.maps.Animation.BOUNCE,
+    } else {
+      navigator.geolocation.getCurrentPosition((res) =>{
+        console.log(res);
+       this.createMapAtCoords(res)
       });
-
-      this.locationCircle = new google.maps.Circle({
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 2,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35,
-        map: this.gMap,
-        center: this.latLng,
-        radius: this.radius * 1000
-      });
-			this.gMap.addListener('click', this.mapClick);
-			this.locationCircle.addListener('click', this.mapClick);
-    })
+    }
   }
 
+  createMapAtCoords(pos : any){
+    _.merge(this.gCoords, pos.coords);
+    this.latLng = new google.maps.LatLng(this.gCoords.latitude, this.gCoords.longitude) 
+    this.gMap = new google.maps.Map(this.mapNode.nativeElement.valueOf(), {
+      center: this.latLng,
+      zoom: 10,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+
+    // this.gMap.setCenter(new google.maps.LatLng(this.gCoords.latitude, this.gCoords.longitude));
+
+    // this.gMap.setCenter(new google.maps.LatLng(this.gCoords.latitude, this.gCoords.longitude));
+    this.gMarker = new google.maps.Marker({ 
+      position: this.latLng,
+      map: this.gMap,
+      animation: google.maps.Animation.BOUNCE,
+    });
+
+    this.locationCircle = new google.maps.Circle({
+      strokeColor: '#FF0000',
+      strokeOpacity: 0.8,
+      strokeWeight: 2,
+      fillColor: '#FF0000',
+      fillOpacity: 0.35,
+      map: this.gMap,
+      center: this.latLng,
+      radius: this.radius * 1000
+    });
+    this.gMap.addListener('click', this.mapClick);
+    this.locationCircle.addListener('click', this.mapClick);
+  }
   ngOnChanges(changes) {
     if(!!this.locationCircle) {
       this.locationCircle.setRadius(this.radius * 1000);

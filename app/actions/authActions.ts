@@ -45,7 +45,6 @@ const fbLogout = (errorCallback, successCallback):any => {
 // Success.
 const setAuthSuccess = (response) => {
   console.log('Auth Success')
-  console.log(response);
   if(!response.isRegistered) {
     response['status'] = 'NEW_USER';
   } else {
@@ -109,14 +108,13 @@ const authDevice = ():any => {
       console.log('login Status');
       console.log(res);
       if(res.status !== 'connected') {
+        Facebook.login(['public_profile', 'email']).then((res)=>{
 				var expDate = new Date(new Date().getTime() + res.authResponse.expiresIn * 1000 ).toISOString();
 				var authData = {
 					id: String(res.authResponse.userID),
 					access_token: res.authResponse.accessToken,
 					expiration_date: expDate
 				}
-        Facebook.login(['public_profile', 'email']).then((res)=>{
-          (res) => {
             window.parseManager.deviceLogin(
               // (response) => console.log(response),
               res.authResponse,
@@ -126,14 +124,14 @@ const authDevice = ():any => {
               ),
               (error) => dispatch(setAuthError(error))
             )
-          }
         })
       } else {
-				var authData = {
-					id: String(res.authResponse.userID),
-					access_token: res.authResponse.accessToken,
-					expiration_date: expDate
-				}
+        var expDate = new Date(new Date().getTime() + res.authResponse.expiresIn * 1000 ).toISOString();
+        var authData = {
+          id: String(res.authResponse.userID),
+          access_token: res.authResponse.accessToken,
+          expiration_date: expDate
+        }
 
         window.parseManager.deviceLogin(
           // (response) => console.log(response),

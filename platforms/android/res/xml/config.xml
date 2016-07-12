@@ -36,11 +36,14 @@
     <access origin="https://*.fbcdn.net" />
     <access origin="https://*.akamaihd.net" />
     <preference name="android-minSdkVersion" value="15" />
+    <feature name="Geolocation">
+        <param name="android-package" value="org.apache.cordova.geolocation.Geolocation" />
+    </feature>
     <allow-intent href="market:*" />
     <string name="facebook_app_id">1824765444411364</string>
     <name>HambaSafe</name>
-    <description>An Ionic Framework and Cordova project.</description>
-    <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
+    <description>Better together.</description>
+    <author email="george@lameco.co.za" href="http://ionicframework.com/">George Phillips</author>
     <content src="index.html" />
     <access origin="*" />
     <allow-intent href="http://*/*" />
