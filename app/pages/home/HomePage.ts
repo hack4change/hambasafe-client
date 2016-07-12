@@ -47,14 +47,40 @@ export class HomePage {
 
   constructor(private nav: NavController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
    
-  ngOnInit(){
-    let options = {timeout: 10000, enableHighAccuracy: true};
+  ngOnInit() {
+    var options = {timeout: 10000, enableHighAccuracy: true};
     navigator.geolocation.getCurrentPosition(
-      function(res){console.log(res)},
-      function(err){console.log(err)},
+      (pos) => {
+        this.coordinates = pos.coords;
+        this.zone.run(() => {
+          this.activities$ = this.ngRedux.select(
+            state => {
+              return state.getIn(['eventData', 'items'])
+              .filter((item) => {
+                console.log(this.sliderDistance);
+                return distanceCalculator(
+                  this.coordinates.latitude,
+                  this.coordinates.longitude,
+                  item.get('startLocation').get('latitude'),
+                  item.get('startLocation').get('longitude')
+                ) <= this.sliderDistance;
+              })
+              .toJS()
+            }
+          );
+          this.activities$.subscribe(x => {
+            this.zone.run(() => {
+              this.isEmpty = !!x ? ( x.length == 0 ).toString() : 'true';
+            })
+          });
+          this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.sliderDistance, this.coordinates.latitude, this.coordinates.longitude));
+        }
+      },
+      (err) => {
+        console.log(err)
+      },
       options
-    );
-
+    )
   }
 
   isActive(filterBy) {

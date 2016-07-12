@@ -37,18 +37,23 @@ export class MapComponent {
     this.geoCoder = new google.maps.Geocoder;
   }
   ngAfterContentInit() {
+    var options = {timeout: 10000, enableHighAccuracy: true};
     console.log(this.mapNode.nativeElement.valueOf());
-    if(this.platform.is('cordova')) {
-      Geolocation.getCurrentPosition().then((res) => {
+    // if(this.platform.is('cordova')) {
+    //   Geolocation.getCurrentPosition().then((res) => {
+    //     console.log(res);
+    //     this.createMapAtCoords(res)
+    //   });
+    // } else {
+    navigator.geolocation.getCurrentPosition(
+      (res) =>{
         console.log(res);
         this.createMapAtCoords(res)
-      });
-    } else {
-      navigator.geolocation.getCurrentPosition((res) =>{
-        console.log(res);
-       this.createMapAtCoords(res)
-      });
-    }
+      },
+      (err) => console.log(err),
+        options
+    );
+    // }
   }
 
   createMapAtCoords(pos : any){

@@ -65,7 +65,6 @@ export class ProfilePage {
 		this.nav.pop();
 	}
 	goActivityList(index: number) {
-    console.log('loading ActivityListPage')
     this.nav.push(ActivityListPage, {
       'header' : this.listTypes[index]['header'],
       'filter' : this.listTypes[index]['filterExpression'],
@@ -73,7 +72,6 @@ export class ProfilePage {
 	}
 
   getIsRated(starNumber: number) {
-    console.log(starNumber);
     if(starNumber <= this.userRating) {
       return 'rating-gold';
     } else {

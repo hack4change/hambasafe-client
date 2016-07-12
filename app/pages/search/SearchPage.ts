@@ -48,12 +48,19 @@ export class SearchPage {
   constructor(private nav: NavController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
 
   ngOnInit() {
-    navigator.geolocation.getCurrentPosition((pos) => {
-      this.coordinates = pos.coords;
-      this.zone.run(() => {
-        this.activityConnector();
-      })
-    })
+    var options = {timeout: 10000, enableHighAccuracy: true};
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        this.coordinates = pos.coords;
+        this.zone.run(() => {
+          this.activityConnector();
+        })
+      },
+      (err) => {
+        console.log(err);
+      },
+      options
+    )
     this.ngRedux.dispatch(eventDataActions.fetchEvents());
   }
 
