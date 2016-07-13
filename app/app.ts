@@ -165,7 +165,7 @@ window.fbAsyncInit = function() {
   // Executed when the SDK is loaded
 
   // console.log(FB);
-  enableProdMode();
+  // enableProdMode();
   ionicBootstrap(MyApp, [provider(store), ParseManager], {
     backButtonText : '',
   })

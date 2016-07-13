@@ -1,10 +1,13 @@
-<ion-item class="borderless" [ngClass]="getClasses()" (click)="viewActivity()">
+<ion-item [ngClass]="getClasses()" (click)="viewActivity()">
     <ion-avatar item-left>
-      <img src="/img/adam.jpg">
+      <img src="img/adam.jpg">
     </ion-avatar>
   <ion-row>
-    <div class="activity-location">
+    <div style="font-size: 2rem; " class="activity-location">
+      <!-->
     {{  activity.city }}, {{  activity.suburb }}
+      -->
+      {{ activity.name }}
     </div>
     <div *ngIf="!actionType" class="activity-date">
     {{  startFormatted }}
@@ -12,8 +15,9 @@
   </ion-row>
   <ion-row>
     <ion-item class="borderless">
-    <h1 style="font-size: 2rem;">
-      {{ activity.name }}
+    <h1 style="font-size: 1.5rem;">
+
+      {{ activity.description }}
     </h1>
     </ion-item>
   </ion-row>

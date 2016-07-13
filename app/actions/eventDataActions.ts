@@ -112,7 +112,7 @@ const fetchEventsByCoordinates = (distance: number, latitude: number, longitude:
 const setCreateSuccessState = (response) => {
   return {
     data: fromJS({
-      status: 'created',
+      status: 'CREATED',
     }),
     type: actionTypes.EVENTS_CREATE_SUCCESS,
   };
@@ -123,7 +123,7 @@ const setCreateErrorState = (error) => {
   return {
     data: fromJS({
       message: error,
-      status: 'error',
+      status: 'CREATE_ERROR',
     }),
     type: actionTypes.EVENTS_CREATE_FAIL,
   };
@@ -157,6 +157,7 @@ const createActivity = (data):any => {
 const setIdle = ():any => {
   return {
     data: fromJS({
+      message:'',
       status: 'idle',
     }),
     type: actionTypes.EVENTS_STATUS_SET,

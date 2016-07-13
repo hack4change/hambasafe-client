@@ -52,18 +52,23 @@ export class CreatePage {
   private endLocation;
   private intensity;
   private waitMins;
-  private geoCoder        : any;
+  private geoCoder: any;
+  private minDate: string;
+  private maxDate: string;
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) {}
 
   ngOnInit(){
     this.geoCoder = new google.maps.Geocoder;
-  
+    var tmpDate = new Date();
+    this.minDate    = tmpDate.toISOString().split("T")[0];
+    this.maxDate    = (new Date(new Date().setFullYear(new Date().getFullYear() + 1))).toISOString().split("T")[0];
+    this.startDate  = this.minDate;
     this.created$ = this.ngRedux.select(state=>state.getIn(['eventData', 'status']));
     this.userId$ = this.ngRedux.select(state=>state.getIn(['currentUser', 'id']));
 
     this.created$.subscribe(eventStatus => {
       switch (eventStatus) {
-        case 'created': 
+        case 'CREATED': 
           if(this.createModal) {
           this.createModal.dismiss()
         }
@@ -78,9 +83,10 @@ export class CreatePage {
           // spinner: 'crescent',
           dismissOnPageChange : true,
         })
+
         this.nav.present(this.createModal);
         break;
-        case 'error': 
+        case 'CREATE_ERROR': 
           if(this.createModal) {
           this.createModal.dismiss()
           //TODO: REMOVE
@@ -98,24 +104,78 @@ export class CreatePage {
     var roundDateToISO = ":00.000Z";
     console.log(this.startTime);
     console.log(this.eventType);
-		// if(!this.eventType) {
-		// 	return; 
-		// }
-		// if(!this.name) {
-		// 	return; 
-		// }
-		// if(!this.description) {
-		// 	return; 
-		// }
-		// if(!this.startTime) {
-		// 	return; 
-		// }
-		// if(!this.startDate) {
-		// 	return; 
-		// }
-		// if(!this.startLocation) {
-		// 	return; 
-		// }
+		if(!this.eventType) {
+      this.nav.present(Loading.create({
+        content: 'Select an event type... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
+		if(!this.name) {
+      this.nav.present(Loading.create({
+        content: 'Enter a name for the event... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
+		if(!this.description) {
+      this.nav.present(Loading.create({
+        content: 'Enter a description... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
+		if(isNaN(this.distance)) {
+      this.nav.present(Loading.create({
+        content: 'Enter a description... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
+		if(!this.startTime) {
+      this.nav.present(Loading.create({
+        content: 'Tell us what time it starts... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
+		if(!this.startDate) {
+      this.nav.present(Loading.create({
+        content: 'Tell us what day it starts... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
+		if(!this.startLocation) {
+      this.nav.present(Loading.create({
+        content: 'Tell us where it starts... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
+		if(!this.waitMins) {
+      this.nav.present(Loading.create({
+        content: 'Tell us how long you can wait... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
 		// if(!this.endTime) {
 		// 	return; 
 		// }
@@ -125,9 +185,6 @@ export class CreatePage {
 		// if(!this.endLocation) {
 		// 	return; 
 		// }
-		// if(!this.waitMins) {
-		// 	return; 
-		// }
     var data = {
       'name'          : this.name         || 'Cycling in Numbers',
       'description'   : this.description  || 'howdy',
@@ -135,12 +192,12 @@ export class CreatePage {
       'intensity'     : this.intensity    || 'NOVICE',
       'eventType'     : this.eventType    || 'RUN',
       'startDate'     : this.startDate  + "T" + this.startTime + roundDateToISO ,
-      'endDate'       : this.endDate  +  "T"+this.endTime + roundDateToISO,
+      // 'endDate'       : this.endDate  +  "T"+this.endTime + roundDateToISO,
       'waitTime'      : Number(this.waitMins) || 10,
       'isPublic'      : this.isPublic,
       'startLocation' : {
-        longitude: this.startLocation.lng(),
-        latitude: this.startLocation.lat(),
+        longitude: this.startLocation.longitude,
+        latitude: this.startLocation.latitude,
       },
       // 'endLocation' : {
       //   longitude: this.endLocation.lng(),
@@ -154,7 +211,10 @@ export class CreatePage {
   }
   closeMap(type: string) {
     if(type=='START_LOCATION'){
-      this.startLocation = this.startMap.latLng;
+      this.startLocation = {
+        'latitude' : this.startMap.latLng.lat(),
+        'longitude' : this.startMap.latLng.lng(),
+      }
     } else if(type=='END_LOCATION'){
       this.endLocation = this.endMap.latLng;
     }

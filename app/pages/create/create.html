@@ -44,8 +44,13 @@
         <ion-label floating>Estimated distance(kilometers)</ion-label>
         <ion-input [(ngModel)]="distance" type="number" required></ion-input>
       </ion-item>
-      <ion-item *ngIf="!startLocation" (click)="openMap('START_LOCATION')" class="">
-        Where does it start?
+      <ion-item *ngIf="!startLocation" (click)="openMap('START_LOCATION')" class="clean">
+        <ion-label floating>Where does it start?</ion-label>
+        <ion-input type="text" value="" required></ion-input>
+      </ion-item>
+      <ion-item *ngIf="startLocation" (click)="openMap('START_LOCATION')" class="">
+        <ion-label floating>Where does it start?</ion-label>
+        <ion-input type="text" value="{{ startLocation.latitude }}, {{ startLocation.longitude }}" required></ion-input>
       </ion-item>
       <ion-item class="">
         <ion-label floating>
@@ -57,8 +62,9 @@
         <ion-label floating>
           What day does it start?
         </ion-label>
-        <ion-datetime displayFormat="DD/MMM/YY" pickerFormat="DD MMM YY" [(ngModel)]="startDate"></ion-datetime>
+        <ion-datetime min="{{ minDate }}" max="{{ maxDate }}" displayFormat="DD/MMM/YY" value="startDate" pickerFormat="DD MM YYYY" [(ngModel)]="startDate"></ion-datetime>
       </ion-item>
+      <!-->
       <ion-item class="">
         <ion-label floating>
           What time does it end?
@@ -74,11 +80,10 @@
       <ion-item (click)="openMap('END_LOCATION')" class="">
         Where does it end?
       </ion-item>
+      -->
       <ion-item class="">
-        <ion-label floating>
-          Wait time(minutes)?
-        </ion-label>
-        <ion-input type="number "[(ngModel)]="waitMins"></ion-input>
+        <ion-label floating>Wait time(minutes)?</ion-label>
+        <ion-input [(ngModel)]="waitMins" type="number"></ion-input>
       </ion-item>
     </ion-list>
   </template>

@@ -26,6 +26,7 @@ export const getInitialState = ()=> {
       email : '',
       profilePicture: '',
       // isSilhouette: null,
+      message: '',
     }))
   })
 }

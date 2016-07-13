@@ -7,9 +7,10 @@ export default function currentUser(state:any, action: any= {}) {
       return state.set('status', action.data.get('status'));
     case actionTypes.USER_CREATE_SUCCESS:
       var retState = state.set('status', action.data.get('status'));
-      return retState.set('id', action.data.get('id'));
+      return retState.set('message', '');
     case actionTypes.USER_CREATE_FAIL:
-      return state.set('status', action.data.get('status'));
+      var retState = state.set('status', action.data.get('status'));
+      return retState.set('message', action.data.get('message'));
     case actionTypes.USER_AUTH_INIT:
       return state.set('status', action.data.get('status'));
     case actionTypes.USER_AUTH_SUCCESS:

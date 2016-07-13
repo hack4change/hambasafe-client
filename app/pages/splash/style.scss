@@ -1,6 +1,7 @@
 .splash-page {
   scroll-content {
     overflow-y: auto;
+    height:90%;
   }
   background-color: $positive;
   .splash-wrapper {
@@ -16,13 +17,14 @@
     .splash-container {
       display: block;
       width: 50%;
+      max-width: 15em;
       margin: 0 auto;
       text-align: center;
       img {
         width: 128px;
       }
       .splash-intro-one {
-        padding-top:15%;
+        padding-top:5%;
         h3 {
           font-weight: bold; 
           color: $light;
@@ -35,7 +37,7 @@
         }
       }
       .splash-intro-button {
-        padding-top:30%;
+        padding-top:10%;
         padding-bottom:50%;
         width: 100%;
         button {
@@ -45,6 +47,15 @@
           font-weight:bold;
         }
       }
+    }
+  }
+  ion-toolbar {
+    .toolbar-title{
+      text-align: center;
+      a {
+        color: white; 
+      }
+    
     }
   }
 }

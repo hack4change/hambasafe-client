@@ -8,7 +8,7 @@ import {
   animate
 } from '@angular/core';
 import {AsyncPipe} from '@angular/common';
-import {Modal, NavController, ViewController} from 'ionic-angular';
+import {Modal, NavController, ViewController, Loading} from 'ionic-angular';
 const _ = require('lodash');
 
 /**
@@ -58,6 +58,7 @@ import {MapComponent} from '../../components/map/map.component.ts';
 export class RegistrationPage {
   // @ViewChild('myMap') mapChild;
 
+  createModal       :   any;
   currentUser$      :   Observable<any>;
   validForm         :   boolean;
   aniState          :   string  = 'inactive';
@@ -121,6 +122,21 @@ export class RegistrationPage {
           this.profilePicture     = userData.picture;
           this.isSilhouette       = userData.isSilhouette;
         }
+        switch(userData.status){
+          case 'CREATING':
+            break;
+          case 'CREATE_SUCCESS':
+            break;
+          case 'CREATE_ERROR':
+            // this.createModal = Loading.create({
+            // content: userData.message,
+            // // spinner: 'crescent',
+            // dismissOnPageChange : true,
+            // duration: 2000,
+          // })
+
+            break;
+        }
       })
 
     })
@@ -140,13 +156,78 @@ export class RegistrationPage {
 	createUser() {
     var userData = {
       'profilePicture'  :   this.profilePicture,
-			'firstName'	      :   this.firstName || 'George',//this.firstName,
-			'lastName'		    :   this.lastName || 'Phillips',//this.lastName,
-			'gender'			    :   _.find(this.gender, {'selected': true}) ? _.find(this.gender, {'selected': true}).name : 'Male',
-      'address'         :   this.address || 'temp',
-			'dateOfBirth'     :	  this.dateOfBirth || (new Date).toISOString(),//this.dateOfBirth,
-      'mobileNumber'    :   this.mobileNumber || '0827643743',
-      'email'           :   this.email || 'George@sum.such',
+			'firstName'	      :   this.firstName,
+			'lastName'		    :   this.lastName,//this.lastName,
+			'gender'			    :   _.find(this.gender, {'selected': true}),
+      // 'address'         :   this.address,
+			'dateOfBirth'     :	  this.dateOfBirth,//this.dateOfBirth,
+      'mobileNumber'    :   this.mobileNumber,
+      'email'           :   this.email,
+    }
+    if(!this.profilePicture){
+        this.nav.present( Loading.create({
+        content: 'Please add a profile picture on facebook',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }));
+      return;
+    } else if(!this.firstName) {
+      this.nav.present(Loading.create({
+        content: 'Firstname... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+    } else if(!this.lastName) {
+      this.nav.present(Loading.create({
+        content: 'Surname... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+    } else if(!this.gender || !(this.gender == 'Male' || this.gender == 'Female' || this.gender == 'Other')) {
+      this.nav.present(Loading.create({
+        content: 'Gender... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+    } else if(!this.dateOfBirth || !(new Date(this.dateOfBirth))) {
+      this.nav.present(Loading.create({
+        content: 'Date Of Birth... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+    } else if(!this.mobileNumber) {
+      this.nav.present(Loading.create({
+        content: 'mobile number... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+    } else if(!this.email) {
+      this.nav.present(Loading.create({
+        content: 'email... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+    } else if(this.confirmEmail !== this.email) {
+      this.nav.present(Loading.create({
+        content: "The email fields don't match! O.o",
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
     }
     console.log(userData);
     //TODO: Validation

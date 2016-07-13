@@ -48,7 +48,7 @@ export class HomePage {
   constructor(private nav: NavController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
    
   ngOnInit() {
-    var options = {timeout: 10000, enableHighAccuracy: true};
+    var options = { timeout: 10000, enableHighAccuracy: true };
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         this.coordinates = pos.coords;
@@ -57,7 +57,6 @@ export class HomePage {
             state => {
               return state.getIn(['eventData', 'items'])
               .filter((item) => {
-                console.log(this.sliderDistance);
                 return distanceCalculator(
                   this.coordinates.latitude,
                   this.coordinates.longitude,
@@ -74,7 +73,7 @@ export class HomePage {
             })
           });
           this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.sliderDistance, this.coordinates.latitude, this.coordinates.longitude));
-        }
+        })
       },
       (err) => {
         console.log(err)
@@ -92,10 +91,10 @@ export class HomePage {
   }
 
   sliderChange() {
-    if(this.sliderDistance > this.greatestDistance && this.coordinates) {
+    // if(this.sliderDistance > this.greatestDistance && this.coordinates) {
       this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.sliderDistance, this.coordinates.latitude, this.coordinates.longitude));
       this.greatestDistance = this.sliderDistance;
-    }
+    // }
   }
 
   checkEmpty() {

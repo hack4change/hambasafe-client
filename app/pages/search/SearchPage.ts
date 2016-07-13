@@ -52,6 +52,7 @@ export class SearchPage {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         this.coordinates = pos.coords;
+        this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(150, this.coordinates.longitude, this.coordinates.latitude));
         this.zone.run(() => {
           this.activityConnector();
         })
@@ -88,7 +89,9 @@ export class SearchPage {
         //XXX: Time sorting;
         return true;
       })
-      .toJS()
+      .toJS().sort(function(a, b) {
+        return a.startDate.iso > b.startDate.iso;
+      })
     });
 
     this.activities$.subscribe(x => {

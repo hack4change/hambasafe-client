@@ -2,6 +2,9 @@ activity-item {
   cursor:pointer;
   ion-item {
     padding-left: 6px !important; 
+    .item .item-inner {
+      padding-right: 0px;
+    }
   }
   ion-item.been-invited {
     border-left: 12px solid $assertive !important;
@@ -45,11 +48,12 @@ activity-item {
   }
   .activity-location{
     display: inline-block;
-    width: 50%;
+    width: 70%;
   }
   .activity-date {
     display: inline-block;
-    width: 50%;
+    background-color: white;
+    width: 30%;
     text-align:right;
   }
 }

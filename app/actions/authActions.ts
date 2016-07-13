@@ -109,21 +109,21 @@ const authDevice = ():any => {
       console.log(res);
       if(res.status !== 'connected') {
         Facebook.login(['public_profile', 'email']).then((res)=>{
-				var expDate = new Date(new Date().getTime() + res.authResponse.expiresIn * 1000 ).toISOString();
-				var authData = {
-					id: String(res.authResponse.userID),
-					access_token: res.authResponse.accessToken,
-					expiration_date: expDate
-				}
-            window.parseManager.deviceLogin(
-              // (response) => console.log(response),
-              res.authResponse,
-              (response) => getProfile(
-                (response) => dispatch(setAuthError(response)), 
-                  (response) => dispatch(setAuthSuccess(response))
-              ),
-              (error) => dispatch(setAuthError(error))
-            )
+          var expDate = new Date(new Date().getTime() + res.authResponse.expiresIn * 1000 ).toISOString();
+          var authData = {
+            id: String(res.authResponse.userID),
+            access_token: res.authResponse.accessToken,
+            expiration_date: expDate
+          }
+          window.parseManager.deviceLogin(
+            // (response) => console.log(response),
+            res.authResponse,
+            (response) => getProfile(
+              (response) => dispatch(setAuthError(response)), 
+                (response) => dispatch(setAuthSuccess(response))
+            ),
+            (error) => dispatch(setAuthError(error))
+          )
         })
       } else {
         var expDate = new Date(new Date().getTime() + res.authResponse.expiresIn * 1000 ).toISOString();

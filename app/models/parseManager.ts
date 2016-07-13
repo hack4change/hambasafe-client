@@ -29,9 +29,17 @@ export class ParseManager {
           this.Parse.User.current().set(key, value);
         }
       })
-      this.Parse.User.current().save();
+      this.Parse.User.current().save(null, {
+        success: (res) => {
+          success();
+        },
+        error: (res) => {
+          console.log("error");
+          console.log(res);
+          error(res);
+        }
+      });
       console.log('here');
-      success();
     }
     userRegistered() {
       if(!this.Parse.User.current()) return false;
@@ -39,7 +47,7 @@ export class ParseManager {
       if(!this.Parse.User.current().get('firstName')) return false;
       if(!this.Parse.User.current().get('lastName')) return false;
       if(!this.Parse.User.current().get('gender')) return false;
-      if(!this.Parse.User.current().get('address')) return false;
+      // if(!this.Parse.User.current().get('address')) return false;
       if(!this.Parse.User.current().get('dateOfBirth')) return false;
       if(!this.Parse.User.current().get('mobileNumber')) return false;
       if(!this.Parse.User.current().get('email')) return false;
@@ -226,8 +234,8 @@ export class ParseManager {
       });
     }
 		logOut(success:any, error:any){
-      if(this.Parse.User.current()){
-        this.Parse.User.current().logOut();
+      if(!!this.Parse.User.current()){
+        this.Parse.User.logOut();
         success();
       } else {
         error("User not logged in");

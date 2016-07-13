@@ -18,8 +18,8 @@
         <ion-avatar *ngIf="!!profilePicture" item-left>
           <img src="{{ profilePicture }}">
         </ion-avatar>
-        <input name="profile-picture" class="hidden-file-input" id="profile-picture" type="file" placeholder="Profile Picture" [(ngModel)]="uploadPicture" accept="image/*" required />
-        <label for="profile-picture">Choose a file</label>
+        <!-- <input name="profile-picture" class="hidden-file-input" id="profile-picture" type="file" placeholder="Profile Picture" [(ngModel)]="uploadPicture" accept="image/*" required /> -->
+        <label for="profile-picture">Please complete...</label>
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Firstname</ion-label>
@@ -40,9 +40,9 @@
           <ion-checkbox primary (click)="selectGender(genderOpt.name)" checked="{{ genderOpt.selected }}"></ion-checkbox>
         </ion-item>
       </div>
-      <ion-item class="borderless input-modal-button" (click)="openLocation()">
-        Location
-      </ion-item>
+      <!-- <ion-item class="borderless input-modal-button" (click)="openLocation()"> -->
+      <!--   Location -->
+      <!-- </ion-item> -->
       <ion-item class="borderless">
         <ion-label floating>Date of Birth</ion-label>
         <ion-datetime displayFormat="DD MMM YY" pickerFormat="DD MMM YY" [(ngModel)]="dateOfBirth"></ion-datetime>
@@ -59,10 +59,10 @@
         <ion-label floating>Confirm Email</ion-label>
         <ion-input type="email"  [(ngModel)]="confirmEmail" required></ion-input>
       </ion-item>
-      <ion-item>
-        <input name="identification" class="hidden-file-input" type="file" accept="image/*" id="identification" [(ngModel)]="identification" required />
-        <label for="identification">Scan my ID or Driver's License</label>
-      </ion-item>
+      <!-- <ion-item> -->
+      <!--   <input name="identification" class="hidden-file-input" type="file" accept="image/*" id="identification" [(ngModel)]="identification" required /> -->
+      <!--   <label for="identification">Scan my ID or Driver's License</label> -->
+      <!-- </ion-item> -->
       <ion-item class="borderless" (click)="openTerms()">
         <h2 *ngIf="!termsAccepted">
         Accept the Terms of Use
@@ -76,8 +76,8 @@
 </ion-content>
 <ion-footer>
   <ion-toolbar position="bottom">
-    <button full primary (click)="createUser()">
-      <!-- [disabled]="!validForm" -->
+    <button [disabled]="!termsAccepted" full primary (click)="createUser()">
+      <!--  -->
       Next
     </button>
   </ion-toolbar>

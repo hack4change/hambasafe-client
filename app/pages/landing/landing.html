@@ -1,50 +1,42 @@
-<ion-content>
+<ion-header>
   <ion-toolbar class="icon-only">
     <a class="clickable" menuToggle>
       <ion-icon light class="menu-icon" name="md-more"></ion-icon>
     </a>
   </ion-toolbar>
-  <div class="landing-content">
-    <ion-row>
-      <ion-col width-10>
-      </ion-col>
-      <ion-col class="landing-container">
-        <div class="flex-single">
-        </div>
-        <div class="flex-single">
-          <div class="landing-app-image">
-            <img src="img/hambasafe_app_icon_logo.png" />
-          </div>
+</ion-header>
+<ion-content>
+  <div class="valign-outer landing-wrapper">
+    <div class="valign-inner">
+      <div class="landing-container">
+        <img src="img/hambasafe_app_icon_logo.png">
+        <div class="landing-intro-one">
             <h1>
               HambaSafe
             </h1>
         </div>
-        <div class="flex-single">
+        <div class="landing-intro-two">
           <h5>
             Login or Sign Up
           </h5>
-          <!-- facebook login button -->
-          <button light block (click)="fbLogin()">
-            <ion-icon class="facebook-color pull-left" name="logo-facebook" item-left></ion-icon>
-            <div class="text-center">
-              Facebook
-            </div>
-          </button>
         </div>
-        <div class="flex-double">
-        </div>
-      </ion-col>
-      <ion-col width-10>
-      </ion-col>
-    </ion-row>
+      <div class="landing-intro-button">
+        <button class="facebook-button" light full block ion-item no-lines (click)="fbLogin()" detail-none>
+          <ion-icon name="logo-facebook" item-left></ion-icon>
+            Facebook
+          <ion-icon name="logo-facebook" style="display:none" item-right></ion-icon>
+        </button>
+      </div>
+    </div>
   </div>
+</div>
 </ion-content>
 <ion-footer>
-<ion-toolbar position="bottom">
-  <ion-title class="text-footer">
-    <a (click)="goToTerms()">
-      Terms of Use
-    </a>
-  </ion-title>
-</ion-toolbar>
+  <ion-toolbar position="bottom">
+    <ion-title class="text-footer">
+      <a (click)="goToTerms()">
+        Terms of Use
+      </a>
+    </ion-title>
+  </ion-toolbar>
 </ion-footer>

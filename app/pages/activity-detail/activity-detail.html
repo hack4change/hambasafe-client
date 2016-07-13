@@ -15,7 +15,7 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content>
+<ion-content padding>
   <ion-list>
   <activity-item [activity]="activity$ | async"></activity-item>
   </ion-list>
@@ -25,4 +25,10 @@
     </p>
   </div>
 </ion-content>
-
+<ion-footer>
+  <ion-toolbar class="main-bar">
+    <button full primary [disabled]="true">
+      Join!
+    </button>
+  </ion-toolbar>
+</ion-footer>
