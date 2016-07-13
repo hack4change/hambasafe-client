@@ -3,7 +3,7 @@ const _ = require('lodash');
 
 var Parse = require('parse').Parse;
 Parse.initialize('test1234');
-Parse.serverURL = 'https://163.172.144.224/parse'
+Parse.serverURL = 'https://mainstream.ninja/parse'
 
 export class ParseManager {
     ActivityClass: any;
@@ -16,6 +16,7 @@ export class ParseManager {
       this.LocationClass = this.Parse.Object.extend("Location");
       this.Parse.Object.registerSubclass('Activity', this.ActivityClass);
       this.Parse.Object.registerSubclass('Location', this.LocationClass);
+      this.fbInit();
     }
     
     signUp(data, success:()=>void, error:(res)=>void)
@@ -69,6 +70,7 @@ export class ParseManager {
         });
 
         activityQuery.near('startLocation', point);
+        // activityQuery.include('author');
         activityQuery.find({
           success: (res) => { 
             console.log(res);
@@ -92,7 +94,7 @@ export class ParseManager {
 
         userQuery.find({
           success: (res) => { 
-                success(res);
+            success(res);
           },
           error:(err) =>{
             console.log('parse saving error');
@@ -102,46 +104,45 @@ export class ParseManager {
     }
     createActivity(data: String, error:(res)=>void, success:(res)=>void)
     {
-        var activity = new this.ActivityClass();
-        var user = this.Parse.User.current();
-        _.forEach(data, (value, key) => {
-          if(key == 'startLocation' || key == 'endLocation') {
-            activity.set(key, new this.Parse.GeoPoint(value));
-          } else if(key == 'startDate' || key == 'endDate') {
-            activity.set(key, new Date(value));
-          } else {
-            activity.set(key, value);
-          }
-        })
-        var activityRelation = activity.relation('author');
-        activityRelation.add(user);
+      var activity = new this.ActivityClass();
+      var user = this.Parse.User.current();
+      _.forEach(data, (value, key) => {
+        if(key == 'startLocation' || key == 'endLocation') {
+          activity.set(key, new this.Parse.GeoPoint(value));
+        } else if(key == 'startDate' || key == 'endDate') {
+          activity.set(key, new Date(value));
+        } else {
+          activity.set(key, value);
+        }
+      })
+      var activityRelation = activity.relation('author');
+      activityRelation.add(user);
 
-        activity.save(null, {
-          success: (res) => { 
-            console.log('activity saved to parse server');
-            var userRelation = user.relation('activities');
-            userRelation.add(activity);
-            user.save(null, {
-              success: (res) => { 
-                console.log('user-activity relation saved');
-                console.log(res);
-                success(res);
-              },
-              error: (err) => {
-                console.log('parse saving error');
-                console.log(err);
-                error(res);
-              }
-            });
-            // success(res)
-          },
-          error:(err)=> {
-            console.log('parse saving error');
-            console.log(err);
-            error(err);
-          }
-        });
-
+      activity.save(null, {
+        success: (res) => { 
+          console.log('activity saved to parse server');
+          var userRelation = user.relation('activities');
+          userRelation.add(activity);
+          user.save(null, {
+            success: (res) => { 
+              console.log('user-activity relation saved');
+              console.log(res);
+              success(res);
+            },
+            error: (err) => {
+              console.log('parse saving error');
+              console.log(err);
+              error(res);
+            }
+          });
+          // success(res)
+        },
+        error:(err)=> {
+          console.log('parse saving error');
+          console.log(err);
+          error(err);
+        }
+      });
     }
 		getActivities() {
       console.log('fetching queries');
@@ -184,7 +185,7 @@ export class ParseManager {
            Set if you want to check the authentication status
            at the start up of the app
          */
-        // status: true,
+        status: true,
 
         /*
            Enable cookies to allow the server to access

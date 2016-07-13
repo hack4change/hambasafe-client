@@ -16,8 +16,26 @@ const fbLogin = (errorCallback, successCallback):any => {
   // console.log(typeof(FB.getLoginStatus));
 }
 
+const deviceLogout = (errorCallback, successCallback):any => {
+  Facebook.getLoginStatus().then( (response:any) => {
+    if (response.status === 'connected') {
+      Facebook.logout().then((response: any) => {
+        console.log(response);
+        if (response.authResponse) {
+          window.parseManager.logOut(
+            successCallback,
+            errorCallback
+          )
+        } else {
+          errorCallback(response);
+        }
+      }) 
+    } else {
+      successCallback(response);
+    }
+  })
+}
 const fbLogout = (errorCallback, successCallback):any => {
-
   FB.getLoginStatus(function(response) {
     if (response.status === 'connected') {
       FB.logout(function(response: any) {
@@ -118,7 +136,7 @@ const authDevice = ():any => {
           window.parseManager.deviceLogin(
             // (response) => console.log(response),
             res.authResponse,
-            (response) => getProfile(
+            (response) => getDeviceProfile(
               (response) => dispatch(setAuthError(response)), 
                 (response) => dispatch(setAuthSuccess(response))
             ),
@@ -136,7 +154,7 @@ const authDevice = ():any => {
         window.parseManager.deviceLogin(
           // (response) => console.log(response),
           authData,
-          (response) => getProfile(
+          (response) => getDeviceProfile(
             (response) => dispatch(setAuthError(response)), 
               (response) => dispatch(setAuthSuccess(response))
           ),
@@ -184,18 +202,24 @@ const setLogoutTrying = () => {
   };
 };
 
-const logoutUser = ():any => {
+const logoutUser = (isCordova):any => {
   return dispatch => {
     // const url = 'https://www.reddit.com/top/.json?limit=10';
     //
     // Set loading state.
     //
     dispatch(setAuthTrying());
-    fbLogout(
-      (error) => dispatch(setLogoutError(error)),
-        () => dispatch(setLogoutSuccess())
-    );
-
+    if(isCordova){
+      deviceLogout(
+        (error) => dispatch(setLogoutError(error)),
+          () => dispatch(setLogoutSuccess())
+      );
+    } else {
+      fbLogout(
+        (error) => dispatch(setLogoutError(error)),
+          () => dispatch(setLogoutSuccess())
+      );
+    }
   };
 };
 
@@ -229,6 +253,19 @@ const getProfile = (errorCallback, successCallback): any => {
   }
 }
 
+/**
+ * getFacebookProfile
+ */
+const getDeviceProfile = (errorCallback, successCallback): any => {
+  console.log('get Profile');
+  var userRegistered = window.parseManager.userRegistered();
+  if(userRegistered) {
+    getParseProfile(errorCallback, successCallback);
+  } else {
+    getDeviceFacebookProfile(errorCallback, successCallback);
+  }
+}
+
 const getParseProfile = (errorCallback, successCallback): any => {
   var respJson = {
     'isRegistered' : true,
@@ -243,6 +280,50 @@ const getParseProfile = (errorCallback, successCallback): any => {
   successCallback(respJson);
 }
 
+const getDeviceFacebookProfile = (errorCallback, successCallback): any => { 
+  var respJson : any = {
+    'isRegistered' : false,
+  }
+  Facebook.getLoginStatus().then((response)=> {
+    console.log('Status');
+    console.log(JSON.stringify(response));
+    if (response.status !== 'connected') {
+      this.setAnonymous()
+    } else {
+      _.merge(respJson, _.pick(response.authResponse, ['accessToken' , 'userID']));
+      respJson.fbId = respJson.userID;
+      respJson.userID = undefined;
+      //TODO: Remove
+      console.log(response);
+      Facebook.api('/me?fields=first_name,last_name,birthday,gender,email,picture', [
+      ]).then((apiResponse: any) => {
+        console.log(apiResponse);
+        _.merge(respJson,  _.pick(apiResponse, [
+          'first_name',
+          'last_name',
+          'birthday',
+          'gender',
+          'email',
+        ]));
+        respJson.picture = apiResponse.picture.data.url;
+        respJson.isSilhouette = apiResponse.picture.data.is_silhouette;
+
+        // jsonRequest(
+        //   API_ROOT + '/v1/Authentication/ExternalLogin',
+        //   {
+        //     method: 'POST',
+        //     body:  {
+        //       'accessToken' : respJson['accessToken']
+        //     }
+        //   },
+        successCallback(respJson);// ,
+        // errorCallback(loginResponse),
+        // )
+      });
+    }
+  })
+
+}
 const getFacebookProfile = (errorCallback, successCallback): any => { 
   var respJson : any = {
     'isRegistered' : false,

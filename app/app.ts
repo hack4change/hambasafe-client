@@ -76,7 +76,6 @@ export class MyApp {
    * Init func
    */
   ngOnInit() {
-    window.parseManager.fbInit();
     this.setMenuAnonymous();
     this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
     this.authStatus$.subscribe( userStatus => {
@@ -157,7 +156,7 @@ export class MyApp {
     this.nav.push(TermsPage);
   }
   logOut() {
-    this.ngRedux.dispatch(authActions.logoutUser());
+    this.ngRedux.dispatch(authActions.logoutUser(this.platform.is('cordova')));
   }
 }
 
