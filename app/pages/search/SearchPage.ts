@@ -52,7 +52,11 @@ export class SearchPage {
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         this.coordinates = pos.coords;
-        this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(150, this.coordinates.longitude, this.coordinates.latitude));
+        if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+          if(Math.abs(this.latitude) <= 90 && Math.abs(this.longitude) <= 180 ) {
+            this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(150, this.coordinates.longitude, this.coordinates.latitude));
+          }
+        }
         this.zone.run(() => {
           this.activityConnector();
         })

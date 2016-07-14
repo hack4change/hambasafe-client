@@ -58,7 +58,19 @@ export class MapComponent {
 
   createMapAtCoords(pos : any){
     _.merge(this.gCoords, pos.coords);
-    this.latLng = new google.maps.LatLng(this.gCoords.latitude, this.gCoords.longitude) 
+    if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+      if(Math.abs(this.latitude) <= 90 && Math.abs(this.longitude) <= 180 ) {
+        this.latLng = new google.maps.LatLng(this.gCoords.latitude, this.gCoords.longitude) 
+      } else {
+        this.gCoords.latitude = 0;
+        this.gCoords.longitude = 0;
+        this.latLng = new google.maps.LatLng(0, 0) 
+      }
+    } else {
+      this.gCoords.latitude = 0;
+      this.gCoords.longitude = 0;
+      this.latLng = new google.maps.LatLng(0, 0) 
+    }
     this.gMap = new google.maps.Map(this.mapNode.nativeElement.valueOf(), {
       center: this.latLng,
       zoom: 10,
