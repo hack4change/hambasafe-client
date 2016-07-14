@@ -96,7 +96,7 @@ export class SearchPage {
 
           return false;
         }
-        }
+      }
         //XXX: Time sorting;
         return true;
       })
