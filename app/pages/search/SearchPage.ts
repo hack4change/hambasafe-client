@@ -79,12 +79,19 @@ export class SearchPage {
       })
       .filter((item) => {
         if(this.activeType == 'SEARCH') {
-            return distanceCalculator(
-              this.coordinates.latitude,
-              this.coordinates.longitude,
-              item.get('startLocation').get('latitude'),
-              item.get('startLocation').get('longitude')
-            ) <= this.searchDistance;
+          if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+            if(Math.abs(this.latitude) <= 90 && Math.abs(this.longitude) <= 180 ) {
+              return distanceCalculator(
+                this.coordinates.latitude,
+                this.coordinates.longitude,
+                item.get('startLocation').get('latitude'),
+                item.get('startLocation').get('longitude')
+              ) <= this.searchDistance;
+            }
+          }
+
+          return false;
+        }
         }
         //XXX: Time sorting;
         return true;
@@ -123,13 +130,17 @@ export class SearchPage {
       latitude: lat,
       longitude: lng,
     }
-    if(!!lat && !!lng){
-      geoCoder.geocode({'location' : this.mapChild.latLng}, (results, status) => {
+    // if(!!lat && !!lng){
+          if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+            if(Math.abs(this.latitude) <= 90 && Math.abs(this.longitude) <= 180 ) {
+      // geoCoder.geocode({'location' : this.mapChild.latLng}, (results, status) => {
         console.log(results);
         console.log(status);
         this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.latitude, this.coordinates.latitude));
-      })
-    }
+      // })
+            }
+          }
+    // }
   }
 
   goBack() {
