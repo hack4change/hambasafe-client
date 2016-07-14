@@ -84,7 +84,7 @@ export class SearchPage {
       .filter((item) => {
         if(this.activeType == 'SEARCH') {
           if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-            if(Math.abs(this.latitude) <= 90 && Math.abs(this.longitude) <= 180 ) {
+            if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
               return distanceCalculator(
                 this.coordinates.latitude,
                 this.coordinates.longitude,
@@ -96,7 +96,6 @@ export class SearchPage {
 
           return false;
         }
-      }
         //XXX: Time sorting;
         return true;
       })

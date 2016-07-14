@@ -58,8 +58,8 @@ export class MapComponent {
 
   createMapAtCoords(pos : any){
     _.merge(this.gCoords, pos.coords);
-    if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-      if(Math.abs(this.latitude) <= 90 && Math.abs(this.longitude) <= 180 ) {
+    if(!!this.gCoords && !!this.gCoords.latitude && !!this.gCoords.longitude) {
+      if(Math.abs(this.gCoords.latitude) <= 90 && Math.abs(this.gCoords.longitude) <= 180 ) {
         this.latLng = new google.maps.LatLng(this.gCoords.latitude, this.gCoords.longitude) 
       } else {
         this.gCoords.latitude = 0;

@@ -73,7 +73,7 @@ export class HomePage {
             })
           });
           if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-            if(Math.abs(this.latitude) <= 90 && Math.abs(this.longitude) <= 180 ) {
+            if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
               this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.sliderDistance, this.coordinates.latitude, this.coordinates.longitude));
             }
           }
@@ -97,7 +97,7 @@ export class HomePage {
   sliderChange() {
     // if(this.sliderDistance > this.greatestDistance && this.coordinates) {
     if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-      if(Math.abs(this.latitude) <= 90 && Math.abs(this.longitude) <= 180 ) {
+      if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
         this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.sliderDistance, this.coordinates.latitude, this.coordinates.longitude));
         this.greatestDistance = this.sliderDistance;
       }

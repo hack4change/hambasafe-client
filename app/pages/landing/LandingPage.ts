@@ -34,7 +34,13 @@ export class LandingPage
   authStatus$: Observable<any>;
   created$: Observable<any>;
 
-  constructor(private platform: Platform, private nav: NavController, private ngRedux: NgRedux<any>) {};
+  constructor(private platform: Platform, private nav: NavController, private ngRedux: NgRedux<any>) {
+    if(this.platform.is('cordova')) {
+      this.ngRedux.dispatch(authActions.authDevice());
+    } else {
+      this.ngRedux.dispatch(authActions.authUser());
+    }
+  };
 
   ngOnInit(){
     this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
@@ -52,11 +58,6 @@ export class LandingPage
           console.log('Unhandled authentication status');
       }
     })
-    if(this.platform.is('cordova')) {
-      this.ngRedux.dispatch(authActions.authDevice());
-    } else {
-      this.ngRedux.dispatch(authActions.authUser());
-    }
   }
 
   fbLogin() {
