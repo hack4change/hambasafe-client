@@ -72,7 +72,9 @@ export class HomePage {
               this.isEmpty = !!x ? ( x.length == 0 ).toString() : 'true';
             })
           });
-          this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.sliderDistance, this.coordinates.latitude, this.coordinates.longitude));
+          if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+            this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.sliderDistance, this.coordinates.latitude, this.coordinates.longitude));
+          }
         })
       },
       (err) => {
@@ -92,8 +94,10 @@ export class HomePage {
 
   sliderChange() {
     // if(this.sliderDistance > this.greatestDistance && this.coordinates) {
+    if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude){
       this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.sliderDistance, this.coordinates.latitude, this.coordinates.longitude));
       this.greatestDistance = this.sliderDistance;
+    }
     // }
   }
 

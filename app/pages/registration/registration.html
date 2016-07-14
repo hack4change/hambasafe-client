@@ -34,7 +34,7 @@
         <ion-icon name="ios-arrow-up" *ngIf="isGenderOpen()" item-right></ion-icon>
         <ion-icon name="ios-arrow-down" *ngIf="!isGenderOpen()" item-right></ion-icon>
       </ion-item>
-      <div [hidden]="!isGenderOpen()" @genderCollapseState="aniState">
+      <div [hidden]="!isGenderOpen()"><!-- @genderCollapseState="aniState" -->
         <ion-item *ngFor="let genderOpt of genderOptions" >
           <ion-label>{{ genderOpt.name }}</ion-label>
           <ion-checkbox primary (click)="selectGender(genderOpt.name)" checked="{{ genderOpt.selected }}"></ion-checkbox>
