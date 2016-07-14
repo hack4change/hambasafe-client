@@ -52,11 +52,11 @@ export class LandingPage
           console.log('Unhandled authentication status');
       }
     })
-    // if(this.platform.is('cordova')) {
-    //   this.ngRedux.dispatch(authActions.authDevice());
-    // } else {
-    //   this.ngRedux.dispatch(authActions.authUser());
-    // }
+    if(this.platform.is('cordova')) {
+      this.ngRedux.dispatch(authActions.authDevice());
+    } else {
+      this.ngRedux.dispatch(authActions.authUser());
+    }
   }
 
   fbLogin() {
