@@ -8,13 +8,13 @@ import distanceCalculator from '../../utils/distanceCalculator';
  * Actions
  */
 import {eventDataActions} from '../../actions/eventDataActions';
+import {usersActions} from '../../actions/usersActions';
 
 /**
  *  Redux
  */
-import {Observable} from 'rxjs';
 import {NgRedux} from 'ng2-redux';
-
+import {Observable, Subscription} from 'rxjs';
 
 /*
  *  Pages
@@ -38,52 +38,89 @@ import {ActivityItemComponent} from '../../components/activity-item/activity-ite
   ]
 })
 export class HomePage {
+  activities$                  : Observable<any>;
+  location$                    : Observable<any>;
+  activitiesSub$               : Subscription;
+  locationSub$                 : Subscription;
   isFiltered: string = 'public';
-  activities$: Observable<any>;
   isEmpty: any = 'true';
-  sliderDistance: number = 2;
+  searchDistance: number = 2;
   greatestDistance: number = 2;
   coordinates: any;
 
   constructor(private nav: NavController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
    
   ngOnInit() {
-    var options = { timeout: 10000, enableHighAccuracy: true };
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        this.coordinates = pos.coords;
-        this.zone.run(() => {
-          this.activities$ = this.ngRedux.select(
-            state => {
-              return state.getIn(['eventData', 'items'])
-              .filter((item) => {
-                return distanceCalculator(
-                  this.coordinates.latitude,
-                  this.coordinates.longitude,
-                  item.get('startLocation').get('latitude'),
-                  item.get('startLocation').get('longitude')
-                ) <= this.sliderDistance;
-              })
-              .toJS()
-            }
-          );
-          this.activities$.subscribe(x => {
-            this.zone.run(() => {
-              this.isEmpty = !!x ? ( x.length == 0 ).toString() : 'true';
-            })
-          });
+    this.locationConnector();
+    this.activityConnector();
+  }
+
+  ngOnDestroy() {
+    console.log('Destroying Subscriptions')
+    this.locationSub$.unsubscribe();
+    this.activitiesSub$.unsubscribe();
+  }
+
+  locationConnector() {
+    this.location$ = this.ngRedux.select((state) => {
+      var pos = state.getIn(['currentUser', 'location']);
+      return {
+        longitude : pos.get('longitude'),
+        latitude : pos.get('latitude')
+      }
+    })
+    this.locationSub$ = this.location$.subscribe((pos) => {
+      if(pos.longitude === null || pos.latitude === null) {
+        this.ngRedux.dispatch(usersActions.getLocation());
+      } else {
+        if(!_.isEqual(pos, this.coordinates)) {
+          this.coordinates = pos;
+          console.log('location update');
           if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
             if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
-              this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.sliderDistance, this.coordinates.latitude, this.coordinates.longitude));
+              console.log('activity update')
+              this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.longitude, this.coordinates.latitude));
             }
           }
-        })
-      },
-      (err) => {
-        console.log(err)
-      },
-      options
-    )
+        }
+      }
+    });
+  }
+  activityConnector() {
+    this.activities$ = this.ngRedux.select((state) => {
+      console.log('activity update');
+      return state.getIn(['eventData', 'items'])
+      .filter((item)=> {
+        if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+          if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
+            console.log(distanceCalculator(
+              this.coordinates.latitude,
+              this.coordinates.longitude,
+              item.get('startLocation').get('latitude'),
+              item.get('startLocation').get('longitude')
+            ));
+            console.log(this.searchDistance);
+            return distanceCalculator(
+              this.coordinates.latitude,
+              this.coordinates.longitude,
+              item.get('startLocation').get('latitude'),
+              item.get('startLocation').get('longitude')
+            ) <= this.searchDistance;
+          }
+        }
+        return false;
+      })
+      .toJS().sort(function(a, b) {
+        return a.startDate.iso > b.startDate.iso;
+      })
+    });
+    this.activitiesSub$ = this.activities$.subscribe((x) => {
+      this.zone.run(() => {
+        console.log(x);
+        this.isEmpty = x.length == 0;
+      })
+    });
+
   }
 
   isActive(filterBy) {
@@ -95,13 +132,14 @@ export class HomePage {
   }
 
   sliderChange() {
-    // if(this.sliderDistance > this.greatestDistance && this.coordinates) {
-    if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-      if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
-        this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.sliderDistance, this.coordinates.latitude, this.coordinates.longitude));
-        this.greatestDistance = this.sliderDistance;
+    console.log('sliderUpdate');
+    // if(this.searchDistance > this.greatestDistance && this.coordinates) {
+      if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+        if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
+          this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.latitude, this.coordinates.longitude));
+          this.greatestDistance = this.searchDistance;
+        }
       }
-    }
     // }
   }
 

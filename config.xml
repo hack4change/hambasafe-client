@@ -55,4 +55,5 @@
     <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
     <plugin name="cordova-plugin-inappbrowser" spec="~1.4.0" />
     <plugin name="cordova-plugin-geolocation" spec="~2.2.0" />
+    <plugin name="cordova.plugins.diagnostic" spec="~3.1.1" />
 </widget>

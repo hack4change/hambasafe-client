@@ -7,7 +7,13 @@ const _ = require('lodash');
  *  Redux
  */
 import {NgRedux} from 'ng2-redux';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
+
+/**
+ *  Actions
+ */
+import {eventDataActions} from '../../actions/eventDataActions';
+import {usersActions} from '../../actions/usersActions';
 
 declare var google;
 
@@ -19,6 +25,11 @@ export class MapComponent {
   @ViewChild('mapComponent') mapNode;
 
   @Input() radius;
+
+  location$               : Observable<any>;
+  locationSub$            : Subscription;
+  coordinates             : any;
+  
   //Holds map reference.
   private gMap            : any;
   //Holds marker reference.
@@ -45,19 +56,38 @@ export class MapComponent {
     //     this.createMapAtCoords(res)
     //   });
     // } else {
-    navigator.geolocation.getCurrentPosition(
-      (res) =>{
-        console.log(res);
-        this.createMapAtCoords(res)
-      },
-      (err) => console.log(err),
-        options
-    );
+    this.locationConnector();
     // }
+  }
+  locationConnector() {
+    this.location$ = this.ngRedux.select((state) => {
+      var pos = state.getIn(['currentUser', 'location']);
+      return {
+        longitude : pos.get('longitude'),
+        latitude : pos.get('latitude')
+      }
+    })
+    this.locationSub$ = this.location$.subscribe((pos) => {
+      if(pos.longitude === null || pos.latitude === null) {
+        this.ngRedux.dispatch(usersActions.getLocation());
+      } else {
+        if(!_.isEqual(pos, this.coordinates)) {
+          this.coordinates = pos;
+          console.log('location update');
+          if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+            if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
+              console.log('create Map')
+              this.createMapAtCoords(this.coordinates);
+            }
+          }
+        }
+      }
+    });
   }
 
   createMapAtCoords(pos : any){
-    _.merge(this.gCoords, pos.coords);
+    console.log(pos);
+    _.merge(this.gCoords, pos);
     if(!!this.gCoords && !!this.gCoords.latitude && !!this.gCoords.longitude) {
       if(Math.abs(this.gCoords.latitude) <= 90 && Math.abs(this.gCoords.longitude) <= 180 ) {
         this.latLng = new google.maps.LatLng(this.gCoords.latitude, this.gCoords.longitude) 

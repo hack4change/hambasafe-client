@@ -28,15 +28,15 @@ export class ActivityDetailPage {
   constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>) {
     console.log("Heydy");
     this.activityId = this.params.data['activityId'];
+    console.log(this.activityId);
   };
 
   ngOnInit() {
     this.activity$ = this.ngRedux.select(
       state => 
         state.getIn(['eventData', 'items'])
-        .find(item =>  
-          item.get('id') === this.activityId
-        ).toJS()
+        .find(item => item.get('objectId') === this.activityId)
+        .toJS()
     );
     this.activity$.subscribe(x => {
       this.description = x.description;

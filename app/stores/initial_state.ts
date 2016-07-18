@@ -21,11 +21,13 @@ export const getInitialState = ()=> {
       lastName: '',
       gender: '',
       dateOfBirth: '',
-      location: '',
+      location: {
+        longtiude: null,
+        latitude : null,
+      },
       mobileNumber: '',
       email : '',
       profilePicture: '',
-      // isSilhouette: null,
       message: '',
     }))
   })

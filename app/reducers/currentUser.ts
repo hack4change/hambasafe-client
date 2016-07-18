@@ -23,6 +23,8 @@ export default function currentUser(state:any, action: any= {}) {
       return state.set('status', action.data.get('status'));
     case actionTypes.USER_LOGOUT_FAIL:
       return state.set('status', action.data.get('status'));
+    case actionTypes.USER_SET_POSITION:
+      return state.set('location', action.data);
     case actionTypes.USER_SET_STATUS:
       return state.set('status', action.data.get('status'));
     default:

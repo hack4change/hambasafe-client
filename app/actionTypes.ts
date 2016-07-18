@@ -6,18 +6,21 @@ const actionTypes = keyMirror({
   USER_LOGOUT_SUCCESS           : undefined,
   USER_LOGOUT_FAIL              : undefined,
 
-  USER_AUTH_INIT              : undefined,
-  USER_AUTH_SUCCESS           : undefined,
-  USER_AUTH_FAIL              : undefined,
+  USER_AUTH_INIT                : undefined,
+  USER_AUTH_SUCCESS             : undefined,
+  USER_AUTH_FAIL                : undefined,
 
-  USER_CREATE_INIT            : undefined,
-  USER_CREATE_SUCCESS         : undefined,
-  USER_CREATE_FAIL            : undefined,
+  USER_CREATE_INIT              : undefined,
+  USER_CREATE_SUCCESS           : undefined,
+  USER_CREATE_FAIL              : undefined,
 
-  USER_FETCH_INIT             : undefined,
-  USER_FETCH_SUCCESS          : undefined,
-  USER_FETCH_FAIL             : undefined,
+  USER_FETCH_INIT               : undefined,
+  USER_FETCH_SUCCESS            : undefined,
+  USER_FETCH_FAIL               : undefined,
 
+  USER_SET_POSITION             : undefined,
+  USER_SET_POSITION_FAIL        : undefined,
+  USER_SET_POSITION_SUCCESD     : undefined,
 //EVENTS
 
   EVENTS_STATUS_SET            : undefined,

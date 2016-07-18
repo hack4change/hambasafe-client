@@ -36,9 +36,9 @@ export class ActivityItemComponent {
     return !! this.activity.eventType ? this.activity.eventType : '';
   }
   viewActivity(){
-    console.log(this.activity['id']);
+    console.log(this.activity['objectId']);
     this.nav.push(ActivityDetailPage, {
-      'activityId' : this.activity['id'],
+      'activityId' : this.activity['objectId'],
     }) 
   }
   getClasses(){

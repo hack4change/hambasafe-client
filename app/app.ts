@@ -27,6 +27,7 @@ import {authActions} from './actions/authActions';
 import {CreatePage} from "./pages/create/CreatePage";
 import {HomePage} from "./pages/home/HomePage";
 import {SplashPage} from "./pages/splash/SplashPage";
+import {SearchPage} from "./pages/search/SearchPage";
 import {EmergencyPage} from './pages/emergency/EmergencyPage';
 import {TermsPage} from './pages/terms/TermsPage';
 import {AboutPage} from './pages/about/AboutPage';
@@ -52,7 +53,7 @@ import {ParseManager} from './models/parseManager';
 export class MyApp {
   @ViewChild('myNavRoot') nav: NavController;
 
-  private rootPage: any = SplashPage;
+  private rootPage: any = SearchPage;
   private authStatus$ : Observable<any>;
   oldStatus: string;
 
