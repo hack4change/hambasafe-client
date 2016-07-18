@@ -162,6 +162,7 @@ const getLocation = ():any => {
 }
 
 const setLocation = (longitude: number, latitude: number):any => {
+  console.log('set Location');
   return {
     data: fromJS({
       longitude: longitude,

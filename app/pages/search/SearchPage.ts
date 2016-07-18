@@ -119,6 +119,9 @@ export class SearchPage {
          return a.startDate.iso > b.startDate.iso;
        })
      });
+    this.activitiesSub$ = this.activities$.subscribe((x) => {
+      console.log(x);
+    })  
   }
 
   isActive(callingType) {

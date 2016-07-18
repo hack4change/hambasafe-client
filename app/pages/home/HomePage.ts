@@ -51,6 +51,7 @@ export class HomePage {
   constructor(private nav: NavController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
    
   ngOnInit() {
+    this.ngRedux.dispatch(usersActions.getLocation());
     this.locationConnector();
     this.activityConnector();
   }
@@ -116,8 +117,9 @@ export class HomePage {
     });
     this.activitiesSub$ = this.activities$.subscribe((x) => {
       this.zone.run(() => {
-        console.log(x);
-        this.isEmpty = x.length == 0;
+        console.log('isEmpty');
+        console.log(x.length == 0);
+        this.isEmpty = (x.length == 0).toString();
       })
     });
 
@@ -134,8 +136,8 @@ export class HomePage {
   sliderChange() {
     console.log('sliderUpdate');
     // if(this.searchDistance > this.greatestDistance && this.coordinates) {
-      if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-        if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
+      if (!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+        if (Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
           this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.latitude, this.coordinates.longitude));
           this.greatestDistance = this.searchDistance;
         }
