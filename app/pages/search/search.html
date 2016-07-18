@@ -31,15 +31,15 @@
 
 <ion-content [ngSwitch]="activeType">
   <template ngSwitchCase="TIME">
-    <ion-item class="borderless">
-			<ion-label>Activity Type</ion-label> <!-- replace tile with selected gender-->
-			<ion-select [(ngModel)]="activityType" required>
-				<ion-option value="">All</ion-option>
-				<ion-option value="WALK">Walk</ion-option>
-				<ion-option value="RUN">Run</ion-option>
-				<ion-option value="CYCLE">Cycle</ion-option>
-			</ion-select>
-    </ion-item>
+    <!-- <ion-item class="borderless"> -->
+			<!-- <ion-label>Activity Type</ion-label> -->
+			<!-- <ion-select [(ngModel)]="activityType" required> -->
+				<!-- <ion-option value="">All</ion-option> -->
+				<!-- <ion-option value="WALK">Walk</ion-option> -->
+				<!-- <ion-option value="RUN">Run</ion-option> -->
+				<!-- <ion-option value="CYCLE">Cycle</ion-option> -->
+			<!-- </ion-select> -->
+    <!-- </ion-item> -->
   <ion-toolbar class="buttonbar">
     <button (click)="toggleView('TIME')" class="square-corner" [ngClass]="{active: isActive('TIME'), 'not-active': !isActive('TIME')}" clear block ion-row center>
       <ion-icon name="ios-time-outline" item-left></ion-icon>

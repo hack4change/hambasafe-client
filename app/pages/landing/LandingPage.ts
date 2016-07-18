@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Platform, NavController} from 'ionic-angular';
+import {Platform, NavController, Loading} from 'ionic-angular';
 
 /**
  *  Redux
@@ -33,13 +33,9 @@ export class LandingPage
 {
   authStatus$: Observable<any>;
   created$: Observable<any>;
+  loadingPopup: any;
 
   constructor(private platform: Platform, private nav: NavController, private ngRedux: NgRedux<any>) {
-    if(this.platform.is('cordova')) {
-      this.ngRedux.dispatch(authActions.authDevice());
-    } else {
-      this.ngRedux.dispatch(authActions.authUser());
-    }
   };
 
   ngOnInit(){
@@ -47,12 +43,14 @@ export class LandingPage
     this.authStatus$.subscribe((userStatus) => {
       switch(userStatus) {
         case 'AUTHENTICATED':
+          this.loadingPopup.dismiss();
           this.nav.setRoot(ProfilePage);
           // this.nav.setRoot(HomePage);
         break;
         case 'ATTEMPTING':
           break;
         case 'ERROR':
+          this.loadingPopup.dismiss();
           break;
         default:
           console.log('Unhandled authentication status');
@@ -61,6 +59,11 @@ export class LandingPage
   }
 
   fbLogin() {
+    this.loadingPopup = Loading.create({
+      content: 'Logging in...',
+      dismissOnPageChange : true,
+    })
+    this.nav.present(this.loadingPopup);
     if(this.platform.is('cordova')) {
       this.ngRedux.dispatch(authActions.authDevice());
     } else {

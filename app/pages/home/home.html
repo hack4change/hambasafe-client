@@ -83,7 +83,7 @@
   <template ngSwitchDefault>
     <activity-item *ngFor="let activity of activities$| async" [activity]="activity"></activity-item>
       <button (click)="goToCreate()" style="position:fixed; bottom: 2%; right:2%;" fab>
-        <ion-icon name="add" style="font-size: 3.5em;"></ion-icon>
+        <ion-icon name="add"></ion-icon>
       </button>
   </template>
 </ion-content>

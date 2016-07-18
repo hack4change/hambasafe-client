@@ -79,7 +79,6 @@ export class MyApp {
     this.setMenuAnonymous();
     this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
     this.authStatus$.subscribe( userStatus => {
-      console.log('Root userStatus');
       switch(userStatus){
         case 'AUTHENTICATED':
           this.setMenuAuthenticated();
@@ -100,6 +99,9 @@ export class MyApp {
       if(this.oldStatus === 'AUTHENTICATED' && userStatus !== 'AUTHENTICATED') {
         this.nav.push(LandingPage);
       }
+      console.log('Root userStatus');
+      console.log(userStatus);
+      console.log(this.oldStatus);
       this.oldStatus = userStatus;
     })
   }

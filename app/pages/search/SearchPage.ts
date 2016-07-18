@@ -53,7 +53,7 @@ export class SearchPage {
       (pos) => {
         this.coordinates = pos.coords;
         if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-          if(Math.abs(this.latitude) <= 90 && Math.abs(this.longitude) <= 180 ) {
+          if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
             this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(150, this.coordinates.longitude, this.coordinates.latitude));
           }
         }
@@ -134,15 +134,13 @@ export class SearchPage {
       longitude: lng,
     }
     // if(!!lat && !!lng){
-          if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-            if(Math.abs(this.latitude) <= 90 && Math.abs(this.longitude) <= 180 ) {
-      // geoCoder.geocode({'location' : this.mapChild.latLng}, (results, status) => {
-        console.log(results);
-        console.log(status);
+    if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+      if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
+        // geoCoder.geocode({'location' : this.mapChild.latLng}, (results, status) => {
         this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.latitude, this.coordinates.latitude));
-      // })
-            }
-          }
+        // })
+      }
+    }
     // }
   }
 

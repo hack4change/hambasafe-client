@@ -57,7 +57,7 @@ export class CreatePage {
   private maxDate: string;
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) {}
 
-  ngOnInit(){
+  ngOnInit() {
     this.geoCoder = new google.maps.Geocoder;
     var tmpDate = new Date();
     this.minDate    = tmpDate.toISOString().split("T")[0];
@@ -131,9 +131,45 @@ export class CreatePage {
       }))
       return;
 		}
+		if(this.description.length < 40) {
+      this.nav.present(Loading.create({
+        content: '40 character minimum for the description! :-P (40-400)',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
+		if(this.description.length > 400) {
+      this.nav.present(Loading.create({
+        content: "Hate to be stickler, but your description's a touch long! (40-400)",
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
 		if(isNaN(this.distance)) {
       this.nav.present(Loading.create({
-        content: 'Enter a description... please!',
+        content: 'Enter a distance... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
+		if(this.distance < 0) {
+      this.nav.present(Loading.create({
+        content: "Hey, distance not displacement!",
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
+		if(this.distance >150) {
+      this.nav.present( Loading.create({
+        content: "The maximum distance for an event is 150Km!",
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
@@ -167,9 +203,36 @@ export class CreatePage {
       }))
       return;
 		}
-		if(!this.waitMins) {
+		if(Math.abs(this.startLocation.longitude) > 90 ||Math.abs(this.startLocation.longitude) > 180) {
+      this.nav.present(Loading.create({
+        content: 'A location on earth please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return
+		}
+		if(isNaN(this.waitMins)) {
       this.nav.present(Loading.create({
         content: 'Tell us how long you can wait... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
+		if(this.waitMins < 0) {
+      this.nav.present(Loading.create({
+         content: "It's a bit rude to leave before people arrive!",
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
+		if(this.waitMins > 30) {
+      this.nav.present(Loading.create({
+        content: "You can't be waiting around that long! :O",
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
@@ -186,14 +249,14 @@ export class CreatePage {
 		// 	return; 
 		// }
     var data = {
-      'name'          : this.name         || 'Cycling in Numbers',
-      'description'   : this.description  || 'howdy',
-      'distance'      : Number(this.distance)     || 5,
-      'intensity'     : this.intensity    || 'NOVICE',
-      'eventType'     : this.eventType    || 'RUN',
+      'name'          : this.name,
+      'description'   : this.description,
+      'distance'      : Number(this.distance),
+      'intensity'     : this.intensity,
+      'eventType'     : this.eventType,
       'startDate'     : this.startDate  + "T" + this.startTime + roundDateToISO ,
       // 'endDate'       : this.endDate  +  "T"+this.endTime + roundDateToISO,
-      'waitTime'      : Number(this.waitMins) || 10,
+      'waitTime'      : Number(this.waitMins),
       'isPublic'      : this.isPublic,
       'startLocation' : {
         longitude: this.startLocation.longitude,

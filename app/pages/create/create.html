@@ -33,6 +33,14 @@
         </ion-select>
       </ion-item>
       <ion-item class="">
+        <ion-label>Intensity</ion-label> <!-- replace tile with selected gender-->
+        <ion-select [(ngModel)]="intensity" required>
+          <ion-option value="NOVICE">NOVICE</ion-option>
+          <ion-option value="INTERMEDIATE">INTERMEDIATE</ion-option>
+          <ion-option value="INTENSE">INTENSE</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item class="">
         <ion-label floating>Name</ion-label>
         <ion-input [(ngModel)]="name" type="text" required></ion-input>
       </ion-item>

@@ -22,10 +22,7 @@ const deviceLogout = (errorCallback, successCallback):any => {
       Facebook.logout().then((response: any) => {
         console.log(response);
         if (response.authResponse) {
-          window.parseManager.logOut(
-            successCallback,
-            errorCallback
-          )
+         successCallback()
         } else {
           errorCallback(response);
         }

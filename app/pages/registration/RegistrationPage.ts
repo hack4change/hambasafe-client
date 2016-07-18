@@ -115,6 +115,8 @@ export class RegistrationPage {
             var genderIndex = _.findIndex(this.genderOptions, {'name' : _.capitalize(this.gender)});
             if(genderIndex != -1) {
               this.genderOptions[genderIndex].selected = true;
+              this.genderHeader = this.genderOptions[genderIndex].name;
+              this.gender = _.capitalize(this.gender);
             } else {
               this.genderOptions[this.genderOptions.length -1 ].selected = true;
             }
@@ -158,7 +160,7 @@ export class RegistrationPage {
       'profilePicture'  :   this.profilePicture,
 			'firstName'	      :   this.firstName,
 			'lastName'		    :   this.lastName,//this.lastName,
-			'gender'			    :   _.find(this.gender, {'selected': true}),
+			'gender'			    :   this.gender,
       // 'address'         :   this.address,
 			'dateOfBirth'     :	  this.dateOfBirth,//this.dateOfBirth,
       'mobileNumber'    :   this.mobileNumber,
@@ -188,7 +190,7 @@ export class RegistrationPage {
         duration: 1000,
       }))
       return;
-    } else if(!this.gender || !(this.gender == 'Male' || this.gender == 'Female' || this.gender == 'Other')) {
+    } else if(!this.genderHeader || !(this.genderHeader == 'Male' || this.genderHeader == 'Female' || this.genderHeader == 'Other')) {
       this.nav.present(Loading.create({
         content: 'Gender... please!',
         spinner: 'hide',
