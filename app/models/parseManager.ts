@@ -7,14 +7,17 @@ Parse.serverURL = 'https://mainstream.ninja/parse'
 
 export class ParseManager {
     ActivityClass: any;
+    AttendanceClass: any;
     LocationClass: any;
     Parse: any;
     constructor() {
       console.log('CONSTRUCTOR')
       this.Parse = Parse;
       this.ActivityClass = this.Parse.Object.extend("Activity");
+      this.AttendanceClass = this.Parse.Object.extend("Attendance");
       this.LocationClass = this.Parse.Object.extend("Location");
       this.Parse.Object.registerSubclass('Activity', this.ActivityClass);
+      this.Parse.Object.registerSubclass('Attendance', this.AttendanceClass);
       this.Parse.Object.registerSubclass('Location', this.LocationClass);
       this.fbInit();
     }
@@ -57,6 +60,34 @@ export class ParseManager {
     }
     getCurrentUser(){
       return this.Parse.User.current();
+    }
+    joinActivity(activityId: any, error:(res)=>void, success:(res)=>void)
+    {
+      console.log('Joining');
+      console.log(activityId);
+      var activityQuery = new this.Parse.Query(this.ActivityClass);
+      activityQuery.get(activityId, {
+        success : (res) => {
+          var attend = new this.AttendanceClass();
+          attend.set('userReference', this.Parse.User.current().get('objectId'));
+          attend.set('activityReference', res.get('objectId'));
+          attend.save(null, {
+            success : (res) => {
+              console.log('joined Event')
+              console.log(res);
+              success(res);
+            },
+            error   : (err) => {
+              console.log('ERROR: joining Event')
+              console.log(err);
+            }
+          })
+        },
+        error : (err) => {
+          console.log('ERROR: joining Event');
+          console.log(err);
+        }
+      })
     }
     getActivity(name: String, error:(res)=>void, success:(res)=>void)
     {

@@ -23,19 +23,23 @@ const actionTypes = keyMirror({
   USER_SET_POSITION_SUCCESD     : undefined,
 //EVENTS
 
-  EVENTS_STATUS_SET            : undefined,
+  EVENT_STATUS_SET            : undefined,
 
-  EVENTS_CREATE_INIT           : undefined,
-  EVENTS_CREATE_FAIL           : undefined,
-  EVENTS_CREATE_SUCCESS        : undefined,
+  EVENT_CREATE_INIT           : undefined,
+  EVENT_CREATE_FAIL           : undefined,
+  EVENT_CREATE_SUCCESS        : undefined,
 
-  EVENTS_DELETE_INIT           : undefined,
-  EVENTS_DELETE_FAIL           : undefined,
-  EVENTS_DELETE_SUCCESS        : undefined,
+  EVENT_JOIN_INIT             : undefined,
+  EVENT_JOIN_FAIL             : undefined,
+  EVENT_JOIN_SUCCESS          : undefined,
 
-  EVENTS_FETCH_INIT            : undefined,
-  EVENTS_FETCH_FAIL            : undefined,
-  EVENTS_FETCH_SUCCESS         : undefined,
+  EVENT_DELETE_INIT           : undefined,
+  EVENT_DELETE_FAIL           : undefined,
+  EVENT_DELETE_SUCCESS        : undefined,
+
+  EVENTS_FETCH_INIT           : undefined,
+  EVENTS_FETCH_FAIL           : undefined,
+  EVENTS_FETCH_SUCCESS        : undefined,
 
 //OTHER
   RATING_INIT                 : undefined,

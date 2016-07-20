@@ -107,38 +107,8 @@ const fetchEventsByCoordinates = (distance: number, latitude: number, longitude:
 };
 
 /**
- * Creating
+ * CREATE
  */
-const setCreateSuccessState = (response) => {
-  return {
-    data: fromJS({
-      status: 'CREATED',
-    }),
-    type: actionTypes.EVENTS_CREATE_SUCCESS,
-  };
-};
-
-// Error.
-const setCreateErrorState = (error) => {
-  return {
-    data: fromJS({
-      message: error,
-      status: 'CREATE_ERROR',
-    }),
-    type: actionTypes.EVENTS_CREATE_FAIL,
-  };
-};
-const setCreateLoadingState = () => {
-  console.log('loadingState');
-  return {
-    data: fromJS({
-      status: 'CREATING',
-    }),
-    type: actionTypes.EVENTS_CREATE_INIT,
-  };
-}
-
-
 const createActivity = (data):any => {
   return dispatch => {
     console.log('event Create')
@@ -153,6 +123,79 @@ const createActivity = (data):any => {
     // Do request.
   };
 };
+const setCreateSuccessState = (response) => {
+  return {
+    data: fromJS({
+      status: 'CREATED',
+    }),
+    type: actionTypes.EVENT_CREATE_SUCCESS,
+  };
+};
+
+// Error.
+const setCreateErrorState = (error) => {
+  return {
+    data: fromJS({
+      message: error,
+      status: 'CREATE_ERROR',
+    }),
+    type: actionTypes.EVENT_CREATE_FAIL,
+  };
+};
+const setCreateLoadingState = () => {
+  console.log('loadingState');
+  return {
+    data: fromJS({
+      status: 'CREATING',
+    }),
+    type: actionTypes.EVENT_CREATE_INIT,
+  };
+}
+
+/*
+ *  JOIN
+ */
+
+const joinActivity = (activityId):any => {
+  return dispatch => {
+    console.log('event Join')
+    dispatch(setJoinLoadingState());
+    window.parseManager.joinActivity(
+      activityId,
+      (error) => dispatch(setJoinErrorState(error)),
+      (response) => dispatch(setJoinSuccessState(response))
+    );
+  };
+};
+
+const setJoinSuccessState = (response) => {
+  return {
+    data: fromJS({
+      status: 'JOINED',
+    }),
+    type: actionTypes.EVENT_JOIN_SUCCESS,
+  };
+};
+
+// Error.
+const setJoinErrorState = (error) => {
+  return {
+    data: fromJS({
+      message: error,
+      status: 'JOIN_ERROR',
+    }),
+    type: actionTypes.EVENT_JOIN_FAIL,
+  };
+};
+const setJoinLoadingState = () => {
+  console.log('loadingState');
+  return {
+    data: fromJS({
+      status: 'JOINING',
+    }),
+    type: actionTypes.EVENT_JOIN_INIT,
+  };
+}
 
 const setIdle = ():any => {
   return {
@@ -169,5 +212,6 @@ export const eventDataActions = {
   fetchEventsBySuburb,
   fetchEventsByCoordinates,
   createActivity,
+  joinActivity,
   setIdle,
 };

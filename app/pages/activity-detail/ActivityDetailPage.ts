@@ -10,6 +10,11 @@ import {NgRedux} from 'ng2-redux';
 import {Observable} from 'rxjs';
 
 /*
+ * Actions
+ */
+import {eventDataActions} from '../../actions/eventDataActions';
+
+/*
  *  Components
  */
 import {ActivityItemComponent} from '../../components/activity-item/activity-item.component.ts';
@@ -21,7 +26,7 @@ import {ActivityItemComponent} from '../../components/activity-item/activity-ite
   ],
 })
 export class ActivityDetailPage {
-  activityId: any;
+  activityId: string;
   activity$: Observable<any>;
   description: string;
   
@@ -47,6 +52,6 @@ export class ActivityDetailPage {
     this.nav.pop();
   }
   joinActivity(){
-    
+    this.ngRedux.dispatch(eventDataActions.joinActivity(this.activityId));
   }
 }

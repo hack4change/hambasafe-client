@@ -167,7 +167,7 @@ export class CreatePage {
       }))
       return;
 		}
-		if(this.distance >150) {
+		if(this.distance > 150) {
       this.nav.present( Loading.create({
         content: "The maximum distance for an event is 150Km!",
         spinner: 'hide',
@@ -249,7 +249,7 @@ export class CreatePage {
 		// 	return; 
 		// }
     var convertedDate = new Date(this.startDate  + " " + this.startTime);
-    if( Date.now() >= convertedDate.getTime() - 60*60000){
+    if( Date.now() >= convertedDate.getTime() - 60*60000) {
       this.nav.present(Loading.create({
         content: "It has to start at least one hour from now! :-D",
         spinner: 'hide',
@@ -259,8 +259,8 @@ export class CreatePage {
       return;
     }
     var data = {
-      'name'          : this.name,
-      'description'   : this.description,
+      'name'          : this.name.trim(),
+      'description'   : this.description.trim(),
       'distance'      : Number(this.distance),
       'intensity'     : this.intensity,
       'eventType'     : this.eventType,
