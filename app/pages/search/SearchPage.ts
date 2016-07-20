@@ -74,11 +74,9 @@ export class SearchPage {
       } else {
         if(!_.isEqual(pos, this.coordinates)) {
           this.coordinates = pos;
-          console.log('location update');
           if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
             if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
-              console.log('activity update')
-              this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(150, this.coordinates.longitude, this.coordinates.latitude));
+              this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(150, this.coordinates.latitude, this.coordinates.longitude));
             }
           }
         }
@@ -105,15 +103,20 @@ export class SearchPage {
                return distanceCalculator(
                  this.coordinates.latitude,
                  this.coordinates.longitude,
-                 item.get('startLocation').get('latitude'),
-                 item.get('startLocation').get('longitude')
+                 item.get('startLocation').get('coordinates').get('latitude'),
+                 item.get('startLocation').get('coordinates').get('longitude')
                ) <= this.searchDistance;
              }
            }
            return false;
          }
          //XXX: Time sorting;
-         return true;
+         return distanceCalculator(
+           this.coordinates.latitude,
+           this.coordinates.longitude,
+           item.get('startLocation').get('coordinates').get('latitude'),
+           item.get('startLocation').get('coordinates').get('longitude')
+         ) <= 150;
        })
        .toJS().sort(function(a, b) {
          return a.startDate.iso > b.startDate.iso;

@@ -248,13 +248,23 @@ export class CreatePage {
 		// if(!this.endLocation) {
 		// 	return; 
 		// }
+    var convertedDate = new Date(this.startDate  + " " + this.startTime);
+    if( Date.now() >= (new Date(convertedDate.getTime() - 60*60000)).getTime() ){
+      this.nav.present(Loading.create({
+        content: "It has to start at least one hour from now! :-D",
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+    }
     var data = {
       'name'          : this.name,
       'description'   : this.description,
       'distance'      : Number(this.distance),
       'intensity'     : this.intensity,
       'eventType'     : this.eventType,
-      'startDate'     : this.startDate  + "T" + this.startTime + roundDateToISO ,
+      'startDate'     : convertedDate,
       // 'endDate'       : this.endDate  +  "T"+this.endTime + roundDateToISO,
       'waitTime'      : Number(this.waitMins),
       'isPublic'      : this.isPublic,

@@ -19,6 +19,7 @@ import { ActivityDetailPage } from '../../pages/activity-detail/ActivityDetailPa
 })
 export class ActivityItemComponent {
   @Input() activity: any;
+  @Input() detailed: boolean = false;
   startFormatted : any;
   actionType : string = '';// Math.floor(Math.random()*2) ? 'RATE' : 'VIEW';
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
@@ -37,9 +38,11 @@ export class ActivityItemComponent {
   }
   viewActivity(){
     console.log(this.activity['objectId']);
-    this.nav.push(ActivityDetailPage, {
-      'activityId' : this.activity['objectId'],
-    }) 
+    if(!this.detailed) {
+      this.nav.push(ActivityDetailPage, {
+        'activityId' : this.activity['objectId'],
+      }) 
+    }
   }
   getClasses(){
     let classes = {

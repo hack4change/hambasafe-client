@@ -53,7 +53,7 @@ import {ParseManager} from './models/parseManager';
 export class MyApp {
   @ViewChild('myNavRoot') nav: NavController;
 
-  private rootPage: any = SearchPage;
+  private rootPage: any = LandingPage;
   private authStatus$ : Observable<any>;
   oldStatus: string;
 

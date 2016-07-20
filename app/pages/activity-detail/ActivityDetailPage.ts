@@ -46,4 +46,7 @@ export class ActivityDetailPage {
     console.log('GoBack')
     this.nav.pop();
   }
+  joinActivity(){
+    
+  }
 }

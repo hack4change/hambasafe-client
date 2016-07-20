@@ -80,7 +80,7 @@ export class HomePage {
           if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
             if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
               console.log('activity update')
-              this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.longitude, this.coordinates.latitude));
+              this.ngRedux.dispatch(eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.latitude, this.coordinates.longitude));
             }
           }
         }
@@ -94,18 +94,11 @@ export class HomePage {
       .filter((item)=> {
         if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
           if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
-            console.log(distanceCalculator(
-              this.coordinates.latitude,
-              this.coordinates.longitude,
-              item.get('startLocation').get('latitude'),
-              item.get('startLocation').get('longitude')
-            ));
-            console.log(this.searchDistance);
             return distanceCalculator(
               this.coordinates.latitude,
               this.coordinates.longitude,
-              item.get('startLocation').get('latitude'),
-              item.get('startLocation').get('longitude')
+              item.get('startLocation').get('coordinates').get('latitude'),
+              item.get('startLocation').get('coordinates').get('longitude')
             ) <= this.searchDistance;
           }
         }

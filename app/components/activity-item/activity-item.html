@@ -3,11 +3,8 @@
       <img src="img/adam.jpg">
     </ion-avatar>
   <ion-row>
-    <div style="font-size: 2rem; " class="activity-location">
-      <!-->
-    {{  activity.city }}, {{  activity.suburb }}
-      -->
-      {{ activity.name }}
+    <div class="activity-location">
+    {{  activity.startLocation.suburb }}, {{  activity.startLocation.city }}
     </div>
     <div *ngIf="!actionType" class="activity-date">
     {{  startFormatted }}
@@ -15,9 +12,8 @@
   </ion-row>
   <ion-row>
     <ion-item class="borderless">
-    <h1 style="font-size: 1.5rem;">
-
-      {{ activity.description }}
+    <h1 style="font-size: 2rem;">
+      {{ activity.name }}
     </h1>
     </ion-item>
   </ion-row>

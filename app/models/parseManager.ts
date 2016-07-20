@@ -63,66 +63,135 @@ export class ParseManager {
     }
     getActivitiesByLocation(distance:number, latitude: number, longitude:number, error:(res)=>void, success:(res)=>void)
     {
-        var activityQuery = new this.Parse.Query(this.ActivityClass);
-        var point = new this.Parse.GeoPoint({
-          'latitude' : latitude,
-          'longitude' : longitude,
-        });
+      var point = new this.Parse.GeoPoint({
+        'latitude' : latitude,
+        'longitude' : longitude,
+      });
 
-        activityQuery.near('startLocation', point);
-        // activityQuery.include('author');
-        activityQuery.find({
-          success: (res) => { 
-            console.log(res);
-            var retArray = res.map(function(obj) {
-              return obj.toJSON();
-            })
-            success(retArray);
-          },
-          error:(err) =>{
-            console.log('parse saving error');
-            error(err);
+      var locationQuery = new this.Parse.Query(this.LocationClass);
+      locationQuery.withinKilometers('coordinates', point, distance);
+      locationQuery.find({
+        success: (res) => { 
+          console.log(res);
+          for(var i = 0; i < res.length; i++) {
+            var activityQuery = new this.Parse.Query(this.ActivityClass);
+            activityQuery.equalTo('startLocation', res[i]);
+            var d =  new Date();
+            activityQuery.greaterThanOrEqualTo(
+              'startDate', 
+              {
+                "__type":"Date", 
+                "iso": d.toISOString()
+              }
+            );
+            activityQuery.find({
+              success: (res) => { 
+                console.log(res);
+                var retArray = res.map(function(obj) {
+                  return obj.toJSON();
+                })
+                success(retArray);
+              },
+              error: (err) =>{
+                console.log('parse saving error');
+                error(err);
+              }
+            });
           }
-        });
+          success([]);
+          // var retArray = res.map(function(obj) {
+          //   return obj.toJSON();
+          // })
+          // success(retArray);
+        },
+        error:(err) => {
+          console.log('parse saving error');
+          error(err);
+        }
+      })
+      // activityQuery.near('startLocation', point);
+      // activityQuery.include('author');
+      // activityQuery.find({
+      //   success: (res) => { 
+      //     console.log(res);
+      //     var retArray = res.map(function(obj) {
+      //       return obj.toJSON();
+      //     })
+      //     success(retArray);
+      //   },
+      //   error:(err) =>{
+      //     console.log('parse saving error');
+      //     error(err);
+      //   }
+      // });
     }
-    getActivitiesByTime(error:(res)=>void, success:(res)=>void)
+    getActivitiesByTime(error:(res) => void, success:(res) =>  void)
     {
     }
-    getUserActivities( error:(res)=>void, success:(res)=>void)
+    getUserActivities(error:(res) => void, success:(res) => void)
     {
-        var userQuery = this.Parse.User.current().relation('activities');
+      var userQuery = this.Parse.User.current().relation('activities');
 
-        userQuery.find({
-          success: (res) => { 
-            success(res);
-          },
-          error:(err) =>{
-            console.log('parse saving error');
-            error(err);
-          }
-        });
+      userQuery.find({
+        success: (res) => { 
+          success(res);
+        },
+        error:(err) =>{
+          console.log('parse saving error');
+          error(err);
+        }
+      });
     }
-    createActivity(data: String, error:(res)=>void, success:(res)=>void)
+    createActivity(data: any, error:(res)=>void, success:(res)=>void)
     {
       var activity = new this.ActivityClass();
-      var user = this.Parse.User.current();
+      var locationObj = new this.LocationClass();
       _.forEach(data, (value, key) => {
         if(key == 'startLocation' || key == 'endLocation') {
-          activity.set(key, new this.Parse.GeoPoint(value));
+          // activity.set(key, new this.Parse.GeoPoint(value));
+          return;
         } else if(key == 'startDate' || key == 'endDate') {
           activity.set(key, new Date(value));
         } else {
           activity.set(key, value);
         }
       })
-      var activityRelation = activity.relation('author');
-      activityRelation.add(user);
+       
+      Parse.Cloud.run('checkLocationExists', {
+        'latitude' : data.startLocation.latitude,
+        'longitude' : data.startLocation.longitude,
+      }).then(
+      (res) => {
+        locationObj.set('coordinates', new this.Parse.GeoPoint(data.startLocation));
+        if(!res.exists){
+          locationObj.save(null, {
+            success: (res) => { 
+              this.saveActivity(res, activity, error, success);
+            },
+            error: (err, response) => {
+              console.log('ERROR: LOCATION SAVE');
+              console.log(err);
+              console.log(response);
+            }
 
-      activity.save(null, {
+          })
+        } else {
+          this.saveActivity(res.obj, activity, error, success);
+        }
+      },
+      (err) =>  {
+      })
+
+    }
+    saveActivity(locationObj, activityObj, error:(res)=>void, success:(res)=>void) {
+      var user = this.Parse.User.current();
+      activityObj.set('author', user);
+      activityObj.set('startLocation', locationObj);
+      activityObj.save(null, {
         success: (res) => { 
           console.log('activity saved to parse server');
           var userRelation = user.relation('activities');
-          userRelation.add(activity);
+          userRelation.add(activityObj);
           user.save(null, {
             success: (res) => { 
               console.log('user-activity relation saved');
