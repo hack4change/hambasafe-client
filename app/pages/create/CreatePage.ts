@@ -203,7 +203,7 @@ export class CreatePage {
       }))
       return;
 		}
-		if(Math.abs(this.startLocation.longitude) > 90 ||Math.abs(this.startLocation.longitude) > 180) {
+		if(Math.abs(this.startLocation.longitude) > 90 || Math.abs(this.startLocation.longitude) > 180) {
       this.nav.present(Loading.create({
         content: 'A location on earth please!',
         spinner: 'hide',
@@ -249,7 +249,7 @@ export class CreatePage {
 		// 	return; 
 		// }
     var convertedDate = new Date(this.startDate  + " " + this.startTime);
-    if( Date.now() >= (new Date(convertedDate.getTime() - 60*60000)).getTime() ){
+    if( Date.now() >= convertedDate.getTime() - 60*60000){
       this.nav.present(Loading.create({
         content: "It has to start at least one hour from now! :-D",
         spinner: 'hide',
@@ -283,12 +283,12 @@ export class CreatePage {
     this.activeType = type;
   }
   closeMap(type: string) {
-    if(type=='START_LOCATION'){
+    if(type=='START_LOCATION') { 
       this.startLocation = {
         'latitude' : this.startMap.latLng.lat(),
         'longitude' : this.startMap.latLng.lng(),
       }
-    } else if(type=='END_LOCATION'){
+    } else if(type=='END_LOCATION') {
       this.endLocation = this.endMap.latLng;
     }
       this.activeType = '';
