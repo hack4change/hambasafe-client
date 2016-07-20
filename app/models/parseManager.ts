@@ -69,8 +69,8 @@ export class ParseManager {
       activityQuery.get(activityId, {
         success : (res) => {
           var attend = new this.AttendanceClass();
-          attend.set('userReference', this.Parse.User.current().get('objectId'));
-          attend.set('activityReference', res.get('objectId'));
+          attend.set('userReference', this.Parse.User.current());
+          attend.set('activityReference', res);
           attend.save(null, {
             success : (res) => {
               console.log('joined Event')
