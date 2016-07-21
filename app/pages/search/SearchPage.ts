@@ -117,7 +117,7 @@ export class SearchPage {
            item.get('startLocation').get('coordinates').get('latitude'),
            item.get('startLocation').get('coordinates').get('longitude')
          ) <= 150;
-       })
+       }).toList()
        .toJS().sort(function(a, b) {
          return a.startDate.iso > b.startDate.iso;
        })

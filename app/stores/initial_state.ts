@@ -6,11 +6,11 @@ export const getInitialState = ()=> {
   return Map<string, any>({
     eventData: Map<string, any>(fromJS({
       status: "idle",
-      items: [],
+      items: {},
     })),
     users: Map<string, any>(fromJS({
       status: "idle",
-      items: [],
+      items: {},
     })),
     currentUser: Map<string, any>(fromJS({
       status: "ANONYMOUS",

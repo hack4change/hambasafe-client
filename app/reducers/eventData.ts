@@ -1,4 +1,6 @@
 import actionTypes from '../actionTypes.ts';
+
+import {Map} from 'immutable';
 const _ = require('lodash');
 
 export default function eventData(state:any, action:any = {}) {
@@ -24,8 +26,8 @@ export default function eventData(state:any, action:any = {}) {
       return state;
       
     case actionTypes.EVENT_JOIN_SUCCESS:
-    var items = state.get('items').toSet().union(action.data.get('items').toSet()).toList();
-    return state.set('items', items);
+      console.log(action.data.get('activityId'));
+      return state.updateIn(['items', action.data.get('activityId'), 'isAttending'], true, val => true);
     case actionTypes.EVENT_JOIN_FAIL:
 
 //DELETE EVENTS
@@ -35,8 +37,7 @@ export default function eventData(state:any, action:any = {}) {
 //FETCH EVENTS
     case actionTypes.EVENTS_FETCH_INIT:
     case actionTypes.EVENTS_FETCH_SUCCESS:
-    var items = state.get('items').toSet().union(action.data.get('items').toSet()).toList();
-    return state.set('items', items);
+    return state.set('items', state.get('items').merge(action.data.get('items')));
     case actionTypes.EVENTS_FETCH_FAIL:
 //RATING EVENTS
     case actionTypes.RATING_FETCH_INIT:

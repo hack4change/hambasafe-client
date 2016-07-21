@@ -2,7 +2,8 @@ import actionTypes from '../actionTypes.ts';
 import {fromJS} from 'immutable';
 import jsonRequest from '../utils/jsonRequest';
 import {EventDatum} from '../eventDatum';
- import {ParseManager} from '../models/parseManager';
+import {ParseManager} from '../models/parseManager';
+const _ = require('lodash');
 
 const API_ROOT = 'http://hambasafetesting.azurewebsites.net/v1';
 
@@ -14,10 +15,11 @@ const API_ROOT = 'http://hambasafetesting.azurewebsites.net/v1';
  */
 // Success.
 const setFetchSuccessState = (response) => {
+  console.log('fet')
   console.log(response);
   return {
     data: fromJS({
-      items: response,
+      items: _.keyBy(response, 'objectId'),
       status: 'SUCCESS',
     }),
     type: actionTypes.EVENTS_FETCH_SUCCESS,
@@ -28,7 +30,7 @@ const setFetchSuccessState = (response) => {
 const setFetchErrorState = (error) => {
   return {
     data: fromJS({
-      items: [],
+      items: {},
       message: error,
       status: 'ERROR',
     }),
@@ -39,7 +41,7 @@ const setFetchErrorState = (error) => {
 const setFetchLoadingState = () => {
   return {
     data: fromJS({
-      items: [],
+      items: {},
       status: 'loading',
     }),
     type: actionTypes.EVENTS_FETCH_INIT,
@@ -173,7 +175,7 @@ const setJoinSuccessState = (response) => {
   console.log(response);
   return {
     data: fromJS({
-      activityId: response.get('objectId'),
+      activityId: response['objectId'],
       status: 'JOINED',
     }),
     type: actionTypes.EVENT_JOIN_SUCCESS,

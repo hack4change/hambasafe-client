@@ -75,7 +75,7 @@ export class ParseManager {
           attend.save(null, {
             success : (res) => {
               console.log('joined Event')
-              success(activityObj);
+              success(activityObj.toJSON());
             },
             error   : (err) => {
               console.log('ERROR: joining Event')
