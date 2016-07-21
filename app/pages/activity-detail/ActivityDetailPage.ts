@@ -54,4 +54,7 @@ export class ActivityDetailPage {
   joinActivity(){
     this.ngRedux.dispatch(eventDataActions.joinActivity(this.activityId));
   }
+  canJoin(){
+    // return this.
+  }
 }

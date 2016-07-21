@@ -169,8 +169,11 @@ const joinActivity = (activityId):any => {
 };
 
 const setJoinSuccessState = (response) => {
+  console.log('Join SUCCESS');
+  console.log(response);
   return {
     data: fromJS({
+      activityId: response.get('objectId'),
       status: 'JOINED',
     }),
     type: actionTypes.EVENT_JOIN_SUCCESS,

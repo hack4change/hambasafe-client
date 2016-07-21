@@ -71,21 +71,23 @@ export class ParseManager {
           var attend = new this.AttendanceClass();
           attend.set('userReference', this.Parse.User.current());
           attend.set('activityReference', res);
+          var activityObj = res;
           attend.save(null, {
             success : (res) => {
               console.log('joined Event')
-              console.log(res);
-              success(res);
+              success(activityObj);
             },
             error   : (err) => {
               console.log('ERROR: joining Event')
               console.log(err);
+              error(err);
             }
           })
         },
         error : (err) => {
           console.log('ERROR: joining Event');
           console.log(err);
+          error(err);
         }
       })
     }
@@ -118,10 +120,29 @@ export class ParseManager {
             activityQuery.find({
               success: (res) => { 
                 console.log(res);
-                var retArray = res.map(function(obj) {
-                  return obj.toJSON();
-                })
-                success(retArray);
+                for(var i = 0; i < res.length; i++){
+                  var activityObj  = res[i];
+                  var attendanceQuery = new this.Parse.Query(this.AttendanceClass); 
+                  attendanceQuery.equalTo('activityReference', activityObj);
+                  attendanceQuery.equalTo('userReference', this.getCurrentUser());
+                  attendanceQuery.find({
+                    success : function(response) {
+                      var respObj = activityObj.toJSON();
+                      if(response.length){
+                        respObj.isAttending = true;
+                      } else {
+                        respObj.isAttending = false;
+                      }
+                      console.log(respObj);
+                      success([
+                        respObj
+                      ]);
+                    },
+                    error: function(err){
+                      error(err);
+                    }
+                  })
+                }
               },
               error: (err) =>{
                 console.log('parse saving error');

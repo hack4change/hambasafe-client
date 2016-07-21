@@ -20,7 +20,7 @@ const actionTypes = keyMirror({
 
   USER_SET_POSITION             : undefined,
   USER_SET_POSITION_FAIL        : undefined,
-  USER_SET_POSITION_SUCCESD     : undefined,
+  USER_SET_POSITION_SUCCESS     : undefined,
 //EVENTS
 
   EVENT_STATUS_SET            : undefined,
