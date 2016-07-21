@@ -39,7 +39,7 @@ export class ProfilePage {
     {
       'header' : '{ Created }',
       'filterExpression' : (activity) => {
-        return activity.get('ownerUser').get('id') === this.currentUser$['id'];
+        return activity.get('ownerUser').get('objectId') === this.currentUser$['objectId'];
       }
     },
   ];
