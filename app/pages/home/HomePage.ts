@@ -104,6 +104,7 @@ export class HomePage {
         }
         return false;
       })
+      .toList()
       .toJS().sort(function(a, b) {
         return a.startDate.iso > b.startDate.iso;
       })

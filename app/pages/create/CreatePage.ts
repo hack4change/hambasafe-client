@@ -80,7 +80,6 @@ export class CreatePage {
         case 'CREATING': 
           this.createModal = Loading.create({
           content: "Creating...",
-          // spinner: 'crescent',
           dismissOnPageChange : true,
         })
 
@@ -89,7 +88,6 @@ export class CreatePage {
         case 'CREATE_ERROR': 
           if(this.createModal) {
           this.createModal.dismiss()
-          //TODO: REMOVE
         }
       }
     });

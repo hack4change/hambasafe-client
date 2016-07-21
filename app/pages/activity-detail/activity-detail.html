@@ -1,6 +1,6 @@
 <ion-header>
   <ion-toolbar class="main-bar">
-    <ion-buttons class="order-left" start>
+    <ion-buttons *ngIf="!isAuthor" class="order-left" start>
       <button dark (click)="goBack()">
         <ion-icon name="ios-arrow-back-outline"></ion-icon>
       </button>
@@ -28,7 +28,6 @@
 <ion-footer>
   <ion-toolbar class="main-bar">
     <button (click)="joinActivity()" [disabled]="(activity$ | async)?.isAttending" full primary>
-
       Join!
     </button>
   </ion-toolbar>

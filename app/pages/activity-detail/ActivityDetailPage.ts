@@ -27,6 +27,7 @@ import {ActivityItemComponent} from '../../components/activity-item/activity-ite
 })
 export class ActivityDetailPage {
   activityId: string;
+  isAuthor: boolean: false;
   activity$: Observable<any>;
   description: string;
   
@@ -47,7 +48,7 @@ export class ActivityDetailPage {
       this.description = x.description;
     })
   }
-  goBack(){
+  goBack() {
     console.log('GoBack')
     this.nav.pop();
   }

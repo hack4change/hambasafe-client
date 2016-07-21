@@ -56,6 +56,7 @@ export class ActivityListPage {
       .filter((activity) => {
         return this.shouldInclude(activity);
       })
+      .toList()
       .toJS()
     });
 
