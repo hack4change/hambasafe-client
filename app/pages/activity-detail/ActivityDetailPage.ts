@@ -27,7 +27,7 @@ import {ActivityItemComponent} from '../../components/activity-item/activity-ite
 })
 export class ActivityDetailPage {
   activityId: string;
-  isAuthor: boolean: false;
+  isAuthor: boolean= false;
   activity$: Observable<any>;
   description: string;
   
@@ -54,8 +54,5 @@ export class ActivityDetailPage {
   }
   joinActivity(){
     this.ngRedux.dispatch(eventDataActions.joinActivity(this.activityId));
-  }
-  canJoin(){
-    // return this.
   }
 }

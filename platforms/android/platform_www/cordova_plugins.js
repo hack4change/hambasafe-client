@@ -89,7 +89,8 @@ module.exports.metadata =
     "cordova-plugin-facebook4": "1.7.1",
     "cordova-plugin-compat": "1.0.0",
     "cordova-plugin-geolocation": "2.2.0",
-    "cordova.plugins.diagnostic": "3.1.1"
+    "cordova.plugins.diagnostic": "3.1.1",
+    "cordova-plugin-crosswalk-webview": "1.8.0"
 };
 // BOTTOM OF METADATA
 });

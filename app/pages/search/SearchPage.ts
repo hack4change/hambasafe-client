@@ -97,6 +97,8 @@ export class SearchPage {
          return true;
        })
        .filter((item) => {
+       })
+       .filter((item) => {
          if(this.activeType == 'SEARCH') {
            if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
              if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
@@ -119,11 +121,17 @@ export class SearchPage {
          ) <= 150;
        }).toList()
        .toJS().sort(function(a, b) {
+         console.log(a);
+         console.log(b);
          return a.startDate.iso > b.startDate.iso;
        })
      });
-    this.activitiesSub$ = this.activities$.subscribe((x) => {
-      console.log(x);
+    this.activitiesSub$ = this.activities$.subscribe((activity) => {
+      this.zone.run(() => {
+        if(this.activityType && activity.eventType != this.activityType){
+          activity = undefined; 
+        }
+      })
     })  
   }
 
