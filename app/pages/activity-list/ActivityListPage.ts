@@ -1,11 +1,12 @@
 import {Component, OnInit, NgZone} from '@angular/core';
+import {AsyncPipe} from '@angular/common';
 import {NavController, NavParams, Loading} from 'ionic-angular';
 
 /**
  *  Redux
  */
 import {NgRedux} from 'ng2-redux';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 
 /*
  *  Pages
@@ -14,14 +15,26 @@ import {HomePage} from '../home/HomePage';
 import {SearchPage} from '../search/SearchPage';
 // import {ActivityList} from '../act'
 
+/*
+ *  Components
+ */
+import {ActivityItemComponent} from '../../components/activity-item/activity-item.component.ts';
+
 @Component({
-  templateUrl: 'build/pages/activity-list/activity-list.html'
+  templateUrl: 'build/pages/activity-list/activity-list.html',
+  directives : [
+    ActivityItemComponent,
+  ],
+  pipes : [
+    AsyncPipe
+  ]
 })
 export class ActivityListPage {
   activities$     : Observable<any>;
+  activitiesSub$  : Subscription;
   listHeader      : string;
   coordinates     : Object = {};
-  shouldInclude      : any;
+  shouldInclude   : any;
 
   constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) { }
 
@@ -46,7 +59,7 @@ export class ActivityListPage {
       .toJS()
     });
 
-    this.activities$.subscribe(x => {
+    this.activitiesSub$ = this.activities$.subscribe(x => {
       this.zone.run(() => {
         console.log('Search Update');
       })

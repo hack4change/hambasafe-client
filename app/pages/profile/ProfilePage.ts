@@ -5,7 +5,7 @@ import {NavController, Loading} from 'ionic-angular';
  *  Redux
  */
 import {NgRedux} from 'ng2-redux';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 
 /*
  *  Pages
@@ -22,9 +22,16 @@ export class ProfilePage {
   currentUser$: Observable<any>;
   maxStars : Object = [1, 2, 3, 4, 5];
   userRating : number = 3;
+  userActivities$ : Observable<any>;
+  userActivitiesSub$ : Subscription;
+  createdCount: number = 0;
+  joinedCount: number = 0;
+  upcomingCount: number = 0;
   listTypes : any =  [
     {
       'header' : '{ Upcoming }',
+      'fetchExpression' : () => {
+      },
       'filterExpression' : (activity) => {
         console.log(this);
         return activity.get('dateTimeStart') >= Date.now();
@@ -32,14 +39,20 @@ export class ProfilePage {
     },
     {
       'header' : '{ Joined }',
+      'fetchExpression' : (activity) => {
+      },
       'filterExpression' : (activity) => {
-        return activity.get('attendees').includes(this.currentUser$['id']);
+        return activity.get('isAttending');
       }
     },
     {
       'header' : '{ Created }',
+      'fetchExpression' : () => {
+      },
       'filterExpression' : (activity) => {
-        return activity.get('ownerUser').get('objectId') === this.currentUser$['objectId'];
+        console.log(activity);
+        console.log(activity.get('author').get('objectId'));
+        return activity.get('author').get('objectId') === window.parseManager.getCurrentUser()['id'];
       }
     },
   ];
@@ -50,6 +63,14 @@ export class ProfilePage {
     this.currentUser$ = this.ngRedux.select((state)=> {
       return state.get('currentUser').toJS();
     });
+    // userActivities$ = this.ngRedux.select((state)=> {
+    //   state.getIn
+    // })
+  }
+
+  ngOnDestroy() {
+    console.log('Destroying Subscriptions')
+    // this.userActivitiesSub$.unsubscribe();
   }
 	
 	goHome() {

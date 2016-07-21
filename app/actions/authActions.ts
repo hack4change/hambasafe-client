@@ -264,17 +264,14 @@ const getDeviceProfile = (errorCallback, successCallback): any => {
 }
 
 const getParseProfile = (errorCallback, successCallback): any => {
-  var respJson = {
-    'isRegistered' : true,
+  try {
+    var userObj = window.parseManager.getCurrentUser().toJSON();
+    userObj.isRegistered = true;
+    console.log(userObj);
+    successCallback(userObj);
+  } catch(e) {
+    errorCallback(e);
   }
-  var userObj = window.parseManager.getCurrentUser();
-  Object.keys(userObj.attributes).forEach(function(fieldName) {
-    console.log(fieldName);
-    userObj.get(fieldName);
-    respJson[fieldName] = userObj.get(fieldName);
-  })
-  console.log(respJson);
-  successCallback(respJson);
 }
 
 const getDeviceFacebookProfile = (errorCallback, successCallback): any => { 
