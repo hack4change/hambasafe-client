@@ -22,6 +22,28 @@ export class ParseManager {
       this.fbInit();
     }
     
+    fetchUsersByName(queryString, success:(res)=>void, error:(res)=>void) {
+      var user = this.Parse.User.current();
+      var userQuery = new this.Parse.Query(this.Parse.User)
+      userQuery.contains('fullname', queryString.toLowerCase());
+      // userQuery.notEqualTo('objectId', user.get('objectId'));
+      userQuery.find({
+        success: (res) => {
+          console.log('FOUND USERS')
+          for (var i = 0; i < res.length; i++) {
+            var resObj = res[i].toJSON();
+            success(resObj);
+          }
+        }, 
+        error: (res) => {
+          console.log('ERROR FINDING USERS');
+          error(res);
+        } 
+      })
+    }
+    fetchFriends(success:()=>void, error:(res)=>void) {
+      var user = this.Parse.current();
+    }
     signUp(data, success:()=>void, error:(res)=>void)
     {
       console.log('signUp');
@@ -243,12 +265,16 @@ export class ParseManager {
         success: (res) => { 
           console.log('activity saved to parse server');
           var userRelation = user.relation('activities');
+          var activity = activityObj.toJSON();
           userRelation.add(activityObj);
           user.save(null, {
             success: (res) => { 
               console.log('user-activity relation saved');
               console.log(res);
-              success(res);
+              success({
+                message: activity['objectId'],
+                item: activity,
+              });
             },
             error: (err) => {
               console.log('parse saving error');
@@ -341,6 +367,7 @@ export class ParseManager {
       });
     }
     facebookLogin(perms, success:any, error:any) {
+      console.log("FB LOGIN");
       this.Parse.FacebookUtils.logIn(perms, {
         success: (response) => {
           console.log('success');

@@ -1,6 +1,7 @@
 import actionTypes from '../actionTypes.ts';
 import {fromJS} from 'immutable';
 import jsonRequest from '../utils/jsonRequest';
+const _ = require('lodash');
 
 /*
  *  DECLARATIONS
@@ -12,30 +13,53 @@ const API_ROOT = 'http://hambasafetesting.azurewebsites.net/v1/Users';
 /*
  *  FETCH USER
  */
+const findUsers = (query):any => {
+  return dispatch => {
+    dispatch(setFetchLoading());
+    window.parseManager.fetchUsersByName(
+      query, 
+     (res) => dispatch(setFetchSuccess(res)),
+     (err) => dispatch(setFetchError(err))
+    )
+  };
+};
+
+/*
+ *  FETCH USER
+ */
+const fetchFriends = ():any => {
+  return dispatch => {
+  };
+};
+
+/*
+ *  FETCH USER
+ */
 const fetchUser = ():any => {
   return dispatch => {
   };
 };
-const setSuccessState = (response) => {
+const setFetchSuccess = (response) => {
+  console.log(response);
   return {
     data: fromJS({
-      items: [],//response.data.children.map((p)=>User.fromJS(p.data)),
+      items: _.keyBy([response], 'objectId'),//response.data.children.map((p)=>User.fromJS(p.data)),
       status: 'SUCCESS',
     }),
     type: actionTypes.USER_FETCH_SUCCESS,
   };
 };
-const setErrorState = (error) => {
+const setFetchError = (error) => {
   return {
     data: fromJS({
-      items: [],
+      items: {},
       message: error,
       status: 'ERROR',
     }),
     type: actionTypes.USER_FETCH_FAIL,
   };
 };
-const setLoadingState = () => {
+const setFetchLoading = () => {
   return {
     data: fromJS({
       items: [],
@@ -173,6 +197,7 @@ const setLocation = (longitude: number, latitude: number):any => {
 };
 
 export const usersActions = {
+  findUsers,
   fetchUser,
   createUser,
   // setUsersIdle,

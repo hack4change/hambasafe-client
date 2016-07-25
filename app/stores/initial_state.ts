@@ -6,6 +6,7 @@ export const getInitialState = ()=> {
   return Map<string, any>({
     eventData: Map<string, any>(fromJS({
       status: "idle",
+      visibleType: '',
       items: {},
     })),
     users: Map<string, any>(fromJS({

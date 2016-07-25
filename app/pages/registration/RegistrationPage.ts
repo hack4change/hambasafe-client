@@ -1,3 +1,5 @@
+declare var uploadcare;
+
 import {
   Component,
   NgZone,
@@ -256,7 +258,7 @@ export class RegistrationPage {
 			if(this.genderOptions[i].name !== option){
 				_.set(this.genderOptions[i], 'selected', false);
 			} else {
-        this.genderOptions[i].selected =  !this.genderOptions[i].selected;
+        this.genderOptions[i].selected = !this.genderOptions[i].selected;
         if(!this.genderOptions[i].selected){
           this.genderHeader = 'Gender';
         } else {
@@ -271,6 +273,32 @@ export class RegistrationPage {
   openTerms() {
     this.termsAccepted = true;
     this.nav.push(TermsPage);
+  }
+  getProfilePicture(){
+    uploadcare.openDialog(null, {
+      // crop: "disabled",
+      previewStep: true,
+      imagesOnly: true
+    }).done((file)=>{
+      file.promise().done((fileInfo)=>{
+        // console.log(fileInfo.cdnUrl);
+        console.log(fileInfo);
+        this.profilePicture = fileInfo.cdnUrl;
+      });
+    });
+  }
+  getIdentificationDocument(){
+    uploadcare.openDialog(null, {
+      // crop: "disabled",
+      previewStep: true,
+      imagesOnly: true
+    }).done((file)=>{
+      file.promise().done((fileInfo)=>{
+        // console.log(fileInfo.cdnUrl);
+        console.log(fileInfo);
+        this.profilePicture = fileInfo.cdnUrl;
+      });
+    });
   }
 }
 

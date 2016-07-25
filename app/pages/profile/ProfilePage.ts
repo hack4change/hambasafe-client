@@ -14,6 +14,7 @@ import {CreatePage} from '../create/CreatePage';
 import {HomePage} from '../home/HomePage';
 import {SearchPage} from '../search/SearchPage';
 import {ActivityListPage} from '../activity-list/ActivityListPage';
+import {AddFriendPage} from '../add-friend/AddFriendPage';
 
 @Component({
   templateUrl: 'build/pages/profile/profile.html'
@@ -63,8 +64,8 @@ export class ProfilePage {
     this.currentUser$ = this.ngRedux.select((state)=> {
       return state.get('currentUser').toJS();
     });
-    // userActivities$ = this.ngRedux.select((state)=> {
-    //   state.getIn
+    // this.userActivities$ = this.ngRedux.select((state)=> {
+    //   // state.getIn(['eventData', ''])
     // })
   }
 
@@ -82,9 +83,14 @@ export class ProfilePage {
 	goCreate() {
     this.nav.push(CreatePage);
 	}
-	goBack() {
-		this.nav.pop();
-	}
+  goBack() {
+    console.log('GoBack')
+    if(this.nav.canGoBack()){
+      this.nav.pop();
+    } else {
+      this.nav.setRoot(HomePage);
+    }
+  }
 	goActivityList(index: number) {
     this.nav.push(ActivityListPage, {
       'header' : this.listTypes[index]['header'],
@@ -98,5 +104,8 @@ export class ProfilePage {
     } else {
       return 'rating-grey';
     }
+  }
+  addFriend(){
+    this.nav.push(AddFriendPage, {});
   }
 }

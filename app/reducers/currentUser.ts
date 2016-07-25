@@ -7,7 +7,7 @@ export default function currentUser(state:any, action: any= {}) {
       return state.set('status', action.data.get('status'));
     case actionTypes.USER_CREATE_SUCCESS:
       var retState = state.set('status', action.data.get('status'));
-      return retState.set('message', '');
+      return retState.set('message', action.data.get('message'));
     case actionTypes.USER_CREATE_FAIL:
       var retState = state.set('status', action.data.get('status'));
       return retState.set('message', action.data.get('message'));

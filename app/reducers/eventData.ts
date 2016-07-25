@@ -7,9 +7,12 @@ export default function eventData(state:any, action:any = {}) {
   console.log('action');
   console.log(action);
   switch (action && action.type) {
+    case actionTypes.EVENTS_VISIBLE_SET:
+      return state.set('visibleType', action.data.get('visibile'))
     case actionTypes.EVENTS_STATUS_SET:
-      console.log(action.data.get('status'));
-    return state.set('status', action.data.get('status'));
+      return state
+    .set('status', action.data.get('status'))
+    .set('message', action.data.get('message'));
 
 //CREATE EVENTS
     case actionTypes.EVENT_CREATE_INIT:
@@ -17,7 +20,13 @@ export default function eventData(state:any, action:any = {}) {
     return state.set('status', action.data.get('status'));
 
     case actionTypes.EVENT_CREATE_SUCCESS:
-      return state.set('status', action.data.get('status'));
+      return state
+    .set('status', action.data.get('status'))
+    .set('message', action.data.get('message'))
+    .set(
+      'items', 
+      state.get('items').merge(action.data.get('items'))
+    );
 
     case actionTypes.EVENT_CREATE_FAIL:
       return state.set('status', action.data.get('status'));

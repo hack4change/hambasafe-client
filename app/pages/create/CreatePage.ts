@@ -1,4 +1,5 @@
 declare var google;
+declare var uploadcare;
 
 import {Component, ViewChild, OnInit} from '@angular/core';
 import {NavController, Loading} from 'ionic-angular';
@@ -7,7 +8,7 @@ import {NavController, Loading} from 'ionic-angular';
  *  Redux
  */
 import {NgRedux} from 'ng2-redux';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 
 /*
  * Actions
@@ -18,6 +19,7 @@ import {eventDataActions} from '../../actions/eventDataActions';
  *  Pages
  */
 import { HomePage } from '../home/HomePage';
+import { ActivityDetailPage } from '../../pages/activity-detail/ActivityDetailPage';
 
 /*
  * Components
@@ -35,7 +37,9 @@ export class CreatePage {
   @ViewChild('endMap') endMap;
 
   created$: Observable<any>;
+  createdSub$:  Subscription;
   userId$: Observable<any>;
+  userIdSub$:   Subscription;
   activeType: string= '';
   currentUserId: number;
   createModal = null; 
@@ -63,19 +67,29 @@ export class CreatePage {
     this.minDate    = tmpDate.toISOString().split("T")[0];
     this.maxDate    = (new Date(new Date().setFullYear(new Date().getFullYear() + 1))).toISOString().split("T")[0];
     this.startDate  = this.minDate;
-    this.created$ = this.ngRedux.select(state=>state.getIn(['eventData', 'status']));
+    this.created$ = this.ngRedux.select(state=>{
+      return {
+        status: state.getIn(['eventData', 'status']),
+        message: state.getIn(['eventData', 'message'])
+      }
+    });
     this.userId$ = this.ngRedux.select(state=>state.getIn(['currentUser', 'id']));
 
-    this.created$.subscribe(eventStatus => {
-      switch (eventStatus) {
+    this.createdSub$ = this.created$.subscribe(eventStatus => {
+
+      console.log('created refresh');
+      switch (eventStatus.status) {
         case 'CREATED': 
           if(this.createModal) {
           this.createModal.dismiss()
         }
-        this.nav.setRoot(HomePage);
-        setTimeout(() => {
-          this.ngRedux.dispatch(eventDataActions.setIdle());
+        console.log(eventStatus.status);
+        console.log(eventStatus.message);
+        // this.nav.setRoot(HomePage);
+        this.nav.setRoot(ActivityDetailPage, {
+          'activityId' : eventStatus.message
         })
+        this.ngRedux.dispatch(eventDataActions.setIdle());
         break;
         case 'CREATING': 
           this.createModal = Loading.create({
@@ -91,7 +105,7 @@ export class CreatePage {
         }
       }
     });
-    this.userId$.subscribe(userId => {
+    this.userIdSub$ = this.userId$.subscribe(userId => {
       this.currentUserId = userId;
     })
     console.log(this.created$);
@@ -296,140 +310,5 @@ export class CreatePage {
   goBack(){
     this.nav.pop();
   }
-
 }
 
-//  private eventService:EventService
-//  shownGroup = null;
-//  options = {};
-//  eventData;
-//  import {EventService} from "./EventService";
-//  searchEvents  () {
-
-
-
-
-
-    
-  // }
-//eventType = ["Walk", "Run", "Cycle"]; 
-//  typeSelected = this.eventType[0];
-  
-
-//  toggleGroup = function (group) {
-//    if (this.isGroupShown(group)) {
-//      this.shownGroup = null;
-//    } else {
-//      this.shownGroup = group;
-//    }
-//  };
-
-//  toggleSelection = function (selected, group) {
-//    this.typeSelected = selected;
-//    this.toggleGroup(group);
-
-
-//  $scope.toggleSelection = function (selected, group) {
-//    $scope.typeSelected = selected;
-//    $scope.toggleGroup(group);
-//  };
-
-//  isGroupShown = function (type, group) {
-//    return this.shownGroup === group && this.typeSelected !== type;
-//  };
-
-//  isShown = function (type, group) {
-//    return this.shownGroup === group && this.typeSelected !== type;
-//  };
-//  details;
-//  result;
-
-//  create() {
-//    console.log(this.details);
-//    console.log(this.result);
-//    this.generateLocationFromAutoComplete(this.details);
-//  }
-
- 
-//  generateLocationFromAutoComplete(details) {
-//    var location: any = {};
-//    location.Address = details.formatted_address;
-//    location.Suburb = this.extractSuburb(details.address_components);
-//    location.City = this.extractCity(details.address_components);
-//    location.Province = this.extractProvince(details.address_components);
-//    location.Country = this.extractCountry(details.address_components);
-//    location.Latitude = details.geometry.location.lat();
-//    location.Longtitude = details.geometry.location.lng();
-//    console.log(location);
-//    return location;
-
-
-//  }
-
-//   extractSuburb(results) {
-//    var suburbResults;
-//    suburbResults = this.findType('sublocality_level_2', results);
-//    if (suburbResults && suburbResults.length && suburbResults.length > 0)
-//      return suburbResults[0].long_name;
-
-//    suburbResults = this.findType('sublocality_level_1', results);
-//    if (suburbResults && suburbResults.length && suburbResults.length > 0)
-//      return suburbResults[0].long_name;
-
-//    suburbResults = this.findType('sublocality', results);
-//    if (suburbResults && suburbResults.length && suburbResults.length > 0)
-//      return suburbResults[0].long_name;
-
-//    return null;
-//  }
-
-//   extractCity(results) {
-//    var suburbResults;
-//    suburbResults = this.findType('locality', results);
-//    if (suburbResults && suburbResults.length > 0)
-//      return suburbResults[0].long_name;
-
-//    return null;
-//  }
-
-//   extractProvince(results) {
-//    var suburbResults;
-//    suburbResults = this.findType('administrative_area_level_1', results);
-//    if (suburbResults && suburbResults.length && suburbResults.length > 0)
-//      return suburbResults[0].long_name;
-
-//    return null;
-//  }
-
-//   extractCountry(results) {
-//    var suburbResults;
-//    suburbResults = this.findType('country', results);
-//    if (suburbResults && suburbResults.length && suburbResults.length > 0)
-//      return suburbResults[0].long_name;
-
-//    return null;
-//  }
-
-//   findType(type, addressComponents) {
-//    var results = [];
-
-//    if(!addressComponents) {
-//      return results;
-//    }
-
-//    var i = 0;
-//    for (i = 0; i < addressComponents.length; i++) {
-//      var addressComponent = addressComponents[i];
-//      if (addressComponent != null && addressComponent.types != null) {
-//        var j = 0;
-//        for (j = 0; j < addressComponent.types.length; j++) {
-//          var localType = addressComponent.types[j];
-//          console.log("local type: " + localType + " - " + addressComponent.long_name);
-//          if (type == localType) {
-//            results.push(addressComponent);
-//          }
-//        }
-//      }
-//    }
-//    return results;
-//  }

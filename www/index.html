@@ -2,6 +2,10 @@
 <html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8">
+  <!-- <meta http-equiv="Content-Security-Policy" content=" -->
+  <!-- default-src 'self' gap: data: 'unsafe-inline' https://ucarecdn.com/ -->
+  <!-- https://social.uploadcare.com https://upload.uploadcare.com ws://ws.pusherapp.com; -->
+  <!-- "> -->
   <title>Hambasafe</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="format-detection" content="telephone=no">
@@ -9,8 +13,16 @@
   <link ios-href="build/css/app.ios.css" rel="stylesheet">
   <link md-href="build/css/app.md.css" rel="stylesheet">
   <link wp-href="build/css/app.wp.css" rel="stylesheet">  
-  <script type="text/javascript"
-          src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAccjO3mjwiV-X0QUttwbxtJKPdffoZv74"></script>
+  <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyAccjO3mjwiV-X0QUttwbxtJKPdffoZv74"></script>
+	<script>
+		UPLOADCARE_LOCALE = "en";
+		UPLOADCARE_TABS = "file url camera facebook gdrive dropbox instagram evernote flickr skydrive";
+		UPLOADCARE_PUBLIC_KEY = "87dd221dccb6090f1442";
+    UPLOADCARE_SCRIPT_BASE = './';
+    UPLOADCARE_PASS_WINDOW_OPEN = true;
+	</script>
+	<script charset="utf-8" src="./uploadcare.full.min.js"></script>
+
 </head>
 <body>
   <div id="fb-root"></div>
@@ -27,6 +39,11 @@
   <script src="build/js/zone.js"></script>
   <!-- the bundle which is built from the app's source code -->
   <script src="build/js/app.bundle.js"></script>
+  <script>
+    if(!!window.cordova) {
+      window.open = cordova.InAppBrowser.open; 
+    }
+  </script>
 
     <ion-nav-view></ion-nav-view>
   </body>

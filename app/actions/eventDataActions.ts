@@ -129,6 +129,8 @@ const setCreateSuccessState = (response) => {
   return {
     data: fromJS({
       status: 'CREATED',
+      message: response.message,
+      items: _.keyBy([response.item], 'objectId')
     }),
     type: actionTypes.EVENT_CREATE_SUCCESS,
   };
@@ -202,11 +204,21 @@ const setJoinLoadingState = () => {
   };
 }
 
+const setVisible = (filterString):any => {
+  console.log('setting visible')
+  return {
+    data: fromJS({
+      'visible' : filterString
+    }),
+    type: actionTypes.EVENTS_VISIBLE_SET,
+  };
+};
+
 const setIdle = ():any => {
   return {
     data: fromJS({
-      message:'',
-      status: 'idle',
+      message:  '',
+      status:   'idle',
     }),
     type: actionTypes.EVENTS_STATUS_SET,
   };
@@ -219,4 +231,5 @@ export const eventDataActions = {
   createActivity,
   joinActivity,
   setIdle,
+  setVisible,
 };

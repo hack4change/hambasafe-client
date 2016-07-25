@@ -11,7 +11,7 @@
 <ion-content>
   <form name="registrationForm" ng-submit="doRegister(signupForm.$valid)" novalidate>
     <ion-list class="borderless">
-      <ion-item>
+      <ion-item (click)="openUploadCare()">
         <!-- || isSilhouette-->
         <ion-icon *ngIf="!profilePicture" item-left name="contact"></ion-icon>
         <!-- && !isSilhouette-->
@@ -19,7 +19,10 @@
           <img src="{{ profilePicture }}">
         </ion-avatar>
         <!-- <input name="profile-picture" class="hidden-file-input" id="profile-picture" type="file" placeholder="Profile Picture" [(ngModel)]="uploadPicture" accept="image/*" required /> -->
-        <label for="profile-picture">Please complete...</label>
+        <input type="hidden" role="uploadcare-uploader"
+                             data-crop="disabled"
+                             data-preview-step="true"
+                             data-images-only="true" />
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Firstname</ion-label>

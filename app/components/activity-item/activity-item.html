@@ -1,6 +1,6 @@
 <ion-item [ngClass]="getClasses()" (click)="viewActivity()">
     <ion-avatar item-left>
-      <img src="img/adam.jpg">
+      <img src="{{ activity.author.profilePicture}}">
     </ion-avatar>
   <ion-row>
     <div class="activity-location">

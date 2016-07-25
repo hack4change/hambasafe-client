@@ -36,10 +36,12 @@ import {ActivityItemComponent} from '../../components/activity-item/activity-ite
 })
 export class SearchPage {
   @ViewChild('myMap') mapChild;
-  activities$                  : Observable<any>;
-  location$                    : Observable<any>;
-  activitiesSub$               : Subscription;
-  locationSub$                 : Subscription;
+  filter$                   : Observable<any>;
+  activities$               : Observable<any>;
+  location$                 : Observable<any>;
+  filterSub$                : Subscription;
+  activitiesSub$            : Subscription;
+  locationSub$              : Subscription;
   typeSelected              : any;
   selectedSearch            : any;
   shownGroup                : any;
@@ -54,6 +56,7 @@ export class SearchPage {
   ngOnInit() {
     this.locationConnector();
     this.activityConnector();
+    this.filterConnector();
   }
   ngOnDestroy(){
     this.locationSub$.unsubscribe();
@@ -86,6 +89,7 @@ export class SearchPage {
   }
   activityConnector() {
     this.activities$ = this.ngRedux.select((state) => {
+      console.log('search update');
        return state.getIn(['eventData', 'items'])
        .filter((item) => {
          console.log(this.activityType);
@@ -96,8 +100,8 @@ export class SearchPage {
          //XXX: Time sorting;
          return true;
        })
-       .filter((item) => {
-       })
+       // .filter((item) => {
+       // })
        .filter((item) => {
          if(this.activeType == 'SEARCH') {
            if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
@@ -127,12 +131,25 @@ export class SearchPage {
        })
      });
     this.activitiesSub$ = this.activities$.subscribe((activity) => {
+      console.log()
       this.zone.run(() => {
         if(this.activityType && activity.eventType != this.activityType){
           activity = undefined; 
         }
       })
     })  
+  }
+
+  filterConnector(){
+    this.filter$ = this.ngRedux.select((state) => state.getIn(['eventData', 'visible']))
+  
+    this.filterSub$ = this.filter$.subscribe((filterString)=>{
+      this.activityType = filterString;
+    })
+  }
+
+  ngOnChanges(changes){
+    console.log(changes);
   }
 
   isActive(callingType) {
@@ -163,6 +180,12 @@ export class SearchPage {
     // }
   }
 
+  toggleFilter(filterString) {
+    console.log('filter!!');
+    console.log(filterString);
+    console.log(this.activityType);
+    this.ngRedux.dispatch(eventDataActions.setVisible(this.activityType));
+  }
   goBack() {
     this.nav.pop();
   }
