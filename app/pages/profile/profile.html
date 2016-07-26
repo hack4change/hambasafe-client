@@ -6,7 +6,7 @@
       </button>
     </ion-buttons>
     <ion-buttons end>
-      <button dark (click)="view()" class="indent">
+      <button dark (click)="goInvites()" class="indent">
         <ion-icon name="mail"></ion-icon>
       </button>
       <button dark (click)="addFriend()" class="indent">
@@ -23,7 +23,7 @@
   <ion-toolbar class="profile-details">
     <ion-item no-lines>
       <ion-avatar item-left> 
-        <img src="{{ (currentUser$| async)?.profilePicture }}"/>
+        <img src="{{ (currentUser$ | async)?.profilePicture }}"/>
       </ion-avatar>
       <div>
         <ion-item  no-lines class="profile-row profile-name">

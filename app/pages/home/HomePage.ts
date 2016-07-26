@@ -92,6 +92,7 @@ export class HomePage {
       console.log('activity update');
       return state.getIn(['eventData', 'items'])
       .filter((item)=> {
+        console.log(item);
         if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
           if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
             return distanceCalculator(
@@ -110,6 +111,7 @@ export class HomePage {
       })
     });
     this.activitiesSub$ = this.activities$.subscribe((x) => {
+      console.log(x);
       this.zone.run(() => {
         console.log('isEmpty');
         console.log(x.length == 0);

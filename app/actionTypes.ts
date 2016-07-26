@@ -68,6 +68,7 @@ const actionTypes = keyMirror({
   INVITE_DECLINE_INIT           : undefined,
   INVITE_DECLINE_SUCCESS        : undefined,
   INVITE_DECLINE_FAIL           : undefined,
+  INVITE_SET_STATUS             : undefined,
 
   //OTHER
   RATING_INIT                   : undefined,

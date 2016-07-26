@@ -85,7 +85,7 @@ export class ProfilePage {
     this.nav.push(CreatePage);
 	}
 	goInvites() {
-    this.nav.push(InvitesPage);
+    this.nav.push(InvitesPage, {});
 	}
 	goActivityList(index: number) {
     this.nav.push(ActivityListPage, {

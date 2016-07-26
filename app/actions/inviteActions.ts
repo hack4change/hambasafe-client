@@ -68,6 +68,15 @@ const setSubscribeError = (err) => {
   }
 
 }
+const setIdle = (err) => {
+  return {
+    type  : actionTypes.INVITE_SET_STATUS,
+    data  : fromJS({
+      'status'    : '',
+    })
+  }
+
+}
 
 export const inviteActions = {
   subscribe,

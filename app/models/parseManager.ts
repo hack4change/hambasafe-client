@@ -65,14 +65,27 @@ export class ParseManager {
             var userQuery = new this.Parse.Query(this.Parse.User);
             userQuery.get(inviteeId, {
               success : (inviteeObj) => {
-                invite.set('activityPtr', activityObj);
-                invite.set('invitorPtr', user);
-                invite.set('inviteePtr', inviteeObj);
-                invite.save(null, {
-                  success : (inviteRes) => {
-                    console.log('successful invite');
-                    console.log(inviteRes.toJSON());
-                    success(inviteRes);
+                var inviteQuery = new this.Parse.Query(this.InviteClass);
+                inviteQuery.equalTo('activityPtr', activityObj)
+                inviteQuery.equalTo('inviteePtr', inviteeObj)
+                inviteQuery.find({
+                  success : (invitedUsers) => {
+                    if(!invitedUsers.length){
+                      invite.set('activityPtr', activityObj);
+                      invite.set('invitorPtr', user);
+                      invite.set('inviteePtr', inviteeObj);
+                      invite.save(null, {
+                        success : (inviteRes) => {
+                          console.log('successful invite');
+                          console.log(inviteRes.toJSON());
+                          success(inviteRes);
+                        },
+                        error   : (err, result) => {
+                          error(err);
+                        }
+                      })
+
+                    }
                   },
                   error   : (err, result) => {
                     error(err);
@@ -85,7 +98,7 @@ export class ParseManager {
             })
           }
         },
-        error: (err, result) =>{
+        error: (err, result) => {
           error(err);
         }
       })
@@ -143,9 +156,33 @@ export class ParseManager {
           attend.save(null, {
             success : (res) => {
               console.log('joined Event')
+
+              var inviteQuery = new this.Parse.Query(this.InviteClass);  
+              inviteQuery.equalTo("activityPtr", activityObj)
+              inviteQuery.equalTo("inviteePtr", this.Parse.User.current())
+              inviteQuery.find({
+                success: (invitesObj) => {
+                  for(var i = 0; i < invitesObj.length; i++) {
+                    console.log('found invite');
+                    invitesObj[i].destroy({
+                      success: function(res) {
+                        // The object was deleted from the Parse Cloud.
+                        console.log('invite deleted')
+                      },
+                      error: function(res, error) {
+                        // The delete failed.
+                        // error is a Parse.Error with an error code and message.
+                      }
+                    });
+                  }
+                },
+                error: (err) => {
+                  error(err);
+                }
+              })
               success(activityObj.toJSON());
             },
-            error   : (err) => {
+            error : (err) => {
               console.log('ERROR: joining Event')
               console.log(err);
               error(err);
@@ -178,6 +215,7 @@ export class ParseManager {
             var activityQuery = new this.Parse.Query(this.ActivityClass);
             activityQuery.equalTo('startLocation', res[i]);
             var d =  new Date();
+            activityQuery.include('author');
             activityQuery.greaterThanOrEqualTo(
               'startDate', 
               {
@@ -196,7 +234,7 @@ export class ParseManager {
                   attendanceQuery.find({
                     success : function(response) {
                       var respObj = activityObj.toJSON();
-                      if(response.length){
+                      if(response.length) {
                         respObj.isAttending = true;
                       } else {
                         respObj.isAttending = false;
@@ -210,6 +248,9 @@ export class ParseManager {
                       error(err);
                     }
                   })
+                  success([
+                    activityObj.toJSON()
+                  ]);
                 }
               },
               error: (err) =>{
@@ -418,7 +459,7 @@ export class ParseManager {
       this.inviteSubscription.on('create', (invite) => {
         console.log('add to invites');
         console.log(invite);
-        createCb(invite);
+        createCb(invite.toJSON());
       })
       this.inviteSubscription.on('delete', (invite) => {
         deleteCb(invite.toJSON()['objectId']);

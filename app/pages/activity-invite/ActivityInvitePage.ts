@@ -32,18 +32,23 @@ import {SearchPage} from '../search/SearchPage';
   templateUrl: 'build/pages/activity-invite/activity-invite.html',
 })
 export class ActivityInvitePage {
-  activityId : string = ''
-  currentQuery : string = '';
-  visibleUsers$     : Observable<any>;
-  visibleUsersSub$  : Subscription;
-  userId$           : Observable<any>;
-  userIdSub$        : Subscription;
-  currentUserId     : string;
+  activityId              : string = ''
+  currentQuery            : string = '';
+  visibleUsers$           : Observable<any>;
+  visibleUsersSub$        : Subscription;
+  userId$                 : Observable<any>;
+  // userIdSub$              : Subscripton;
+  // invitationStatus$     : Observable<any>;
+  // invitationStatusSub$  : Subscription;
+  currentUserId           : string;
   selectedUsers = {};
   constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) {}
   ngOnInit() {
     this.activityId = this.params.data.activityId
+    // this.userStatus = this.ngRedux.select((state)=>state.getIn(['eventData', 'status']))
     this.userId$ = this.ngRedux.select((state)=>state.getIn(['currentUser', 'objectId']))
+    // this.ngRedux.dispatch(inviteActions.setIdle());
+    // this.invitationStatus$ = this.ngRedux.select((state)=>state.getIn(['invite', 'status']))
     this.visibleUsers$ = this.ngRedux.select(
       (state) => {
         return state
@@ -59,6 +64,11 @@ export class ActivityInvitePage {
     this.visibleUsersSub$ = this.visibleUsers$.subscribe(() => {
 
     })
+    // this.invitationStatusSub$ = this.invitationStatusSub$.subscribe((status) => {
+    //   // if(status === "INVITED") {
+    //   //   this.nav.pop();
+    //   // }
+    // )
   }
   /**
    *  NAVIGATION
@@ -83,6 +93,7 @@ export class ActivityInvitePage {
   inviteToActivity(){
     if(this.activityId && Object.keys(this.selectedUsers).length){
       this.ngRedux.dispatch(eventDataActions.inviteToActivity(this.activityId, Object.keys(this.selectedUsers)));
+      this.nav.pop();
     }
   }
   toggleSelect(userItem){
