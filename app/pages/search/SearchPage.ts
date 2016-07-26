@@ -95,7 +95,7 @@ export class SearchPage {
          console.log(this.activityType);
          if(this.activityType !== '' && this.activeType === 'TIME') {
            console.log(this.activeType);
-           return item && item.get('eventType') ? this.activeType === item.get('eventType').get('name'): false;
+           return item && item.get('eventType') ? this.activeType === item.get('eventType'): false;
          }
          //XXX: Time sorting;
          return true;

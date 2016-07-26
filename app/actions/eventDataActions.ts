@@ -223,6 +223,48 @@ const setIdle = ():any => {
     type: actionTypes.EVENTS_STATUS_SET,
   };
 };
+const inviteToActivity = (activityId, userKeys):any => {
+  return dispatch => {
+    dispatch(setInviteLoadingState());
+    window.parseManager.inviteToActivity(
+      activityId,
+      userKeys,
+      (res) => dispatch(setInviteSuccessState(res)),
+      (res) => dispatch(setInviteErrorState(res))
+    )
+  }
+}
+const setInviteSuccessState = (response) => {
+  console.log('Invite SUCCESS');
+  console.log(response);
+  return {
+    data: fromJS({
+      activityId: response['objectId'],
+      status: 'INVITED',
+    }),
+    type: actionTypes.EVENT_INVITE_SUCCESS,
+  };
+};
+
+// Error.
+const setInviteErrorState = (error) => {
+  return {
+    data: fromJS({
+      message: error,
+      status: 'INVITE_ERROR',
+    }),
+    type: actionTypes.EVENT_INVITE_FAIL,
+  };
+};
+const setInviteLoadingState = () => {
+  console.log('loadingState');
+  return {
+    data: fromJS({
+      status: 'INVITING',
+    }),
+    type: actionTypes.EVENT_INVITE_INIT,
+  };
+}
 
 export const eventDataActions = {
   fetchEvents,
@@ -232,4 +274,5 @@ export const eventDataActions = {
   joinActivity,
   setIdle,
   setVisible,
+  inviteToActivity,
 };

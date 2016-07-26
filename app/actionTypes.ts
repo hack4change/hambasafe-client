@@ -14,6 +14,10 @@ const actionTypes = keyMirror({
   USER_CREATE_SUCCESS           : undefined,
   USER_CREATE_FAIL              : undefined,
 
+  USER_ADD_FRIEND_INIT          : undefined,
+  USER_ADD_FRIEND_SUCCESS       : undefined,
+  USER_ADD_FRIEND_FAIL          : undefined,
+
   USER_FETCH_INIT               : undefined,
   USER_FETCH_SUCCESS            : undefined,
   USER_FETCH_FAIL               : undefined,
@@ -21,14 +25,20 @@ const actionTypes = keyMirror({
   USER_SET_POSITION             : undefined,
   USER_SET_POSITION_FAIL        : undefined,
   USER_SET_POSITION_SUCCESS     : undefined,
+  USER_SET_STATUS               : undefined,
+
 //EVENTS
 
   EVENT_VISIBLE_SET             : undefined,
-  EVENTS_STATUS_SET              : undefined,
+  EVENTS_STATUS_SET             : undefined,
 
   EVENT_CREATE_INIT             : undefined,
   EVENT_CREATE_FAIL             : undefined,
   EVENT_CREATE_SUCCESS          : undefined,
+
+  EVENT_INVITE_INIT             : undefined,
+  EVENT_INVITE_FAIL             : undefined,
+  EVENT_INVITE_SUCCESS          : undefined,
 
   EVENT_JOIN_INIT               : undefined,
   EVENT_JOIN_FAIL               : undefined,
@@ -42,12 +52,27 @@ const actionTypes = keyMirror({
   EVENTS_FETCH_FAIL             : undefined,
   EVENTS_FETCH_SUCCESS          : undefined,
 
-//OTHER
+  //INVITES
+  INVITE_SUBSCRIBE_INIT         : undefined,
+  INVITE_SUBSCRIBE_SUCCESS      : undefined,
+  INVITE_SUBSCRIBE_FAIL         : undefined,
+  INVITE_FETCH_INIT             : undefined,
+  INVITE_FETCH_SUCCESS          : undefined,
+  INVITE_FETCH_FAIL             : undefined,
+  INVITE_DELETE_INIT            : undefined,
+  INVITE_DELETE_SUCCESS         : undefined,
+  INVITE_DELETE_FAIL            : undefined,
+  INVITE_ACCEPT_INIT            : undefined,
+  INVITE_ACCEPT_SUCCESS         : undefined,
+  INVITE_ACCEPT_FAIL            : undefined,
+  INVITE_DECLINE_INIT           : undefined,
+  INVITE_DECLINE_SUCCESS        : undefined,
+  INVITE_DECLINE_FAIL           : undefined,
+
+  //OTHER
   RATING_INIT                   : undefined,
   RATING_FAIL                   : undefined,
   RATING_SUCCESS                : undefined,
-
-  USER_SET_STATUS               : undefined,
 })
 
 export default actionTypes;

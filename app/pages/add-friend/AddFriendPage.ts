@@ -77,7 +77,7 @@ export class AddFriendPage {
    * 
    */
   addFriends(){
-  
+    this.ngRedux.dispatch(usersActions.addFriends(Object.keys(this.selectedUsers)));
   }
   toggleSelect(userItem){
     console.log('toggle Select')
@@ -86,9 +86,6 @@ export class AddFriendPage {
     } else {
       this.selectedUsers[userItem['objectId']] = true;
     }
-  }
-  deselectUser(userItem){
-  
   }
   getFromInput(ev){
     console.log(ev);

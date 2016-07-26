@@ -112,6 +112,7 @@ export class ActivityDetailPage {
   
   inviteUsers() {
     this.nav.push(ActivityInvitePage, {
+      activityId : this.activityId
     });
   }
 }

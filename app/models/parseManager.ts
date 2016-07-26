@@ -9,13 +9,16 @@ export class ParseManager {
     ActivityClass: any;
     AttendanceClass: any;
     LocationClass: any;
+    InviteClass: any;
     Parse: any;
+    inviteSubscription;
     constructor() {
       console.log('CONSTRUCTOR')
       this.Parse = Parse;
       this.ActivityClass = this.Parse.Object.extend("Activity");
       this.AttendanceClass = this.Parse.Object.extend("Attendance");
       this.LocationClass = this.Parse.Object.extend("Location");
+      this.InviteClass = this.Parse.Object.extend("Invite");
       this.Parse.Object.registerSubclass('Activity', this.ActivityClass);
       this.Parse.Object.registerSubclass('Attendance', this.AttendanceClass);
       this.Parse.Object.registerSubclass('Location', this.LocationClass);
@@ -26,13 +29,15 @@ export class ParseManager {
       var user = this.Parse.User.current();
       var userQuery = new this.Parse.Query(this.Parse.User)
       userQuery.contains('fullname', queryString.toLowerCase());
-      // userQuery.notEqualTo('objectId', user.get('objectId'));
+      userQuery.notEqualTo('objectId', user['id']);
       userQuery.find({
         success: (res) => {
           console.log('FOUND USERS')
           for (var i = 0; i < res.length; i++) {
-            var resObj = res[i].toJSON();
-            success(resObj);
+            // if(resObj.toJSON['objectId'] !== user['id']){
+              var resObj = res[i].toJSON();
+              success(resObj);
+            // }
           }
         }, 
         error: (res) => {
@@ -41,8 +46,49 @@ export class ParseManager {
         } 
       })
     }
-    fetchFriends(success:()=>void, error:(res)=>void) {
+    addFriends(userArray, success:(res)=>void, error:(res)=>void){
+      for(var i = 0; i < userArray.length; i++){
+      }
+    }
+    fetchFriends(success:(res)=>void, error:(res)=>void) {
       var user = this.Parse.current();
+    }
+    inviteToActivity(activityId, userArray, success:(res)=>void, error:(res)=>void){
+      console.log('inviting');
+      var user = this.Parse.User.current();
+      var activityQuery = new this.Parse.Query(this.ActivityClass);
+      activityQuery.get(activityId, {
+        success: (activityObj) => {
+          for(var i = 0; i < userArray.length; i++){
+            var invite = new this.InviteClass();
+            var inviteeId = userArray[i];
+            var userQuery = new this.Parse.Query(this.Parse.User);
+            userQuery.get(inviteeId, {
+              success : (inviteeObj) => {
+                invite.set('activityPtr', activityObj);
+                invite.set('invitorPtr', user);
+                invite.set('inviteePtr', inviteeObj);
+                invite.save(null, {
+                  success : (inviteRes) => {
+                    console.log('successful invite');
+                    console.log(inviteRes.toJSON());
+                    success(inviteRes);
+                  },
+                  error   : (err, result) => {
+                    error(err);
+                  }
+                })
+              },
+              error   : (err, result) => {
+                error(err);
+              }
+            })
+          }
+        },
+        error: (err, result) =>{
+          error(err);
+        }
+      })
     }
     signUp(data, success:()=>void, error:(res)=>void)
     {
@@ -310,7 +356,7 @@ export class ParseManager {
 			});
 
 		}
-    fbInit(){
+    fbInit() {
       this.Parse.FacebookUtils.init({
 
         /*
@@ -356,7 +402,6 @@ export class ParseManager {
         success: (response) => {
           console.log('success');
           console.log(response);
-          // console.log(this.Parse.User.isModelComplete())
           success(response);
         },
         error: (response) => {
@@ -366,13 +411,39 @@ export class ParseManager {
         }
       });
     }
+    subscribeToInvites(success:any, error:any, createCb:any, deleteCb:any) {
+      var query = new Parse.Query(this.InviteClass);
+      query.equalTo('inviteePtr', this.Parse.User.current());
+      this.inviteSubscription = query.subscribe();
+      this.inviteSubscription.on('create', (invite) => {
+        console.log('add to invites');
+        console.log(invite);
+        createCb(invite);
+      })
+      this.inviteSubscription.on('delete', (invite) => {
+        deleteCb(invite.toJSON()['objectId']);
+      })
+      this.inviteSubscription.on('error', (err) => {
+        error(err);
+      })
+      query.find({
+        success: (invites)=> {
+          console.log('add to invites');
+          for(var i = 0; i< invites.length; i++){
+            createCb(invites[i].toJSON());
+          }
+        },
+        error: (err) => {
+          error(err);
+        }
+      }) 
+      success();
+    }
     facebookLogin(perms, success:any, error:any) {
-      console.log("FB LOGIN");
       this.Parse.FacebookUtils.logIn(perms, {
         success: (response) => {
           console.log('success');
           console.log(response);
-          // console.log(this.Parse.User.isModelComplete())
           success(response);
         },
         error: (response) => {

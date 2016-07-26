@@ -13,6 +13,7 @@ import {Observable, Subscription} from 'rxjs';
 import {CreatePage} from '../create/CreatePage';
 import {HomePage} from '../home/HomePage';
 import {SearchPage} from '../search/SearchPage';
+import {InvitesPage} from '../invites/InvitesPage';
 import {ActivityListPage} from '../activity-list/ActivityListPage';
 import {AddFriendPage} from '../add-friend/AddFriendPage';
 
@@ -83,6 +84,15 @@ export class ProfilePage {
 	goCreate() {
     this.nav.push(CreatePage);
 	}
+	goInvites() {
+    this.nav.push(InvitesPage);
+	}
+	goActivityList(index: number) {
+    this.nav.push(ActivityListPage, {
+      'header' : this.listTypes[index]['header'],
+      'filter' : this.listTypes[index]['filterExpression'],
+    });
+	}
   goBack() {
     console.log('GoBack')
     if(this.nav.canGoBack()){
@@ -91,12 +101,6 @@ export class ProfilePage {
       this.nav.setRoot(HomePage);
     }
   }
-	goActivityList(index: number) {
-    this.nav.push(ActivityListPage, {
-      'header' : this.listTypes[index]['header'],
-      'filter' : this.listTypes[index]['filterExpression'],
-    });
-	}
 
   getIsRated(starNumber: number) {
     if(starNumber <= this.userRating) {

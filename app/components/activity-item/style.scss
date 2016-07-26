@@ -56,4 +56,13 @@ activity-item {
     width: 30%;
     text-align:right;
   }
+  ion-card {
+    // width: 50%;
+    img{
+      display:block;
+      margin: 0 auto;
+      // max-height: 100px;
+      max-width: 100%;
+    }
+  }
 }

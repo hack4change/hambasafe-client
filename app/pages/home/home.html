@@ -2,15 +2,15 @@
   <ion-toolbar class="main-bar">
     <ion-buttons class="order-left" start>
       <button dark menuToggle>
-        <ion-icon name="md-more"></ion-icon>
+        <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
     <ion-buttons end>
       <button primary class="indent">
-        <ion-icon name="md-pin"></ion-icon>
+        <ion-icon name="pin"></ion-icon>
       </button>
       <button dark (click)="loadSearch()">
-        <ion-icon name="md-search"></ion-icon>
+        <ion-icon name="search"></ion-icon>
       </button>
     </ion-buttons>
   </ion-toolbar>
@@ -25,7 +25,7 @@
     </button>
   </ion-toolbar>
   <ion-toolbar>
-    <ion-item class="no-border">
+    <ion-item class="no-border" no-lines>
       <ion-range min="10" max="60" step="10" snaps="true" pin="false" (ngModelChange)="sliderChange()" [(ngModel)]="searchDistance" secondary>
         <ion-icon range-left small>Closer</ion-icon>
         <ion-icon range-right small>Farther</ion-icon>
@@ -43,7 +43,7 @@
           </ion-col>
           <ion-col width-60>
             <div class="text-center">
-              <h5>
+              <h5 style="color:white">
               There are no new activities in your neighbourhood.
               </h5>
             </div>
@@ -56,7 +56,7 @@
           </ion-col>
           <ion-col width-60>
             <div class="text-center">
-              <p>
+              <p style="color:white">
               Would you like to create one?
               </p>
             </div>
@@ -69,7 +69,7 @@
           </ion-col>
           <ion-col width-60>
             <div class="text-center">
-              <button (click)="goToCreate()">
+              <button class="calm-button" (click)="goToCreate()">
                 Sure!
               </button>
             </div>
@@ -82,7 +82,7 @@
   </template>
   <template ngSwitchDefault>
     <activity-item *ngFor="let activity of activities$| async" [activity]="activity"></activity-item>
-      <button (click)="goToCreate()" style="position:fixed; bottom: 2%; right:2%;" fab>
+      <button (click)="goToCreate()" class="calm-button create-fab"  fab>
         <ion-icon name="add"></ion-icon>
       </button>
   </template>

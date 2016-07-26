@@ -19,6 +19,7 @@ import store from './stores/store';
  * Actions
  */
 import {authActions} from './actions/authActions';
+import {inviteActions} from './actions/inviteActions';
 
 
 /*
@@ -31,15 +32,11 @@ import {SearchPage} from "./pages/search/SearchPage";
 import {EmergencyPage} from './pages/emergency/EmergencyPage';
 import {TermsPage} from './pages/terms/TermsPage';
 import {AboutPage} from './pages/about/AboutPage';
-// import {EventDetailPage} from './pages/event-detail/EventDetailPage';
-// import {EventRatingPage} from './pages/event-detail/EventRatingPage';
-import {InvitePage} from './pages/invite/InvitePage';
 import {LandingPage} from './pages/landing/LandingPage';
 import {LatestPage} from './pages/latest/LatestPage';
 import {ProfilePage} from './pages/profile/ProfilePage';
 import {RatingPage} from './pages/rating/RatingPage';
 import {RegistrationPage} from './pages/registration/RegistrationPage';
-// import {SearchPage} from './pages/search/SearchPage';
 
 import {ParseManager} from './models/parseManager';
 
@@ -82,7 +79,7 @@ export class MyApp {
     this.authStatus$.subscribe( userStatus => {
       switch(userStatus){
         case 'AUTHENTICATED':
-          this.setMenuAuthenticated();
+        this.setMenuAuthenticated();
         break;
         case 'CREATE_SUCCESS':
           this.nav.setRoot(HomePage);
@@ -99,6 +96,8 @@ export class MyApp {
       }
       if(this.oldStatus === 'AUTHENTICATED' && userStatus !== 'AUTHENTICATED') {
         this.nav.push(LandingPage);
+      } else if (this.oldStatus !== 'AUTHENTICATED' && userStatus === 'AUTHENTICATED'){
+          this.ngRedux.dispatch(inviteActions.subscribe());
       }
       console.log('Root userStatus');
       console.log(userStatus);

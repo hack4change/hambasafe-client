@@ -13,11 +13,15 @@ export const getInitialState = ()=> {
       status: "idle",
       items: {},
     })),
+    invites: Map<string, any>(fromJS({
+      status: "UNSUBSCRIBED",
+      items: {} 
+    })),
     currentUser: Map<string, any>(fromJS({
       status: "ANONYMOUS",
-      id : '',
-      fbId : '',
-      accessToken: '',
+      // id : '',
+      // fbId : '',
+      // accessToken: '',
       firstName: '',
       lastName: '',
       gender: '',

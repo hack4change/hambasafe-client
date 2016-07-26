@@ -29,6 +29,50 @@ const findUsers = (query):any => {
  */
 const fetchFriends = ():any => {
   return dispatch => {
+    dispatch(setFetchLoading());
+  };
+};
+
+/*
+ *  ADD FRIENDS
+ */
+const addFriends = (userKeys):any => {
+  return dispatch => {
+    dispatch(setFetchLoading());
+    window.parseManager.addFriends(
+      userKeys,
+     (res) => dispatch(setAddFriendSuccess(res)),
+     (err) => dispatch(setAddFriendError(err))
+    )
+  };
+};
+const setAddFriendSuccess = (response) => {
+  console.log(response);
+  return {
+    data: fromJS({
+      items: _.keyBy([response], 'objectId'),//response.data.children.map((p)=>User.fromJS(p.data)),
+      status: 'SUCCESS',
+    }),
+    type: actionTypes.USER_ADD_FRIEND_SUCCESS,
+  };
+};
+const setAddFriendError = (error) => {
+  return {
+    data: fromJS({
+      items: {},
+      message: error,
+      status: 'ERROR',
+    }),
+    type: actionTypes.USER_ADD_FRIEND_FAIL,
+  };
+};
+const setAddFriendLoading = () => {
+  return {
+    data: fromJS({
+      items: [],
+      status: 'ADDING',
+    }),
+    type: actionTypes.USER_ADD_FRIEND_INIT,
   };
 };
 
@@ -197,10 +241,10 @@ const setLocation = (longitude: number, latitude: number):any => {
 };
 
 export const usersActions = {
+  addFriends,
+  createUser,
   findUsers,
   fetchUser,
-  createUser,
-  // setUsersIdle,
   getLocation,
   setLocation,
 };
