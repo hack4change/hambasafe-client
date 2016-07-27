@@ -31,21 +31,17 @@ import {InvitesSentComponent} from '../../components/invites-sent/invites-sent.c
   ]
 })
 export class InvitesPage {
-	sent;
-	received;
   constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) {}
   userId$             : Observable<any>;
   userIdSub$          : Subscription;
   activities$         : Observable<any>;
   activitiesSub$      : Subscription;
   currentUserId       : string;
-  selectedActivities = [];
-
-  constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) {}
+  selectedActivities 	= [];
+	viewType					  : string= 'RECEIVED';
 
   ngOnInit() {
-		this.sent = InvitesSentComponent;
-		this.received = InvitesReceivedComponent;
+    console.log(this.viewType);
     this.userId$ = this.ngRedux.select((state) => state.getIn(['currentUser', 'objectId']))
     this.activities$ = this.ngRedux.select((state) => {
       console.log('here');
@@ -59,7 +55,7 @@ export class InvitesPage {
         if(!!activityToPush){
           invitedActivities.push(activityToPush.toJSON());
         } else {
-          //TODO: GET NEW ACTIVITY
+          //TODO: Dispatch GET ACTIVITY
         }
       }
       return invitedActivities;

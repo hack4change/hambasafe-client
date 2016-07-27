@@ -9,9 +9,24 @@
       Invites
     </ion-title>
   </ion-toolbar>
+  <ion-toolbar primary>
+    <ion-segment light [(ngModel)]="viewType">
+      <ion-segment-button value="RECEIVED">
+        Received
+      </ion-segment-button>
+      <ion-segment-button value="SENT">
+        Sent
+      </ion-segment-button>
+    </ion-segment>
+  </ion-toolbar>
 </ion-header>
-<ion-content>
-  <ion-list>
-    <activity-item *ngFor="let activity of activities$ | async" [activity]="activity"></activity-item>
-  </ion-list>
+<ion-content primary>
+  <div [ngSwitch]="viewType">
+    <ion-list *ngSwitchCase="'RECEIVED'">
+      <activity-item *ngFor="let activity of activities$ | async" [activity]="activity"></activity-item>
+    </ion-list>
+    <ion-list *ngSwitchCase="'SENT'">
+      <activity-item *ngFor="let activity of activities$ | async" [activity]="activity"></activity-item>
+    </ion-list>
+  </div>
 </ion-content>

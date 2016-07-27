@@ -56,7 +56,6 @@ export class ActivityDetailPage {
     console.log("ActivityDetailPage");
     this.activityId = this.params.data['activityId'];
     console.log(this.activityId);
-    // this.ngRedux.dispatch(eventDataActions.joinActivity(this.activityId));
   };
 
   ngOnInit() {
@@ -108,6 +107,7 @@ export class ActivityDetailPage {
 
   joinActivity() {
     this.ngRedux.dispatch(eventDataActions.joinActivity(this.activityId));
+    this.goBack();
   }
   
   inviteUsers() {
