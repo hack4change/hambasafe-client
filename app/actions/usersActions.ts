@@ -23,6 +23,19 @@ const findUsers = (query):any => {
     )
   };
 };
+/**
+ *  Fetch Users that have an attending reference to an event
+ */
+const fetchByAttendance = (activityId: string):any => {
+  return dispatch => {
+    dispatch(setFetchLoading());
+    window.parseManager.fetchByAttendance(
+      activityId, 
+     (res) => dispatch(setFetchSuccess(res)),
+     (err) => dispatch(setFetchError(err))
+    )
+  }
+}
 
 /*
  *  FETCH USER
@@ -241,6 +254,7 @@ const setLocation = (longitude: number, latitude: number):any => {
 };
 
 export const usersActions = {
+  fetchByAttendance,
   addFriends,
   createUser,
   findUsers,

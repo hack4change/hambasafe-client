@@ -20,6 +20,7 @@ import {Observable, Subscription} from 'rxjs';
  * Actions
  */
 import {eventDataActions} from '../../actions/eventDataActions';
+import {usersActions}     from '../../actions/usersActions';
 
 /*
  *  Pages
@@ -46,42 +47,62 @@ export class ActivityDetailPage {
   activitySub$: Subscription;
   eventStatus$ : Observable<any>;
   eventStatusSub$ : Subscription;
+  users$: Observable<any>;
+  usersSub$: Subscription;
   userId$: Observable<any>;
   userIdSub$:   Subscription;
   currentUserId: number;
- 
+  mustRate:  boolean = false;
   description: string;
+  users = [];
   
   constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) {
     console.log("ActivityDetailPage");
     this.activityId = this.params.data['activityId'];
     console.log(this.activityId);
+    console.log(this.activityId);
+    this.mustRate = this.params.data['mustRate'];
   };
 
   ngOnInit() {
+    if(this.mustRate){
+      this.ngRedux.dispatch(usersActions.fetchByAttendance(this.activityId))
+    }
     this.userId$ = this.ngRedux.select(state=>state.getIn(['currentUser', 'objectId']));
+    this.users$ = this.ngRedux.select((state) => {
+      return state
+      .getIn(['users', 'items'])
+      .filter((user) => {
+        return user.get('attendance').includes(this.activityId);
+      })
+      .toJSON()
+    }) 
     this.activity$ = this.ngRedux.select(
-      state => 
-        state.getIn(['eventData', 'items'])
+      state => {
+        return state.getIn(['eventData', 'items'])
         .find(item => {
           console.log(item.get('objectId') === this.activityId);
           return item.get('objectId') === this.activityId;
         })
-        .toJS()
-    );
-    this.userIdSub$ = this.userId$.subscribe(userId => {
+        .toJSON()
+      }
+    ); 
+    this.userIdSub$ = this.userId$.subscribe((userId) => {
       this.zone.run(() => {
         this.currentUserId = userId;
         this.activitySub$ = this.activity$.subscribe(activity => {
           this.zone.run(() => {
-            console.log('Activitiy Subscription');
-            console.log(activity);
-            if(activity.author.objectId == this.currentUserId){
+            if(activity.author.objectId == this.currentUserId) {
               this.isAuthor = true;  
             }
           })
         })
       })
+    })
+
+    this.usersSub$ =  this.users$.subscribe((users) => {
+      console.log('ATTENDED BY USERS')
+      console.log(users)
     })
   }
 
@@ -105,6 +126,11 @@ export class ActivityDetailPage {
     }
   }
 
+  rateActivity() {
+    // this.ngRedux.dispatch(eventDataActions.rateActivity(this.activityId, rating));
+    // this.ngRedux.dispatch(usersActions.rateUser(this.userId, rating));
+    this.goBack();
+  }
   joinActivity() {
     this.ngRedux.dispatch(eventDataActions.joinActivity(this.activityId));
     this.goBack();

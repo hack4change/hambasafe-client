@@ -20,6 +20,7 @@ import store from './stores/store';
  */
 import {authActions} from './actions/authActions';
 import {inviteActions} from './actions/inviteActions';
+import {eventDataActions} from './actions/eventDataActions';
 
 
 /*
@@ -98,6 +99,7 @@ export class MyApp {
         this.nav.push(LandingPage);
       } else if (this.oldStatus !== 'AUTHENTICATED' && userStatus === 'AUTHENTICATED'){
           this.ngRedux.dispatch(inviteActions.subscribe());
+          this.ngRedux.dispatch(eventDataActions.subscribeAttending());
       }
       console.log('Root userStatus');
       console.log(userStatus);

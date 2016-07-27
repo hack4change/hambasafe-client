@@ -20,6 +20,7 @@ import { ActivityDetailPage } from '../../pages/activity-detail/ActivityDetailPa
 export class ActivityItemComponent {
   @Input() activity: any;
   @Input() detailed: boolean = false;
+  @Input() mustRate: boolean = false;
   startFormatted : any;
   actionType : string = '';// Math.floor(Math.random()*2) ? 'RATE' : 'VIEW';
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
@@ -41,17 +42,16 @@ export class ActivityItemComponent {
     if(!this.detailed) {
       this.nav.push(ActivityDetailPage, {
         'activityId' : this.activity['objectId'],
+        'mustRate'     : this.mustRate,
       }) 
     }
   }
   getClasses(){
-    let classes = {
+    var classes = {
     }
-    // if( this.actionType === 'RATE' ) {
-    //   classes['must-rate'] = true;
-    // } else if( this.actionType === 'VIEW' ) {
-    //   classes['been-invited'] = true;
-    // }
+    if( this.mustRate ) {
+      classes['must-rate'] = true;
+    } 
     return classes;
   }
 }

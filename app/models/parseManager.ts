@@ -10,8 +10,12 @@ export class ParseManager {
     AttendanceClass: any;
     LocationClass: any;
     InviteClass: any;
+    FriendsClass: any;
+    UserRatingClass: any;
+    ActivityRatingClass: any;
     Parse: any;
     inviteSubscription;
+    attendingSubscription;
     constructor() {
       console.log('CONSTRUCTOR')
       this.Parse = Parse;
@@ -19,41 +23,168 @@ export class ParseManager {
       this.AttendanceClass = this.Parse.Object.extend("Attendance");
       this.LocationClass = this.Parse.Object.extend("Location");
       this.InviteClass = this.Parse.Object.extend("Invite");
+      this.FriendsClass = this.Parse.Object.extend("Friends");
+      this.UserRatingClass = this.Parse.Object.extend("UserRating");
+      this.ActivityRatingClass = this.Parse.Object.extend("ActivityRating");
       this.Parse.Object.registerSubclass('Activity', this.ActivityClass);
       this.Parse.Object.registerSubclass('Attendance', this.AttendanceClass);
       this.Parse.Object.registerSubclass('Location', this.LocationClass);
       this.fbInit();
     }
-    
-    fetchUsersByName(queryString, success:(res)=>void, error:(res)=>void) {
-      var user = this.Parse.User.current();
-      var userQuery = new this.Parse.Query(this.Parse.User)
-      userQuery.contains('fullname', queryString.toLowerCase());
-      userQuery.notEqualTo('objectId', user['id']);
-      userQuery.find({
-        success: (res) => {
-          console.log('FOUND USERS')
-          for (var i = 0; i < res.length; i++) {
-            // if(resObj.toJSON['objectId'] !== user['id']){
-              var resObj = res[i].toJSON();
-              success(resObj);
-            // }
-          }
-        }, 
-        error: (res) => {
-          console.log('ERROR FINDING USERS');
-          error(res);
-        } 
+    /**
+     *  SUBSCRIPTIONS
+     *
+     */
+    subscribeToAttending(error:any, createCb:any, deleteCb:any){
+      var query = new Parse.Query(this.AttendanceClass);
+      query.equalTo('userReference', this.Parse.User.current());
+      query.include('activityReference');
+      query.include('activityReference.startLocation');
+      query.include('activityReference.author');
+      query.include('ratingPtr');
+      this.attendingSubscription = query.subscribe();
+      this.attendingSubscription.on('create', (attendance) => {
+        var attendedActivity = attendance.get('activityReference').toJSON();
+        attendedActivity.isAttending = true;
+        if(!!attendance.get('ratingPtr')){
+          attendedActivity.hasRated = true;
+        }
+        createCb([
+          attendedActivity
+        ]);   
       })
+      query.find({
+        success: (activitiesAttending)=> {
+          for(var i = 0; i < activitiesAttending.length; i++){
+            var attendedActivity = activitiesAttending[i].get('activityReference').toJSON();
+            attendedActivity.isAttending = true;
+            if(!!activitiesAttending[i].get('ratingPtr')){
+              attendedActivity.hasRated = true;
+            }
+            createCb([
+              attendedActivity
+            ]);   
+          }
+        },
+        error: function(err){
+          // error(err);
+        }
+      }) 
+    
     }
-    addFriends(userArray, success:(res)=>void, error:(res)=>void){
-      for(var i = 0; i < userArray.length; i++){
-      }
+    subscribeToInvites(success:any, error:any, createCb:any, deleteCb:any) {
+      var query = new Parse.Query(this.InviteClass);
+      query.equalTo('inviteePtr', this.Parse.User.current());
+      this.inviteSubscription = query.subscribe();
+      this.inviteSubscription.on('create', (invite) => {
+        console.log('add to invites');
+        console.log(invite);
+        createCb(invite.toJSON());
+      })
+      this.inviteSubscription.on('delete', (invite) => {
+        deleteCb(invite.toJSON()['objectId']);
+      })
+      this.inviteSubscription.on('error', (err) => {
+        error(err);
+      })
+      query.find({
+        success: (invites)=> {
+          console.log('add to invites');
+          for(var i = 0; i< invites.length; i++){
+            createCb(invites[i].toJSON());
+          }
+        },
+        error: (err) => {
+          error(err);
+        }
+      }) 
+      success();
     }
-    fetchFriends(success:(res)=>void, error:(res)=>void) {
-      var user = this.Parse.current();
+    
+
+/***
+ * ACTIVITIES
+ ***/
+
+    createActivity(data: any, error:(res)=>void, success:(res)=>void)
+    {
+      var activity = new this.ActivityClass();
+      var locationObj = new this.LocationClass();
+      _.forEach(data, (value, key) => {
+        if(key == 'startLocation' || key == 'endLocation') {
+          // activity.set(key, new this.Parse.GeoPoint(value));
+          return;
+        } else if(key == 'startDate' || key == 'endDate') {
+          activity.set(key, new Date(value));
+        } else {
+          activity.set(key, value);
+        }
+      })
+       
+      Parse.Cloud.run('checkLocationExists', {
+        'latitude' : data.startLocation.latitude,
+        'longitude' : data.startLocation.longitude,
+      }).then(
+      (res) => {
+        locationObj.set('coordinates', new this.Parse.GeoPoint(data.startLocation));
+        if(!res.exists){
+          locationObj.save(null, {
+            success: (res) => { 
+              this.saveActivity(res, activity, error, success);
+            },
+            error: (err, response) => {
+              console.log('ERROR: LOCATION SAVE');
+              console.log(err);
+              console.log(response);
+            }
+
+          })
+        } else {
+          this.saveActivity(res.obj, activity, error, success);
+        }
+      },
+      (err) =>  {
+      })
+
     }
-    inviteToActivity(activityId, userArray, success:(res)=>void, error:(res)=>void){
+    saveActivity(locationObj, activityObj, error:(res)=>void, success:(res)=>void) 
+    {
+      var user = this.Parse.User.current();
+      activityObj.set('author', user);
+      activityObj.set('startLocation', locationObj);
+      activityObj.save(null, {
+        success: (res) => { 
+          console.log('activity saved to parse server');
+          var userRelation = user.relation('activities');
+          var activity = activityObj.toJSON();
+          userRelation.add(activityObj);
+          user.save(null, {
+            success: (res) => { 
+              console.log('user-activity relation saved');
+              console.log(res);
+              success({
+                message: activity['objectId'],
+                item: activity,
+              });
+            },
+            error: (err) => {
+              console.log('parse saving error');
+              console.log(err);
+              error(res);
+            }
+          });
+          // success(res)
+        },
+        error:(err)=> {
+          console.log('parse saving error');
+          console.log(err);
+          error(err);
+        }
+      });
+    }
+
+    inviteToActivity(activityId, userArray, success:(res)=>void, error:(res)=>void)
+    {
       console.log('inviting');
       var user = this.Parse.User.current();
       var activityQuery = new this.Parse.Query(this.ActivityClass);
@@ -103,45 +234,7 @@ export class ParseManager {
         }
       })
     }
-    signUp(data, success:()=>void, error:(res)=>void)
-    {
-      console.log('signUp');
-      console.log(data);
-      _.forEach(data, (value, key) => {
-        if(key == 'dateOfBirth') {
-          this.Parse.User.current().set(key, new Date(value));
-        } else {
-          this.Parse.User.current().set(key, value);
-        }
-      })
-      this.Parse.User.current().save(null, {
-        success: (res) => {
-          success();
-        },
-        error: (res) => {
-          console.log("error");
-          console.log(res);
-          error(res);
-        }
-      });
-      console.log('here');
-    }
-    userRegistered() {
-      if(!this.Parse.User.current()) return false;
-      if(!this.Parse.User.current().get('profilePicture')) return false;
-      if(!this.Parse.User.current().get('firstName')) return false;
-      if(!this.Parse.User.current().get('lastName')) return false;
-      if(!this.Parse.User.current().get('gender')) return false;
-      // if(!this.Parse.User.current().get('address')) return false;
-      if(!this.Parse.User.current().get('dateOfBirth')) return false;
-      if(!this.Parse.User.current().get('mobileNumber')) return false;
-      if(!this.Parse.User.current().get('email')) return false;
-      // if(!this.Parse.User.current().get('fbId')) isValid = false;
-      return true;
-    }
-    getCurrentUser(){
-      return this.Parse.User.current();
-    }
+
     joinActivity(activityId: any, error:(res)=>void, success:(res)=>void)
     {
       console.log('Joining');
@@ -156,7 +249,6 @@ export class ParseManager {
           attend.save(null, {
             success : (res) => {
               console.log('joined Event')
-
               var inviteQuery = new this.Parse.Query(this.InviteClass);  
               inviteQuery.equalTo("activityPtr", activityObj)
               inviteQuery.equalTo("inviteePtr", this.Parse.User.current())
@@ -196,7 +288,10 @@ export class ParseManager {
         }
       })
     }
-    getActivity(name: String, error:(res)=>void, success:(res)=>void)
+    /*
+     * Activity Fetching
+     */
+    getActivity(objectId: String, error:(res)=>void, success:(res)=>void)
     {
     }
     getActivitiesByLocation(distance:number, latitude: number, longitude:number, error:(res)=>void, success:(res)=>void)
@@ -227,29 +322,8 @@ export class ParseManager {
               success: (res) => { 
                 console.log(res);
                 for(var i = 0; i < res.length; i++){
-                  var activityObj  = res[i];
-                  var attendanceQuery = new this.Parse.Query(this.AttendanceClass); 
-                  attendanceQuery.equalTo('activityReference', activityObj);
-                  attendanceQuery.equalTo('userReference', this.getCurrentUser());
-                  attendanceQuery.find({
-                    success : function(response) {
-                      var respObj = activityObj.toJSON();
-                      if(response.length) {
-                        respObj.isAttending = true;
-                      } else {
-                        respObj.isAttending = false;
-                      }
-                      console.log(respObj);
-                      success([
-                        respObj
-                      ]);
-                    },
-                    error: function(err){
-                      error(err);
-                    }
-                  })
                   success([
-                    activityObj.toJSON()
+                    res[i].toJSON()
                   ]);
                 }
               },
@@ -260,31 +334,12 @@ export class ParseManager {
             });
           }
           success([]);
-          // var retArray = res.map(function(obj) {
-          //   return obj.toJSON();
-          // })
-          // success(retArray);
         },
         error:(err) => {
           console.log('parse saving error');
           error(err);
         }
       })
-      // activityQuery.near('startLocation', point);
-      // activityQuery.include('author');
-      // activityQuery.find({
-      //   success: (res) => { 
-      //     console.log(res);
-      //     var retArray = res.map(function(obj) {
-      //       return obj.toJSON();
-      //     })
-      //     success(retArray);
-      //   },
-      //   error:(err) =>{
-      //     console.log('parse saving error');
-      //     error(err);
-      //   }
-      // });
     }
     getActivitiesByTime(error:(res) => void, success:(res) =>  void)
     {
@@ -299,81 +354,6 @@ export class ParseManager {
         },
         error:(err) =>{
           console.log('parse saving error');
-          error(err);
-        }
-      });
-    }
-    createActivity(data: any, error:(res)=>void, success:(res)=>void)
-    {
-      var activity = new this.ActivityClass();
-      var locationObj = new this.LocationClass();
-      _.forEach(data, (value, key) => {
-        if(key == 'startLocation' || key == 'endLocation') {
-          // activity.set(key, new this.Parse.GeoPoint(value));
-          return;
-        } else if(key == 'startDate' || key == 'endDate') {
-          activity.set(key, new Date(value));
-        } else {
-          activity.set(key, value);
-        }
-      })
-       
-      Parse.Cloud.run('checkLocationExists', {
-        'latitude' : data.startLocation.latitude,
-        'longitude' : data.startLocation.longitude,
-      }).then(
-      (res) => {
-        locationObj.set('coordinates', new this.Parse.GeoPoint(data.startLocation));
-        if(!res.exists){
-          locationObj.save(null, {
-            success: (res) => { 
-              this.saveActivity(res, activity, error, success);
-            },
-            error: (err, response) => {
-              console.log('ERROR: LOCATION SAVE');
-              console.log(err);
-              console.log(response);
-            }
-
-          })
-        } else {
-          this.saveActivity(res.obj, activity, error, success);
-        }
-      },
-      (err) =>  {
-      })
-
-    }
-    saveActivity(locationObj, activityObj, error:(res)=>void, success:(res)=>void) {
-      var user = this.Parse.User.current();
-      activityObj.set('author', user);
-      activityObj.set('startLocation', locationObj);
-      activityObj.save(null, {
-        success: (res) => { 
-          console.log('activity saved to parse server');
-          var userRelation = user.relation('activities');
-          var activity = activityObj.toJSON();
-          userRelation.add(activityObj);
-          user.save(null, {
-            success: (res) => { 
-              console.log('user-activity relation saved');
-              console.log(res);
-              success({
-                message: activity['objectId'],
-                item: activity,
-              });
-            },
-            error: (err) => {
-              console.log('parse saving error');
-              console.log(err);
-              error(res);
-            }
-          });
-          // success(res)
-        },
-        error:(err)=> {
-          console.log('parse saving error');
-          console.log(err);
           error(err);
         }
       });
@@ -397,6 +377,159 @@ export class ParseManager {
 			});
 
 		}
+
+
+/***
+ * USER FUNCTIONS
+ ***/
+    getCurrentUser(){
+      return this.Parse.User.current();
+    }
+
+    fetchUsersByName(queryString, success:(res)=>void, error:(res)=>void) {
+      var user = this.Parse.User.current();
+      var userQuery = new this.Parse.Query(this.Parse.User)
+      userQuery.contains('fullname', queryString.toLowerCase());
+      userQuery.notEqualTo('objectId', user['id']);
+      userQuery.find({
+        success: (res) => {
+          console.log('FOUND USERS')
+          for(var i = 0; i < res.length; i++) {
+            // if(resObj.toJSON['objectId'] !== user['id']){
+              var resObj = res[i].toJSON();
+              success(resObj);
+            // }
+          }
+        }, 
+        error: (res) => {
+          console.log('ERROR FINDING USERS');
+          error(res);
+        } 
+      })
+    }
+    fetchByAttendance(activityId, success:(res)=>void, error:(res)=>void) {
+      var user = this.Parse.User.current();
+      var attendanceQuery = new this.Parse.Query(this.AttendanceClass)
+      attendanceQuery.equalTo('activityReference',  {
+        __type: "Pointer",
+        className: "Activity",
+        objectId: activityId
+      });
+      attendanceQuery.notEqualTo('userReference', user);
+      attendanceQuery.include('userReference');
+      attendanceQuery.find({
+        success: (res) => {
+          console.log('FOUND USERS')
+          for (var i = 0; i < res.length; i++) {
+            var resObj = res[i].get('userReference').toJSON();
+            resObj.attendance = [
+              activityId
+            ]
+            success(resObj);
+          }
+        }, 
+        error: (res) => {
+          console.log('ERROR FINDING USERS');
+          error(res);
+        } 
+      })
+    }
+    addFriends(userArray, success:(res)=>void, error:(res)=>void){
+      for(var i = 0; i < userArray.length; i++){
+      }
+    }
+    fetchFriends(success:(res)=>void, error:(res)=>void) {
+      var user = this.Parse.current();
+    }
+
+    /*
+     *  Registration
+     */
+    signUp(data, success:()=>void, error:(res)=>void)
+    {
+      console.log('signUp');
+      console.log(data);
+      _.forEach(data, (value, key) => {
+        if(key == 'dateOfBirth') {
+          this.Parse.User.current().set(key, new Date(value));
+        } else {
+          this.Parse.User.current().set(key, value);
+        }
+      })
+      this.Parse.User.current().save(null, {
+        success: (res) => {
+          success();
+        },
+        error: (res) => {
+          console.log("error");
+          console.log(res);
+          error(res);
+        }
+      });
+      console.log('here');
+    }
+    userRegistered() {
+      if(!this.Parse.User.current()) return false;
+      if(!this.Parse.User.current().get('profilePicture')) return false;
+      if(!this.Parse.User.current().get('firstName')) return false;
+      if(!this.Parse.User.current().get('lastName')) return false;
+      if(!this.Parse.User.current().get('gender')) return false;
+      // if(!this.Parse.User.current().get('address')) return false;
+      if(!this.Parse.User.current().get('dateOfBirth')) return false;
+      if(!this.Parse.User.current().get('mobileNumber')) return false;
+      if(!this.Parse.User.current().get('email')) return false;
+      // if(!this.Parse.User.current().get('fbId')) isValid = false;
+      return true;
+    }
+    /*
+     *  LOGIN
+     */
+    deviceLogin(authData, success:any, error:any) {
+      if(!this.Parse.User.current()) {
+      var user = new this.Parse.User();
+      } else {
+       var user = this.Parse.User.current();
+      }
+      this.Parse.FacebookUtils.logIn(authData, {
+        success: (response) => {
+          console.log('success');
+          console.log(response);
+          success(response);
+        },
+        error: (response) => {
+          console.log('error');
+          console.log(response);
+          error(response);
+        }
+      });
+    }
+    facebookLogin(perms, success:any, error:any) {
+      this.Parse.FacebookUtils.logIn(perms, {
+        success: (response) => {
+          console.log('success');
+          console.log(response);
+          success(response);
+        },
+        error: (response) => {
+          console.log('error');
+          console.log(response);
+          error(response);
+        }
+      });
+    }
+    //LOGOUT
+		logOut(success:any, error:any){
+      if(!!this.Parse.User.current()){
+        this.Parse.User.logOut();
+        success();
+      } else {
+        error("User not logged in");
+      }
+    }
+
+/**
+ * UTILITY
+ */
     fbInit() {
       this.Parse.FacebookUtils.init({
 
@@ -432,75 +565,6 @@ export class ParseManager {
 
         version    : 'v2.6',
       });
-    }
-    deviceLogin(authData, success:any, error:any) {
-      if(!this.Parse.User.current()) {
-      var user = new this.Parse.User();
-      } else {
-       var user = this.Parse.User.current();
-      }
-      this.Parse.FacebookUtils.logIn(authData, {
-        success: (response) => {
-          console.log('success');
-          console.log(response);
-          success(response);
-        },
-        error: (response) => {
-          console.log('error');
-          console.log(response);
-          error(response);
-        }
-      });
-    }
-    subscribeToInvites(success:any, error:any, createCb:any, deleteCb:any) {
-      var query = new Parse.Query(this.InviteClass);
-      query.equalTo('inviteePtr', this.Parse.User.current());
-      this.inviteSubscription = query.subscribe();
-      this.inviteSubscription.on('create', (invite) => {
-        console.log('add to invites');
-        console.log(invite);
-        createCb(invite.toJSON());
-      })
-      this.inviteSubscription.on('delete', (invite) => {
-        deleteCb(invite.toJSON()['objectId']);
-      })
-      this.inviteSubscription.on('error', (err) => {
-        error(err);
-      })
-      query.find({
-        success: (invites)=> {
-          console.log('add to invites');
-          for(var i = 0; i< invites.length; i++){
-            createCb(invites[i].toJSON());
-          }
-        },
-        error: (err) => {
-          error(err);
-        }
-      }) 
-      success();
-    }
-    facebookLogin(perms, success:any, error:any) {
-      this.Parse.FacebookUtils.logIn(perms, {
-        success: (response) => {
-          console.log('success');
-          console.log(response);
-          success(response);
-        },
-        error: (response) => {
-          console.log('error');
-          console.log(response);
-          error(response);
-        }
-      });
-    }
-		logOut(success:any, error:any){
-      if(!!this.Parse.User.current()){
-        this.Parse.User.logOut();
-        success();
-      } else {
-        error("User not logged in");
-      }
     }
 }
 

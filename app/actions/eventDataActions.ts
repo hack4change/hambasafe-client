@@ -265,6 +265,32 @@ const setInviteLoadingState = () => {
     type: actionTypes.EVENT_INVITE_INIT,
   };
 }
+const subscribeAttending = ():any => {
+  return dispatch => {
+    window.parseManager.subscribeToAttending(
+      (err) => {
+        dispatch(setSubscribeAttendingFail(err))
+      },
+      (res) => {
+        dispatch(setFetchSuccessState(res))
+      },
+      (res) => {
+        dispatch(setDeleteAttending(res))
+      }
+    );
+  }
+}
+const setCreateAttending = (res):any => {
+
+}
+const setDeleteAttending = (res):any => {
+}
+const setSubscribeAttendingSuccess = ():any => {
+
+}
+const setSubscribeAttendingFail = (err):any => {
+
+}
 
 export const eventDataActions = {
   fetchEvents,
@@ -275,4 +301,5 @@ export const eventDataActions = {
   setIdle,
   setVisible,
   inviteToActivity,
+  subscribeAttending,
 };

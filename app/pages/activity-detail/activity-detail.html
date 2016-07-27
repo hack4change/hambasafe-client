@@ -15,9 +15,11 @@
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
-<ion-content padding>
+<ion-content *ngIf="mustRate" padding>
+</ion-content>
+<ion-content *ngIf="!mustRate" padding>
   <ion-list>
-  <activity-item detailed="true" [activity]="activity$ | async"></activity-item>
+    <activity-item detailed="true" [activity]="activity$ | async"></activity-item>
   </ion-list>
   <div>
     <p>
@@ -32,8 +34,12 @@
 </ion-content>
 <ion-footer>
   <ion-toolbar class="main-bar">
-    <button (click)="joinActivity()" [disabled]="(activity$ | async)?.isAttending" full primary>
+    <button *ngIf="!mustRate" (click)="joinActivity()" [disabled]="(activity$ | async)?.isAttending" full primary>
       Join!
+    </button>
+    <button *ngIf="mustRate" (click)="rateActivity()" [disabled]="(activity$ | async)?.isAttending" full primary>
+      Rate!
     </button>
   </ion-toolbar>
 </ion-footer>
+

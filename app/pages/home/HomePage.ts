@@ -39,9 +39,13 @@ import {ActivityItemComponent} from '../../components/activity-item/activity-ite
 })
 export class HomePage {
   activities$                  : Observable<any>;
+  activitiesToRate$            : Observable<any>;
   location$                    : Observable<any>;
+
   activitiesSub$               : Subscription;
+  activitiesToRateSub$         : Subscription;
   locationSub$                 : Subscription;
+
   isFiltered: string = 'public';
   isEmpty: any = 'true';
   searchDistance: number = 2;
@@ -92,6 +96,9 @@ export class HomePage {
       console.log('activity update');
       return state.getIn(['eventData', 'items'])
       .filter((item)=> {
+        if((new Date(item.get('startDate').get('iso'))).getTime() <= Date.now()){
+          return false
+        };
         console.log(item);
         if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
           if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
@@ -106,6 +113,21 @@ export class HomePage {
         return false;
       })
       .toList()
+      .toJS()
+      .sort(function(a, b) {
+        return a.startDate.iso > b.startDate.iso;
+      })
+    });
+    this.activitiesToRate$ =  this.ngRedux.select((state) => {
+      console.log('activity update');
+      return state.getIn(['eventData', 'items'])
+      .filter((item) => {
+        if((new Date(item.get('startDate').get('iso'))).getTime() > Date.now()){
+          return false
+        };
+        return item.get('isAttending');
+      })
+      .toList()
       .toJS().sort(function(a, b) {
         return a.startDate.iso > b.startDate.iso;
       })
@@ -118,7 +140,10 @@ export class HomePage {
         this.isEmpty = (x.length == 0).toString();
       })
     });
-
+    this.activitiesToRateSub$ = this.activitiesToRate$.subscribe((activity)=> {
+      console.log(activity);
+    
+    });
   }
 
   isActive(filterBy) {
