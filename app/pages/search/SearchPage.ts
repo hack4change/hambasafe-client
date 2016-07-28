@@ -46,7 +46,7 @@ export class SearchPage {
   selectedSearch            : any;
   shownGroup                : any;
   searchDistance            : number  = 2;
-  activityType              : any     = '';
+  activityType              : string  = '';
   activeType                : string  = 'TIME';
   mapSearched               : boolean = false;
   coordinates               : any     = {};
@@ -93,15 +93,12 @@ export class SearchPage {
        return state.getIn(['eventData', 'items'])
        .filter((item) => {
          console.log(this.activityType);
-         if(this.activityType !== '' && this.activeType === 'TIME') {
-           console.log(this.activeType);
-           return item && item.get('eventType') ? this.activeType === item.get('eventType'): false;
-         }
-         //XXX: Time sorting;
+         // if(this.activityType !== '' && this.activeType === 'TIME') {
+         //   console.log(this.activeType);
+         //   return item && item.get('eventType') ? this.activeType === item.get('eventType'): false;
+         // }
          return true;
        })
-       // .filter((item) => {
-       // })
        .filter((item) => {
          if(this.activeType == 'SEARCH') {
            if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
@@ -116,7 +113,6 @@ export class SearchPage {
            }
            return false;
          }
-         //XXX: Time sorting;
          return distanceCalculator(
            this.coordinates.latitude,
            this.coordinates.longitude,

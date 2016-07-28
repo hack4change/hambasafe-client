@@ -284,11 +284,33 @@ const setCreateAttending = (res):any => {
 
 }
 const setDeleteAttending = (res):any => {
+  
 }
 const setSubscribeAttendingSuccess = ():any => {
 
 }
 const setSubscribeAttendingFail = (err):any => {
+
+}
+const rateActivity = (activityId : string, rating:number):any => {
+  return dispatch => {
+    window.parseManager.rateActivity(
+      activityId,
+      rating,
+      (res) => {
+        setRatingSuccess();
+      },
+      (err) => {
+        setRatingFailure(err);
+      }
+    )
+  }
+}
+
+const setRatingSuccess = () => {
+
+}
+const setRatingFailure = (err) => {
 
 }
 
@@ -302,4 +324,5 @@ export const eventDataActions = {
   setVisible,
   inviteToActivity,
   subscribeAttending,
+  rateActivity,
 };

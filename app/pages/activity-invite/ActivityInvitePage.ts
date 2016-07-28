@@ -9,6 +9,7 @@ import {
 import {AsyncPipe} from '@angular/common';
 import {NavController, NavParams} from 'ionic-angular';
 const _ = require('lodash');
+import {capitalize} from '../../utils/capitalize.ts';
 
 /**
  *  Redux
@@ -30,6 +31,9 @@ import {SearchPage} from '../search/SearchPage';
 
 @Component({
   templateUrl: 'build/pages/activity-invite/activity-invite.html',
+  pipes : [
+    capitalize
+  ]
 })
 export class ActivityInvitePage {
   activityId              : string = ''

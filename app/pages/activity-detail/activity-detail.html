@@ -16,6 +16,39 @@
   </ion-toolbar>
 </ion-header>
 <ion-content *ngIf="mustRate" padding>
+  <ion-list>
+    <ion-item>
+      <ion-row text-center>
+        <ion-col>
+        Activity Rating
+        </ion-col>
+      </ion-row>
+      <ion-row text-center>
+        <ion-col>
+        <button *ngFor="let i of maxStars"  [ngClass]="getActivityRating(i)" style="height: 50px" (click)="setActivityRating(i)"> 
+          <ion-icon style="font-size: 5rem;" name="star"></ion-icon>
+        </button>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+    <ion-item>
+      <ion-row text-center>
+        <ion-col>
+        Group Rating
+        </ion-col>
+      </ion-row>
+      <ion-row text-center>
+        <ion-col>
+        <button *ngFor="let i of maxStars"  [ngClass]="getGroupRating(i)" style="height: 50px" (click)="setGroupRating(i)"> 
+          <ion-icon style="font-size: 5rem;" name="star"></ion-icon>
+        </button>
+        </ion-col>
+      </ion-row>
+    </ion-item>
+  </ion-list>
+  <ion-list>
+    <user-item *ngFor="let user of users$ | async" [user]="user"></user-item>
+  </ion-list>
 </ion-content>
 <ion-content *ngIf="!mustRate" padding>
   <ion-list>
@@ -37,7 +70,7 @@
     <button *ngIf="!mustRate" (click)="joinActivity()" [disabled]="(activity$ | async)?.isAttending" full primary>
       Join!
     </button>
-    <button *ngIf="mustRate" (click)="rateActivity()" [disabled]="(activity$ | async)?.isAttending" full primary>
+    <button *ngIf="mustRate" (click)="rateActivity()" [disabled]="activityRating == 0" full primary>
       Rate!
     </button>
   </ion-toolbar>

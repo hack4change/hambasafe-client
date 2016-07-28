@@ -32,18 +32,37 @@ import {InvitesSentComponent} from '../../components/invites-sent/invites-sent.c
 })
 export class InvitesPage {
   constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) {}
-  userId$             : Observable<any>;
-  userIdSub$          : Subscription;
-  activities$         : Observable<any>;
-  activitiesSub$      : Subscription;
-  currentUserId       : string;
+  userId$                 : Observable<any>;
+  userIdSub$              : Subscription;
+  activityInvitesIn$     : Observable<any>;
+  activityInvitesInSub$  : Subscription;
+  activityInvitesOut$     : Observable<any>;
+  activityInvitesOutSub$  : Subscription;
+  currentUserId           : string;
   selectedActivities 	= [];
-	viewType					  : string= 'RECEIVED';
+	viewType					      : string= 'RECEIVED';
 
   ngOnInit() {
     console.log(this.viewType);
     this.userId$ = this.ngRedux.select((state) => state.getIn(['currentUser', 'objectId']))
-    this.activities$ = this.ngRedux.select((state) => {
+    this.activityInvitesIn$ = this.ngRedux.select((state) => {
+      console.log('here');
+      var invites = state.getIn(['invites', 'items']).toList().toJS();
+      var activities = state.getIn(['eventData', 'items']);
+      var invitedActivities = [];
+      for(var i = 0; i < invites.length; i++) {
+        var activityToPush = activities.get(invites[i].activityPtr['objectId'])
+        console.log(invites[i].activityPtr['objectId']);
+        console.log(activityToPush);
+        if(!!activityToPush){
+          invitedActivities.push(activityToPush.toJSON());
+        } else {
+          //TODO: Dispatch GET ACTIVITY
+        }
+      }
+      return invitedActivities;
+    })
+    this.activityInvitesOut$ = this.ngRedux.select((state) => {
       console.log('here');
       var invites = state.getIn(['invites', 'items']).toList().toJS();
       var activities = state.getIn(['eventData', 'items']);
@@ -61,7 +80,10 @@ export class InvitesPage {
       return invitedActivities;
     })
     this.userIdSub$ = this.userId$.subscribe((storeUserId)=>this.currentUserId=storeUserId);
-    this.activitiesSub$ = this.activities$.subscribe((invitedActivities) => {
+    this.activityInvitesInSub$ = this.activityInvitesIn$.subscribe((invitedActivities) => {
+      console.log(invitedActivities);
+    })
+    this.activityInvitesOutSub$ = this.activityInvitesOut$.subscribe((invitedActivities) => {
       console.log(invitedActivities);
     })
   }

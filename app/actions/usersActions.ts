@@ -253,6 +253,29 @@ const setLocation = (longitude: number, latitude: number):any => {
   };
 };
 
+const rateUser = (userId : string, activityId : string, rating:number):any => {
+  return dispatch => {
+    window.parseManager.rateUser(
+      userId,
+      activityId,
+      rating,
+      (res) => {
+        setRatingSuccess();
+      },
+      (err) => {
+        setRatingFailure(err);
+      }
+    )
+  }
+}
+
+const setRatingSuccess = () => {
+
+}
+
+const setRatingFailure = (err) => {
+
+}
 export const usersActions = {
   fetchByAttendance,
   addFriends,
@@ -261,4 +284,5 @@ export const usersActions = {
   fetchUser,
   getLocation,
   setLocation,
+  rateUser,
 };

@@ -2,6 +2,8 @@ import {
   forwardRef,
   Component,
   ViewChild,
+  ViewChildren,
+  QueryList,
   OnInit,
   Input,
   NgZone,
@@ -33,14 +35,17 @@ import {ActivityInvitePage} from '../activity-invite/ActivityInvitePage';
  *  Components
  */
 import {ActivityItemComponent} from '../../components/activity-item/activity-item.component.ts';
+import {UserItemComponent} from '../../components/user-item/user-item.component.ts';
 
 @Component({
   templateUrl: 'build/pages/activity-detail/activity-detail.html',
   directives : [
     forwardRef(() => ActivityItemComponent),
+    UserItemComponent,
   ],
 })
 export class ActivityDetailPage {
+  @ViewChildren(UserItemComponent) userItemChildren:QueryList<UserItemComponent>;
   activityId: string;
   isAuthor: boolean= false;
   activity$: Observable<any>;
@@ -55,7 +60,14 @@ export class ActivityDetailPage {
   mustRate:  boolean = false;
   description: string;
   users = [];
-  
+  maxStars : Object = [1, 2, 3, 4, 5];
+  activityRating: number = 0;
+  groupRating: number = 0;
+
+  ngAfterViewInit() {
+    // children are set
+   console.log();
+  }  
   constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) {
     console.log("ActivityDetailPage");
     this.activityId = this.params.data['activityId'];
@@ -64,8 +76,32 @@ export class ActivityDetailPage {
     this.mustRate = this.params.data['mustRate'];
   };
 
+  getActivityRating(index: number) {
+    return index <= this.activityRating ? {
+      'rated': 'true'
+    } : {
+    };
+  } 
+  getGroupRating(index: number) {
+    return index <= this.groupRating ? {
+      'rated': 'true'
+    } : {
+    };
+  } 
+  setGroupRating(index:number) {
+    this.userItemChildren.toArray().forEach((userItem)=> {
+      console.log('userItem');
+      if(!userItem.hasChanged) {
+        userItem.setRating(index, false);
+      }
+    })
+    this.groupRating = index;
+  }
+  setActivityRating(index:number) {
+    this.activityRating = index;
+  }
   ngOnInit() {
-    if(this.mustRate){
+    if(this.mustRate) {
       this.ngRedux.dispatch(usersActions.fetchByAttendance(this.activityId))
     }
     this.userId$ = this.ngRedux.select(state=>state.getIn(['currentUser', 'objectId']));
@@ -75,6 +111,7 @@ export class ActivityDetailPage {
       .filter((user) => {
         return user.get('attendance').includes(this.activityId);
       })
+      .toList()
       .toJSON()
     }) 
     this.activity$ = this.ngRedux.select(
@@ -99,7 +136,6 @@ export class ActivityDetailPage {
         })
       })
     })
-
     this.usersSub$ =  this.users$.subscribe((users) => {
       console.log('ATTENDED BY USERS')
       console.log(users)
@@ -127,8 +163,12 @@ export class ActivityDetailPage {
   }
 
   rateActivity() {
-    // this.ngRedux.dispatch(eventDataActions.rateActivity(this.activityId, rating));
-    // this.ngRedux.dispatch(usersActions.rateUser(this.userId, rating));
+    this.ngRedux.dispatch(eventDataActions.rateActivity(this.activityId, this.activityRating));
+    
+    this.userItemChildren.toArray().forEach((userItem)=> {
+      console.log('userItem');
+      this.ngRedux.dispatch(usersActions.rateUser(userItem.user.objectId, this.activityId, userItem.rating));
+    })
     this.goBack();
   }
   joinActivity() {

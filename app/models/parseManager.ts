@@ -46,8 +46,22 @@ export class ParseManager {
       this.attendingSubscription.on('create', (attendance) => {
         var attendedActivity = attendance.get('activityReference').toJSON();
         attendedActivity.isAttending = true;
-        if(!!attendance.get('ratingPtr')){
-          attendedActivity.hasRated = true;
+        if(!attendance.get('ratingPtr')){
+          attendedActivity.mustRate = true;
+        } else {
+          attendedActivity.mustRate = false;
+        }
+        createCb([
+          attendedActivity
+        ]);   
+      })
+      this.attendingSubscription.on('update', (attendance) => {
+        var attendedActivity = attendance.get('activityReference').toJSON();
+        attendedActivity.isAttending = true;
+        if(!attendance.get('ratingPtr')) {
+          attendedActivity.mustRate = true;
+        } else {
+          attendedActivity.mustRate = false;
         }
         createCb([
           attendedActivity
@@ -58,8 +72,12 @@ export class ParseManager {
           for(var i = 0; i < activitiesAttending.length; i++){
             var attendedActivity = activitiesAttending[i].get('activityReference').toJSON();
             attendedActivity.isAttending = true;
-            if(!!activitiesAttending[i].get('ratingPtr')){
-              attendedActivity.hasRated = true;
+        console.log(activitiesAttending[i].get('ratingPtr'));
+            console.log(activitiesAttending[i].toJSON());
+            if(!activitiesAttending[i].get('ratingPtr')){
+              attendedActivity.mustRate = true;
+            } else {
+              attendedActivity.mustRate = false;
             }
             createCb([
               attendedActivity
@@ -208,8 +226,8 @@ export class ParseManager {
                       invite.save(null, {
                         success : (inviteRes) => {
                           console.log('successful invite');
-                          console.log(inviteRes.toJSON());
-                          success(inviteRes);
+                          console.log(inviteRes);
+                          success(inviteRes.toJSON());
                         },
                         error   : (err, result) => {
                           error(err);
@@ -434,6 +452,133 @@ export class ParseManager {
         } 
       })
     }
+
+
+    /**
+     * Rating Functions
+     */
+    rateUser(userId:string, activityId:string, rating:number, success: (res) => void, error:(err) => void) {
+      var user = this.Parse.User.current();
+      var attendanceQuery = new this.Parse.Query(this.AttendanceClass);
+      var userAttendedPtr;
+      var userRatingObj;
+      attendanceQuery.equalTo('activityReference',{
+        __type: "Pointer",
+        className: "Activity",
+        objectId: activityId
+      });
+      attendanceQuery.equalTo('userReference', {
+        __type: "Pointer",
+        className: "_User",
+        objectId: userId
+      });
+      attendanceQuery.find().then((attendedResult) => {
+        console.log(attendedResult.length);
+        if(attendedResult.length) {
+          userAttendedPtr = attendedResult[0];
+          var ratingQuery = new this.Parse.Query(this.UserRatingClass);
+          ratingQuery.equalTo("userPtr", {
+            __type: "Pointer",
+            className: "_User",
+            objectId: userId
+          })
+          ratingQuery.equalTo("attendancePtr", userAttendedPtr)
+          ratingQuery.equalTo("raterPtr", user)
+          return ratingQuery.find()
+        }
+      }).then((ratings) => {
+        if(!ratings.length) {
+          console.log('No User rating exists');
+          var ratingToCreate = new this.UserRatingClass();
+          ratingToCreate.set("userPtr", {
+            __type: "Pointer",
+            className: "_User",
+            objectId: userId
+          })
+          ratingToCreate.set("attendancePtr",userAttendedPtr)
+          ratingToCreate.set("raterPtr", user)
+          ratingToCreate.set('rating', rating);
+          return ratingToCreate.save()
+        } else {
+          throw new Error('User Rating exists');
+        }
+      }).then((ratingObj) =>  {
+        console.log('Successfully saved usrRating');
+        if(!!ratingObj){
+          userRatingObj = ratingObj;
+          var userAttendanceQuery = new this.Parse.Query(this.Parse.Attendance);
+          userAttendanceQuery.equalTo('activityReference', activityId);
+          userAttendanceQuery.equalTo('userReference', user);
+          return userAttendanceQuery.find()
+        } else {
+          throw new Error("Couldn't Save Object");
+        }
+      }).then((userAttendance) => {
+        if(userAttendance.length){
+          userAttendance[0].set('ratingPtr', userRatingObj);
+          return userAttendance[0].save()
+        }
+      }).then((res)=>{
+        console.log('Successfully saved rating ptr in attendance')
+        success(res)
+      })
+    }
+
+    rateActivity(activityId:string, rating:number, success: (res) => void, error:(err) => void) {
+      var user = this.Parse.User.current();
+      var activityAttendedPtr;
+      var activityRatingObj;
+      var ratingQuery = new this.Parse.Query(this.ActivityRatingClass);
+      ratingQuery.equalTo("activityPtr", {
+        __type: "Pointer",
+        className: "Activity",
+        objectId: activityId
+      })
+      ratingQuery.equalTo("userPtr", user)
+      ratingQuery.find().then((ratingPtr) => {
+        if(!ratingPtr.length){
+          var ratingToCreate = new this.ActivityRatingClass();
+          ratingToCreate.set('activityPtr', {
+            __type: "Pointer",
+            className: "Activity",
+            objectId: activityId
+          });
+          ratingToCreate.set("userPtr", user)
+          ratingToCreate.set('rating', rating);
+          return ratingToCreate.save();
+        }
+      }).then((ratingObj) =>  {
+        console.log('Successfully saved usrRating');
+        if(!!ratingObj){
+          activityRatingObj = ratingObj;
+          var attendanceQuery = new this.Parse.Query(this.AttendanceClass);
+          attendanceQuery.equalTo('activityReference', {
+            __type: "Pointer",
+            className: "Activity",
+            objectId: activityId
+          });
+          attendanceQuery.equalTo('userReference', user);
+          return attendanceQuery.find()
+        } else {
+          throw new Error("Couldn't Save Object");
+        }
+      }).then((attendance) => {
+        if(attendance.length){
+          attendance[0].set('ratingPtr', activityRatingObj);
+          return attendance[0].save()
+        }
+      }).then((res)=>{
+        console.log('Successfully saved rating ptr in attendance')
+        success(res)
+      })  
+    }
+    
+
+
+
+    /**
+     * Friend Functions
+     */
     addFriends(userArray, success:(res)=>void, error:(res)=>void){
       for(var i = 0; i < userArray.length; i++){
       }
@@ -443,7 +588,7 @@ export class ParseManager {
     }
 
     /*
-     *  Registration
+     *  Registration Function
      */
     signUp(data, success:()=>void, error:(res)=>void)
     {

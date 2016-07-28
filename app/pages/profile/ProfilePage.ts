@@ -13,6 +13,7 @@ import {Observable, Subscription} from 'rxjs';
 import {CreatePage} from '../create/CreatePage';
 import {HomePage} from '../home/HomePage';
 import {SearchPage} from '../search/SearchPage';
+import {RegistrationPage} from '../registration/RegistrationPage';
 import {InvitesPage} from '../invites/InvitesPage';
 import {ActivityListPage} from '../activity-list/ActivityListPage';
 import {AddFriendPage} from '../add-friend/AddFriendPage';

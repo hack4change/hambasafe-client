@@ -23,10 +23,10 @@
 <ion-content primary>
   <div [ngSwitch]="viewType">
     <ion-list *ngSwitchCase="'RECEIVED'">
-      <activity-item *ngFor="let activity of activities$ | async" [activity]="activity"></activity-item>
+      <activity-item *ngFor="let activity of activityInvitesIn$ | async" [activity]="activity"></activity-item>
     </ion-list>
     <ion-list *ngSwitchCase="'SENT'">
-      <activity-item *ngFor="let activity of activities$ | async" [activity]="activity"></activity-item>
+      <activity-item *ngFor="let activity of activityInvitesOut$ | async" [activity]="activity"></activity-item>
     </ion-list>
   </div>
 </ion-content>

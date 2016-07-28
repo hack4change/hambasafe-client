@@ -125,7 +125,7 @@ export class HomePage {
         if((new Date(item.get('startDate').get('iso'))).getTime() > Date.now()){
           return false
         };
-        return item.get('isAttending');
+        return !!item.get('isAttending') && !!item.get('mustRate');
       })
       .toList()
       .toJS().sort(function(a, b) {
