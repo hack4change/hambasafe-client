@@ -1,0 +1,10 @@
+  <ion-item>
+    <ion-avatar item-left>
+      <img src="{{ user.profilePicture}}">
+    </ion-avatar>
+    {{user.fullname | capitalize }}
+    <button item-right *ngFor="let i of maxStars"  [ngClass]="getIsRated(i)" style="height: 50px" (click)="setRating(i, true)"> 
+      <ion-icon style="font-size: 5rem;" name="star"></ion-icon>
+    </button>
+  </ion-item>
+
