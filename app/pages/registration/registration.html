@@ -81,7 +81,11 @@
 </ion-content>
 <ion-footer>
   <ion-toolbar position="bottom">
-    <button [disabled]="!termsAccepted" full primary (click)="createUser()">
+    <button *ngIf="isEdit" [disabled]="!termsAccepted" full primary (click)="createUser()">
+      <!--  -->
+      Save
+    </button>
+    <button *ngIf="!isEdit" [disabled]="!termsAccepted" full primary (click)="createUser()">
       <!--  -->
       Next
     </button>

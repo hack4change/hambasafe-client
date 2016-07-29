@@ -106,7 +106,7 @@ export class ProfilePage {
     }
   }
   goEditProfile() {
-    this.nav.setRoot(RegistrationPage, {
+    this.nav.push(RegistrationPage, {
       'edit': true
     }) 
   }

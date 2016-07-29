@@ -89,6 +89,7 @@ export class RegistrationPage {
   isSilhouette      :   boolean;
   accessToken       :   string;
   isEdit            :   boolean = false;
+  isInit            :   boolean = true;
   genderSelectOpen  :   boolean = false;
   genderHeader      :   string  = "Gender";
 	gender					  : 	string;
@@ -118,9 +119,9 @@ export class RegistrationPage {
     this.currentUser$ = this.ngRedux.select((state)=> {
       return state.get('currentUser').toJS()
     })
-    this.currentUserSub$ = this.currentUser$.subscribe((userData)=> {
+    this.currentUserSub$ = this.currentUser$.subscribe((userData) => {
       this.zone.run(() => {
-        if(!!userData) {
+        if(!!userData && this.isInit) {
           this.firstName          = userData.firstName;
           this.lastName           = userData.lastName;
           if(!!userData.dateOfBirth) {
@@ -146,6 +147,7 @@ export class RegistrationPage {
           this.profilePicture     = userData.profilePicture;
           this.isSilhouette       = userData.isSilhouette;
           this.mobileNumber       = userData.mobileNumber;
+          this.isInit = false;
         }
         switch(userData.status){
           case 'CREATING':
@@ -166,16 +168,21 @@ export class RegistrationPage {
     })
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     console.log('Destroying Registration Subscription');
     if(!!this.currentUserSub$){ 
       this.currentUserSub$.unsubscribe();
     }
   }
 	
-	goBack() {
-		this.nav.pop();
-	}
+  goBack() {
+    console.log('GoBack')
+    if(this.nav.canGoBack()){
+      this.nav.pop();
+    } else {
+      // this.nav.setRoot(HomePage);
+    }
+  }
 
 	guid() {
 		function s4() {
@@ -188,15 +195,14 @@ export class RegistrationPage {
     var userData = {
       'profilePicture'  :   this.profilePicture,
 			'firstName'	      :   this.firstName,
-			'lastName'		    :   this.lastName,//this.lastName,
+			'lastName'		    :   this.lastName,
 			'gender'			    :   this.gender,
-      // 'address'         :   this.address,
-			'dateOfBirth'     :	  this.dateOfBirth,//this.dateOfBirth,
+			'dateOfBirth'     :	  this.dateOfBirth,
       'mobileNumber'    :   this.mobileNumber,
       'email'           :   this.email,
     }
     if(!this.profilePicture){
-        this.nav.present( Loading.create({
+      this.nav.present( Loading.create({
         content: 'Please add a profile picture on facebook',
         spinner: 'hide',
         dismissOnPageChange : true,
