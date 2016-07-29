@@ -4,9 +4,9 @@
 Hambasafe is a community created app, with a vision of bringing communities together and helping people keep people safe.
 
 Breaking it down into a few components:
-1. Create an event
-2. Join an event
-3. Rate an event, and the attendees
+1.  Create an event
+2.  Join an event
+3.  Rate an event, and the attendees
 
 The aim is to build up a network of trust, and enjoyment. Enabling people to be active and meet people with similar passions, in safety.
 
