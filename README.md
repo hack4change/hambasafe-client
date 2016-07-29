@@ -11,7 +11,7 @@ Breaking it down into a few components:
 
 The aim is to build up a network of trust, and enjoyment. Enabling people to be active and meet people with similar passions, in safety.
 
-Using to-be-defined algorithms, we can assign the likelihood of legitimacy of your portfolio/person as being a real human, and building it up over time via community feedback.
+Using a to-be-defined algorithms, we can assign the likelihood of legitimacy of your portfolio/person as being a real human, and building it up over time via community feedback.
 
 ## Installation
 
