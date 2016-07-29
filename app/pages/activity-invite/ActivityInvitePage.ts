@@ -9,7 +9,7 @@ import {
 import {AsyncPipe} from '@angular/common';
 import {NavController, NavParams} from 'ionic-angular';
 const _ = require('lodash');
-import {capitalize} from '../../utils/capitalize.ts';
+import {capitalize} from '../../utils/capitalize';
 
 /**
  *  Redux

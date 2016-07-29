@@ -102,6 +102,11 @@ export class ProfilePage {
       this.nav.setRoot(HomePage);
     }
   }
+  goEditProfile() {
+    this.nav.push(RegistrationPage, {
+      'edit': true
+    }) 
+  }
 
   getIsRated(starNumber: number) {
     if(starNumber <= this.userRating) {

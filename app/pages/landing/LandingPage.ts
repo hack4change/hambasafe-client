@@ -43,14 +43,18 @@ export class LandingPage
     this.authStatus$.subscribe((userStatus) => {
       switch(userStatus) {
         case 'AUTHENTICATED':
+          if(!!this.loadingPopup){
           this.loadingPopup.dismiss();
+        }
           this.nav.setRoot(ProfilePage);
           // this.nav.setRoot(HomePage);
         break;
         case 'ATTEMPTING':
           break;
         case 'ERROR':
+          if(!!this.loadingPopup){
           this.loadingPopup.dismiss();
+        }
           break;
         default:
           console.log('Unhandled authentication status');

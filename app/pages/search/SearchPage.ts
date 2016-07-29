@@ -59,8 +59,15 @@ export class SearchPage {
     this.filterConnector();
   }
   ngOnDestroy(){
-    this.locationSub$.unsubscribe();
-    // this.activitiesSub$.unsubscribe();
+    if(!!this.locationSub$){
+      this.locationSub$.unsubscribe();
+    }
+    if(!!this.activitiesSub$){
+      this.activitiesSub$.unsubscribe();
+    }
+    if(!!this.filterSub$){
+      this.filterSub$.unsubscribe();
+    }
   }
 
   locationConnector() {
@@ -91,6 +98,9 @@ export class SearchPage {
     this.activities$ = this.ngRedux.select((state) => {
       console.log('search update');
        return state.getIn(['eventData', 'items'])
+       .filter((item) => {
+         return (new Date(item.get('startDate').get('iso'))).getTime() > Date.now();
+       })
        .filter((item) => {
          console.log(this.activityType);
          // if(this.activityType !== '' && this.activeType === 'TIME') {

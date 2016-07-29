@@ -425,7 +425,7 @@ export class ParseManager {
         } 
       })
     }
-    fetchByAttendance(activityId, success:(res)=>void, error:(res)=>void) {
+    fetchByAttendance(activityId, success: (res)=>void, error: (res)=>void) {
       var user = this.Parse.User.current();
       var attendanceQuery = new this.Parse.Query(this.AttendanceClass)
       attendanceQuery.equalTo('activityReference',  {
@@ -437,7 +437,6 @@ export class ParseManager {
       attendanceQuery.include('userReference');
       attendanceQuery.find({
         success: (res) => {
-          console.log('FOUND USERS')
           for (var i = 0; i < res.length; i++) {
             var resObj = res[i].get('userReference').toJSON();
             resObj.attendance = [

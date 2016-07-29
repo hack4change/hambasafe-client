@@ -19,18 +19,19 @@
           <img src="{{ profilePicture }}">
         </ion-avatar>
         <!-- <input name="profile-picture" class="hidden-file-input" id="profile-picture" type="file" placeholder="Profile Picture" [(ngModel)]="uploadPicture" accept="image/*" required /> -->
-        <input type="hidden" role="uploadcare-uploader"
-                             data-crop="disabled"
-                             data-preview-step="true"
-                             data-images-only="true" />
+        <input type="hidden"
+               role="uploadcare-uploader"
+               data-crop="1:1"
+               data-preview-step="true"
+               data-images-only="true" />
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Firstname</ion-label>
-        <ion-input  type="text" [(ngModel)]="firstName" required></ion-input>
+        <ion-input  type="text" [(ngModel)]="firstName" value="{{ firstName | capitalize }}" required></ion-input>
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Surname</ion-label>
-        <ion-input type="text" [(ngModel)]="lastName" required></ion-input>
+        <ion-input type="text" [(ngModel)]="lastName" value="{{ lastName | capitalize }}" required></ion-input>
       </ion-item>
       <ion-item (click)="toggleGenderOpen()" [ngClass]="{clean: genderSelected(), active: isGenderOpen()}">
         {{ genderHeader }}
@@ -66,7 +67,7 @@
       <!--   <input name="identification" class="hidden-file-input" type="file" accept="image/*" id="identification" [(ngModel)]="identification" required /> -->
       <!--   <label for="identification">Scan my ID or Driver's License</label> -->
       <!-- </ion-item> -->
-      <ion-item class="borderless" (click)="openTerms()">
+      <ion-item *ngIf="!isEdit" class="borderless" (click)="openTerms()">
         <h2 *ngIf="!termsAccepted">
           Accept the Terms of Use
         </h2>

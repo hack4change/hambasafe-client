@@ -28,7 +28,7 @@
       <div>
         <ion-item  no-lines class="profile-row profile-name">
           {{(currentUser$| async)?.firstName}} {{(currentUser$| async)?.lastName}}
-          <ion-icon item-right class="pull-right" name="md-create"></ion-icon>
+          <ion-icon item-right class="pull-right" name="md-create" (click)="goEditProfile()"></ion-icon>
         </ion-item>
         <ion-item  no-lines class="profile-row">
           <ion-icon *ngFor="let i of maxStars" [ngClass]="getIsRated(i)" name="star"></ion-icon>

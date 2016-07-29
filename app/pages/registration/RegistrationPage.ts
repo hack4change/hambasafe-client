@@ -10,7 +10,7 @@ import {
   animate
 } from '@angular/core';
 import {AsyncPipe} from '@angular/common';
-import {Modal, NavController, ViewController, Loading} from 'ionic-angular';
+import {Modal, NavController, NavParams, ViewController, Loading} from 'ionic-angular';
 const _ = require('lodash');
 
 /**
@@ -31,6 +31,11 @@ import {usersActions} from '../../actions/usersActions';
 import {TermsPage} from '../terms/TermsPage';
 
 /*
+ * Pipes
+ */
+import {capitalize} from '../../utils/capitalize';
+
+/*
  * Components
  */
 import {MapComponent} from '../../components/map/map.component.ts';
@@ -40,6 +45,9 @@ import {MapComponent} from '../../components/map/map.component.ts';
   directives : [
     MapComponent,
   ],
+  pipes : [
+    capitalize 
+  ],
   animations: [
     trigger('genderCollapseState', [
       state('inactive', style({
@@ -47,7 +55,7 @@ import {MapComponent} from '../../components/map/map.component.ts';
          height: '0',
         // transform: 'scale(0)'
       })),
-      state('active',   style({
+      state('active', style({
         // backgroundColor: '#cfd8dc',
         // transform: 'scale(1)'
         height: '*',
@@ -77,7 +85,7 @@ export class RegistrationPage {
   uploadPicture     :   string;
   isSilhouette      :   boolean;
   accessToken       :   string;
-
+  isEdit            :   boolean = false;
   genderSelectOpen  :   boolean = false;
   genderHeader      :   string  = "Gender";
 	gender					  : 	string;
@@ -96,9 +104,13 @@ export class RegistrationPage {
     },
   ];
 
-  constructor(private nav: NavController, private viewCtrl: ViewController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
+  constructor(private nav: NavController, private params: NavParams, private viewCtrl: ViewController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
 
   ngOnInit() {
+    this.isEdit = this.params.data.edit? this.params.data.edit : false;
+    if(!!this.isEdit) {
+      this.termsAccepted = true;
+    }
     // this.ngRedux.dispatch(authActions.authUser());
     this.currentUser$ = this.ngRedux.select((state)=> {
       return state.get('currentUser').toJS()
@@ -109,7 +121,12 @@ export class RegistrationPage {
           this.firstName          = userData.firstName;
           this.lastName           = userData.lastName;
           if(!!userData.dateOfBirth) {
-            this.dateOfBirth         = (new Date(userData.dateOfBirth)).toISOString();
+            console.log(userData.dateOfBirth);
+            if(typeof(userData.dateOfBirth) === 'object'){
+              this.dateOfBirth         = (new Date(userData.dateOfBirth.iso)).toISOString();
+            } else {
+              this.dateOfBirth         = (new Date(userData.dateOfBirth)).toISOString();
+            }
           }
           this.email              = userData.email;
           this.gender             = userData.gender;
@@ -123,8 +140,9 @@ export class RegistrationPage {
               this.genderOptions[this.genderOptions.length -1 ].selected = true;
             }
           }
-          this.profilePicture     = userData.picture;
+          this.profilePicture     = userData.profilePicture;
           this.isSilhouette       = userData.isSilhouette;
+          this.mobileNumber       = userData.mobileNumber;
         }
         switch(userData.status){
           case 'CREATING':
