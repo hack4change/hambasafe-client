@@ -1,5 +1,4 @@
 #Hambasafe... The Client
------------------------
 
 ## Better together.
 Hambasafe is a community created app, with a vision of bringing communities together and helping people keep people safe.
