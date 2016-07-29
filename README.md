@@ -13,7 +13,7 @@ The aim is to build up a network of trust, and enjoyment. Enabling people to be 
 
 Using to-be-defined algorithms, we can assign the likelihood of legitimacy of your portfolio/person as being a real human, and building it up over time via community feedback.
 
-## The app
+## Installation
 
 Running the following commands in order, you should be able to view the current state of the app in your browser.
 
@@ -23,6 +23,8 @@ sudo npm install -g cordova ionic@beta
 npm install
 ionic serve -l
 ```
+
+In time, it will be available on the App & Play Stores
 
 ## News to use or lose as you choose:
 * The app logic is contained in `./app`
