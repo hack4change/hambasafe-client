@@ -24,8 +24,7 @@ npm install
 ionic serve -l
 ```
 
-## The BreakDown
-News to use or lose as you choose:
+## News to use or lose as you choose:
 * The app logic is contained in `./app`
 * Parse is used as a server backend, with LiveQueries enabled on the Invite and Attendance Classes.
 * The temporary hosting is at mainstream.ninja, during development.
