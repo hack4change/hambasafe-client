@@ -21,10 +21,13 @@ import {capitalize} from '../../utils/capitalize'
   ]
 })
 export class UserItemComponent {
+
   @Input() user;
+
   rating  : number = 0;
   hasChanged : boolean = false;
   maxStars : Object = [1, 2, 3, 4, 5];
+
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
   ngOnInit() {
     

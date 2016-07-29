@@ -48,14 +48,18 @@ export class ActivityDetailPage {
   @ViewChildren(UserItemComponent) userItemChildren:QueryList<UserItemComponent>;
   activityId: string;
   isAuthor: boolean= false;
-  activity$: Observable<any>;
-  activitySub$: Subscription;
-  eventStatus$ : Observable<any>;
-  eventStatusSub$ : Subscription;
-  users$: Observable<any>;
-  usersSub$: Subscription;
-  userId$: Observable<any>;
-  userIdSub$:   Subscription;
+
+  activity$     : Observable<any>;
+  eventStatus$  : Observable<any>;
+  users$        : Observable<any>;
+  userId$       : Observable<any>;
+
+
+  eventStatusSub$   : Subscription;
+  activitySub$      : Subscription;
+  usersSub$         : Subscription;
+  userIdSub$        : Subscription;
+
   currentUserId: number;
   mustRate:  boolean = false;
   description: string;
@@ -64,10 +68,6 @@ export class ActivityDetailPage {
   activityRating: number = 0;
   groupRating: number = 0;
 
-  ngAfterViewInit() {
-    // children are set
-   console.log();
-  }  
   constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) {
     console.log("ActivityDetailPage");
     this.activityId = this.params.data['activityId'];
@@ -76,30 +76,6 @@ export class ActivityDetailPage {
     this.mustRate = this.params.data['mustRate'];
   };
 
-  getActivityRating(index: number) {
-    return index <= this.activityRating ? {
-      'rated': 'true'
-    } : {
-    };
-  } 
-  getGroupRating(index: number) {
-    return index <= this.groupRating ? {
-      'rated': 'true'
-    } : {
-    };
-  } 
-  setGroupRating(index:number) {
-    this.userItemChildren.toArray().forEach((userItem)=> {
-      console.log('userItem');
-      if(!userItem.hasChanged) {
-        userItem.setRating(index, false);
-      }
-    })
-    this.groupRating = index;
-  }
-  setActivityRating(index:number) {
-    this.activityRating = index;
-  }
   ngOnInit() {
     if(this.mustRate) {
       this.ngRedux.dispatch(usersActions.fetchByAttendance(this.activityId))
@@ -143,16 +119,51 @@ export class ActivityDetailPage {
   }
 
   ngOnDestroy() {
-    this.userIdSub$.unsubscribe();
-    this.activitySub$.unsubscribe();
+    if(!!this.userIdSub$) {
+      this.userIdSub$.unsubscribe();
+    }
+    if(!!this.usersSub$) {
+      this.usersSub$.unsubscribe();
+    }
+    if(!!this.activitySub$) {
+      this.activitySub$.unsubscribe();
+    }
+  }
+
+  getActivityRating(index: number) {
+    return index <= this.activityRating ? {
+      'rated': 'true'
+    } : {
+    };
+  } 
+
+  getGroupRating(index: number) {
+    return index <= this.groupRating ? {
+      'rated': 'true'
+    } : {
+    };
+  } 
+  setGroupRating(index:number) {
+    this.userItemChildren.toArray().forEach((userItem)=> {
+      console.log('userItem');
+      if(!userItem.hasChanged) {
+        userItem.setRating(index, false);
+      }
+    })
+    this.groupRating = index;
+  }
+  setActivityRating(index:number) {
+    this.activityRating = index;
   }
 
 	goHome() {
     this.nav.setRoot(HomePage);
 	}
+
 	goSearch() {
     this.nav.setRoot(SearchPage);
 	}
+
   goBack() {
     console.log('GoBack')
     if(this.nav.canGoBack()){

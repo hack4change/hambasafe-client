@@ -36,12 +36,15 @@ import {ActivityItemComponent} from '../../components/activity-item/activity-ite
 })
 export class SearchPage {
   @ViewChild('myMap') mapChild;
+
   filter$                   : Observable<any>;
   activities$               : Observable<any>;
   location$                 : Observable<any>;
+
   filterSub$                : Subscription;
   activitiesSub$            : Subscription;
   locationSub$              : Subscription;
+
   typeSelected              : any;
   selectedSearch            : any;
   shownGroup                : any;

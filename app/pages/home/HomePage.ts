@@ -52,7 +52,7 @@ export class HomePage {
   greatestDistance: number = 2;
   coordinates: any;
 
-  constructor(private nav: NavController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
+  constructor(private nav: NavController, private ngRedux: NgRedux<any>, private zone: NgZone) {}
    
   ngOnInit() {
     this.ngRedux.dispatch(usersActions.getLocation());
@@ -62,8 +62,15 @@ export class HomePage {
 
   ngOnDestroy() {
     console.log('Destroying Subscriptions')
-    this.locationSub$.unsubscribe();
-    this.activitiesSub$.unsubscribe();
+    if(!!this.locationSub$) {
+      this.locationSub$.unsubscribe();
+    }
+    if(!!this.activitiesSub$){
+      this.activitiesSub$.unsubscribe();
+    }
+    if(!!this.activitiesToRateSub$) {
+      this.activitiesToRateSub$.unsubscribe();
+    }
   }
 
   locationConnector() {

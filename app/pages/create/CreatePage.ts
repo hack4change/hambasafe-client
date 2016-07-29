@@ -36,29 +36,32 @@ export class CreatePage {
   @ViewChild('startMap') startMap;
   @ViewChild('endMap') endMap;
 
-  created$: Observable<any>;
+  created$  : Observable<any>;
+  userId$   : Observable<any>;
+
   createdSub$:  Subscription;
-  userId$: Observable<any>;
   userIdSub$:   Subscription;
+
   activeType: string= '';
   currentUserId: number;
   createModal = null; 
-  private isPublic : boolean = true;
-  private eventType;
-  private name;
-  private description
-  private distance
-  private startTime;
-  private startDate;
-  private startLocation;
-  private endTime;
-  private endDate;
-  private endLocation;
-  private intensity;
-  private waitMins;
-  private geoCoder: any;
-  private minDate: string;
-  private maxDate: string;
+  isPublic : boolean = true;
+  eventType;
+  name;
+  description
+  distance
+  startTime;
+  startDate;
+  startLocation;
+  endTime;
+  endDate;
+  endLocation;
+  intensity;
+  waitMins;
+  geoCoder: any;
+  minDate: string;
+  maxDate: string;
+
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) {}
 
   ngOnInit() {
@@ -109,6 +112,15 @@ export class CreatePage {
       this.currentUserId = userId;
     })
     console.log(this.created$);
+  }
+
+  ngOnDestroy(){
+    if(!!this.createdSub$){
+      this.createdSub$.unsubscribe();
+    }
+    if(!!this.userIdSub$){
+      this.userIdSub$.unsubscribe();
+    }
   }
     
 

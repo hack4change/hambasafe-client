@@ -33,13 +33,18 @@ import {SearchPage} from '../search/SearchPage';
 })
 export class AddFriendPage {
   currentQuery = '';
+
   visibleUsers$     : Observable<any>;
-  visibleUsersSub$  : Subscription;
   userId$           : Observable<any>;
+
+  visibleUsersSub$  : Subscription;
   userIdSub$        : Subscription;
+
   currentUserId     : string;
   selectedUsers = {};
+
   constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) {}
+
   ngOnInit() {
     this.visibleUsers$ = this.ngRedux.select(
       (state) => {
@@ -55,6 +60,14 @@ export class AddFriendPage {
       this.visibleUsersSub$ = this.visibleUsers$.subscribe(() => {
       
       })
+  }
+  ngOnDestroy(){
+    if(!!this.visibleUsersSub$){
+      this.visibleUsersSub$.unsubscribe();
+    }
+    if(!!this.userIdSub$) {
+      this.userIdSub$.unsubscribe();
+    }
   }
   /**
    *  NAVIGATION

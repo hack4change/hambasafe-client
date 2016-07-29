@@ -80,13 +80,14 @@ export class MyApp {
     this.authStatus$.subscribe( userStatus => {
       switch(userStatus){
         case 'AUTHENTICATED':
-        this.setMenuAuthenticated();
+          if(this.menu.isEnabled('anonymous-menu')) {
+          this.setMenuAuthenticated();
+        }
         break;
         case 'CREATE_SUCCESS':
-          this.nav.setRoot(HomePage);
-        setTimeout(()=> {
           this.ngRedux.dispatch(authActions.setAuthenticated());
-        }, 0)
+          this.nav.setRoot(HomePage);
+          break;
         case 'NEW_USER':
           this.nav.setRoot(RegistrationPage);
         break;
@@ -95,9 +96,7 @@ export class MyApp {
           this.setMenuAnonymous();
         }
       }
-      if(this.oldStatus === 'AUTHENTICATED' && userStatus !== 'AUTHENTICATED') {
-        this.nav.push(LandingPage);
-      } else if (this.oldStatus !== 'AUTHENTICATED' && userStatus === 'AUTHENTICATED'){
+      if (this.oldStatus !== 'AUTHENTICATED' && userStatus === 'AUTHENTICATED'){
           this.ngRedux.dispatch(inviteActions.subscribe());
           this.ngRedux.dispatch(eventDataActions.subscribeAttending());
       }

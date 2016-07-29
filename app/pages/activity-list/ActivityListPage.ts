@@ -30,13 +30,16 @@ import {ActivityItemComponent} from '../../components/activity-item/activity-ite
   ]
 })
 export class ActivityListPage {
+
   activities$     : Observable<any>;
+
   activitiesSub$  : Subscription;
+
   listHeader      : string;
   coordinates     : Object = {};
   shouldInclude   : any;
 
-  constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) { }
+  constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) {}
 
   ngOnInit() {
     this.listHeader     = this.params.data['header'];
@@ -68,6 +71,11 @@ export class ActivityListPage {
 
   }
 	
+  ngOnDestroy(){
+    if(!!this.activitiesSub$){
+      this.activitiesSub$.unsubscribe();
+    }
+  }
 	goHome() {
     this.nav.setRoot(HomePage);
 	}

@@ -23,10 +23,13 @@ import {AddFriendPage} from '../add-friend/AddFriendPage';
 })
 export class ProfilePage {
   currentUser$: Observable<any>;
+  userActivities$ : Observable<any>;
+
+  currentUserSub$     : Subscription;
+  userActivitiesSub$  : Subscription;
+
   maxStars : Object = [1, 2, 3, 4, 5];
   userRating : number = 3;
-  userActivities$ : Observable<any>;
-  userActivitiesSub$ : Subscription;
   createdCount: number = 0;
   joinedCount: number = 0;
   upcomingCount: number = 0;
@@ -103,7 +106,7 @@ export class ProfilePage {
     }
   }
   goEditProfile() {
-    this.nav.push(RegistrationPage, {
+    this.nav.setRoot(RegistrationPage, {
       'edit': true
     }) 
   }

@@ -31,16 +31,20 @@ import {InvitesSentComponent} from '../../components/invites-sent/invites-sent.c
   ]
 })
 export class InvitesPage {
-  constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) {}
+
   userId$                 : Observable<any>;
-  userIdSub$              : Subscription;
-  activityInvitesIn$     : Observable<any>;
-  activityInvitesInSub$  : Subscription;
+  activityInvitesIn$      : Observable<any>;
   activityInvitesOut$     : Observable<any>;
+
+  userIdSub$              : Subscription;
+  activityInvitesInSub$   : Subscription;
   activityInvitesOutSub$  : Subscription;
+
   currentUserId           : string;
   selectedActivities 	= [];
 	viewType					      : string= 'RECEIVED';
+
+  constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) {}
 
   ngOnInit() {
     console.log(this.viewType);
@@ -86,7 +90,20 @@ export class InvitesPage {
     this.activityInvitesOutSub$ = this.activityInvitesOut$.subscribe((invitedActivities) => {
       console.log(invitedActivities);
     })
+  } 
+
+  ngOnDestroy() {
+    if(!!this.userIdSub$){
+      this.userIdSub$.unsubscribe();
+    }
+    if(!!this.activityInvitesInSub$){
+      this.activityInvitesInSub$.unsubscribe();
+    }
+    if(!!this.activityInvitesOutSub$){
+      this.activityInvitesOutSub$.unsubscribe();
+    }
   }
+
   toggleSelect(userItem){
     console.log('toggle Select')
     if(!!this.selectedActivities[userItem['objectId']]){

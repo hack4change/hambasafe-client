@@ -38,10 +38,13 @@ import {SearchPage} from '../search/SearchPage';
 export class ActivityInvitePage {
   activityId              : string = ''
   currentQuery            : string = '';
+
   visibleUsers$           : Observable<any>;
-  visibleUsersSub$        : Subscription;
   userId$                 : Observable<any>;
-  // userIdSub$              : Subscripton;
+
+  visibleUsersSub$        : Subscription;
+  userIdSub$              : Subscription;
+
   // invitationStatus$     : Observable<any>;
   // invitationStatusSub$  : Subscription;
   currentUserId           : string;
@@ -74,6 +77,16 @@ export class ActivityInvitePage {
     //   // }
     // )
   }
+
+  ngOnDestroy() {
+    if(!!this.visibleUsersSub$) {
+      this.visibleUsersSub$.unsubscribe();
+    }
+    if(!!this.userIdSub$) {
+      this.userIdSub$.unsubscribe();
+    }
+  }
+
   /**
    *  NAVIGATION
    **/
@@ -91,9 +104,10 @@ export class ActivityInvitePage {
       this.nav.setRoot(HomePage);
     }
   }
+
   /**
-   * 
-   a*/
+   * View Actions
+   */
   inviteToActivity(){
     if(this.activityId && Object.keys(this.selectedUsers).length){
       this.ngRedux.dispatch(eventDataActions.inviteToActivity(this.activityId, Object.keys(this.selectedUsers)));

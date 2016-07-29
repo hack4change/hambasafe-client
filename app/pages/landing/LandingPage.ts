@@ -4,8 +4,8 @@ import {Platform, NavController, Loading} from 'ionic-angular';
 /**
  *  Redux
  */
-import {Observable} from 'rxjs';
 import {NgRedux} from 'ng2-redux';
+import {Observable, Subscription} from 'rxjs';
 
 /*
  *  Actions
@@ -29,24 +29,24 @@ import {ProfilePage} from '../profile/ProfilePage';
   templateUrl: 'build/pages/landing/landing.html'
   
 })
-export class LandingPage 
-{
+export class LandingPage {
   authStatus$: Observable<any>;
-  created$: Observable<any>;
+
+  authStatusSub$  : Subscription;
+
   loadingPopup: any;
 
-  constructor(private platform: Platform, private nav: NavController, private ngRedux: NgRedux<any>) {
-  };
+  constructor(private platform: Platform, private nav: NavController, private ngRedux: NgRedux<any>) {};
 
-  ngOnInit(){
+  ngOnInit() {
     this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
-    this.authStatus$.subscribe((userStatus) => {
+    this.authStatusSub$ = this.authStatus$.subscribe((userStatus) => {
       switch(userStatus) {
         case 'AUTHENTICATED':
           if(!!this.loadingPopup){
           this.loadingPopup.dismiss();
         }
-          this.nav.setRoot(ProfilePage);
+        this.nav.setRoot(ProfilePage);
           // this.nav.setRoot(HomePage);
         break;
         case 'ATTEMPTING':
@@ -60,6 +60,11 @@ export class LandingPage
           console.log('Unhandled authentication status');
       }
     })
+  }
+  ngOnDestroy() {
+    if(!!this.authStatusSub$) {
+      this.authStatusSub$.unsubscribe();
+    }
   }
 
   fbLogin() {

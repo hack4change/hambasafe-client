@@ -17,7 +17,7 @@ const _ = require('lodash');
  *  Redux
  */
 import {NgRedux} from 'ng2-redux';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 
 /**
  *  Actions
@@ -68,8 +68,11 @@ import {MapComponent} from '../../components/map/map.component.ts';
 export class RegistrationPage {
   // @ViewChild('myMap') mapChild;
 
-  createModal       :   any;
   currentUser$      :   Observable<any>;
+
+  currentUserSub$   :   Subscription;
+
+  createModal       :   any;
   validForm         :   boolean;
   aniState          :   string  = 'inactive';
   profilePicture    :   string;
@@ -115,7 +118,7 @@ export class RegistrationPage {
     this.currentUser$ = this.ngRedux.select((state)=> {
       return state.get('currentUser').toJS()
     })
-    this.currentUser$.subscribe((userData)=> {
+    this.currentUserSub$ = this.currentUser$.subscribe((userData)=> {
       this.zone.run(() => {
         if(!!userData) {
           this.firstName          = userData.firstName;
@@ -156,12 +159,18 @@ export class RegistrationPage {
             // dismissOnPageChange : true,
             // duration: 2000,
           // })
-
             break;
         }
       })
 
     })
+  }
+
+  ngOnDestroy(){
+    console.log('Destroying Registration Subscription');
+    if(!!this.currentUserSub$){ 
+      this.currentUserSub$.unsubscribe();
+    }
   }
 	
 	goBack() {
@@ -294,7 +303,7 @@ export class RegistrationPage {
   }
   getProfilePicture(){
     uploadcare.openDialog(null, {
-      // crop: "disabled",
+      crop: "1:1",
       previewStep: true,
       imagesOnly: true
     }).done((file)=>{
