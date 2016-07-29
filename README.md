@@ -58,8 +58,8 @@ In time, it will be available on the App & Play Stores
 
 ## External API's used
 * Google Maps. *Looking to remove/reduce*
-* [UploadCare](uploadcare.com)
+* [UploadCare](https://www.uploadcare.com)
   + Great widget and cdn for handling uploads and distribution of profile pictures.
-* [What3Words](what3words.com)
+* [What3Words](https://www.what3words.com)
   + A wonderbar idea to break down the world into ~57 trillion 3x3 meter blocks. This grants us the ability to reduce server google maps calls for a place data(reverse geocoding) and an easy referencing of events in a location.
   - Really hoping to incorporate this more, unfortunately there's not much of a use case as it stands for forward geocoding.
