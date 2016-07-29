@@ -54,6 +54,7 @@ In time, it will be available on the App & Play Stores
 * Invite Users(based on their name).
 * Accept Invites.
 * Edit Your profile.
+* Rate an event & the attendees
 
 
 ## External API's used
