@@ -1,8 +1,7 @@
 Hambasafe... The Client
 -----------------------
------------------------
 
-# Better together.
+## Better together.
 Hambasafe is a community created app, with a vision of bringing communities together and helping people keep people safe.
 
 Breaking it down into a few components:
@@ -14,7 +13,7 @@ The aim is to build up a network of trust, and enjoyment. Enabling people to be 
 
 Using to-be-defined algorithms, we can assign the likelihood of legitimacy of your portfolio/person as being a real human, and building it up over time via community feedback.
 
-#The app
+## The app
 
 Running the following commands in order, you should be able to view the current state of the app in your browser.
 
@@ -25,7 +24,7 @@ npm install
 ionic serve -l
 ```
 
-#The BreakDown
+## The BreakDown
 News to use or lose as you choose:
 * The app logic is contained in `./app`
 * Parse is used as a server backend, with LiveQueries enabled on the Invite and Attendance Classes.
@@ -34,8 +33,8 @@ News to use or lose as you choose:
 * Redux is used for the persistance of state between views. As well as enabling limited offline capabilities.
 
 
-#The State of the App Address.
-## One can (In no particular order)...
+## The State of the App Address.
+### One can (In no particular order)...
 * Open the app.
 * View The splash page.
 * Navigate to login.
