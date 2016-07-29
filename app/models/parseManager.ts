@@ -31,6 +31,7 @@ export class ParseManager {
     this.Parse.Object.registerSubclass('Location', this.LocationClass);
     this.fbInit();
   }
+  
   /**
    *  SUBSCRIPTIONS
    *

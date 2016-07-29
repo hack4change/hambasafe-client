@@ -96,7 +96,9 @@ export class MyApp {
           this.setMenuAnonymous();
         }
       }
-      if (this.oldStatus !== 'AUTHENTICATED' && userStatus === 'AUTHENTICATED'){
+      if(this.oldStatus !== 'AUTHENTICATED' && userStatus === 'ANONYMOUS') {
+        this.nav.setRoot(LandingPage);
+      } else if (this.oldStatus !== 'AUTHENTICATED' && userStatus === 'AUTHENTICATED'){
           this.ngRedux.dispatch(inviteActions.subscribe());
           this.ngRedux.dispatch(eventDataActions.subscribeAttending());
       }
