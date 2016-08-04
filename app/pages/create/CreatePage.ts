@@ -173,7 +173,7 @@ export class CreatePage {
         break;
         case 'CREATING': 
           this.createModal = Loading.create({
-          content: !!this.isChange ? : "Saving...",
+          content: !!this.isChange ?  "Saving...": "Creating...",
           dismissOnPageChange : true,
         })
 
