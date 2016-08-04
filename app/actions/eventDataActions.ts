@@ -125,6 +125,25 @@ const createActivity = (data):any => {
     // Do request.
   };
 };
+
+/**
+ * UPDATE
+ */
+const updateActivity = (activityId, data):any => {
+  return dispatch => {
+    console.log('event Create')
+    dispatch(setCreateLoadingState());
+    window.parseManager.updateActivity(
+      activityId,
+      data,
+      (error) => dispatch(setCreateErrorState(error)),
+      (response) => dispatch(setCreateSuccessState(response))
+    );
+    // Set loading state.
+
+    // Do request.
+  };
+};
 const setCreateSuccessState = (response) => {
   return {
     data: fromJS({
@@ -319,6 +338,7 @@ export const eventDataActions = {
   fetchEventsBySuburb,
   fetchEventsByCoordinates,
   createActivity,
+  updateActivity,
   joinActivity,
   setIdle,
   setVisible,

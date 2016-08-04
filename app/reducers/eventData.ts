@@ -23,11 +23,7 @@ export default function eventData(state:any, action:any = {}) {
       return state
     .set('status', action.data.get('status'))
     .set('message', action.data.get('message'))
-    .set(
-      'items', 
-      state.get('items').merge(action.data.get('items'))
-    );
-
+    .set('items', state.get('items').mergeDeep(action.data.get('items')));
     case actionTypes.EVENT_CREATE_FAIL:
       return state.set('status', action.data.get('status'));
 

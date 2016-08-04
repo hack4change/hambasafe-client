@@ -109,6 +109,12 @@ export class HomePage {
         console.log(item);
         if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
           if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
+console.log(distanceCalculator(
+              this.coordinates.latitude,
+              this.coordinates.longitude,
+              item.get('startLocation').get('coordinates').get('latitude'),
+              item.get('startLocation').get('coordinates').get('longitude')
+            ));
             return distanceCalculator(
               this.coordinates.latitude,
               this.coordinates.longitude,

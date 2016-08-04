@@ -2,7 +2,8 @@ declare var google;
 declare var uploadcare;
 
 import {Component, ViewChild, OnInit} from '@angular/core';
-import {NavController, Loading} from 'ionic-angular';
+import {NavController, NavParams, Loading} from 'ionic-angular';
+import {FormBuilder, ControlGroup, Validators} from '@angular/common';
 
 /**
  *  Redux
@@ -14,6 +15,13 @@ import {Observable, Subscription} from 'rxjs';
  * Actions
  */
 import {eventDataActions} from '../../actions/eventDataActions';
+
+/*
+ *  Validators
+ */
+import {DistanceValidator} from  '../../validators/distance';
+import {WaitTimeValidator} from  '../../validators/waitTime';
+
 
 /*
  *  Pages
@@ -36,13 +44,19 @@ export class CreatePage {
   @ViewChild('startMap') startMap;
   @ViewChild('endMap') endMap;
 
-  created$  : Observable<any>;
-  userId$   : Observable<any>;
+  created$    : Observable<any>;
+  activity$   : Observable<any>;
+  userId$     : Observable<any>;
 
-  createdSub$:  Subscription;
-  userIdSub$:   Subscription;
+  createdSub$ :  Subscription;
+  activitySub$:  Subscription;
+  userIdSub$  :   Subscription;
 
-  activeType: string= '';
+  isChange    : boolean = false;
+  activityId  : string = '';
+
+  createForm: ControlGroup;
+  activeType: string = '';
   currentUserId: number;
   createModal = null; 
   isPublic : boolean = true;
@@ -57,15 +71,56 @@ export class CreatePage {
   endDate;
   endLocation;
   intensity;
-  waitMins;
+  waitTime;
   geoCoder: any;
   minDate: string;
   maxDate: string;
 
-  constructor(private nav: NavController, private ngRedux: NgRedux<any>) {}
+  constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private fb: FormBuilder) {
+    this.createForm = this.fb.group({
+      name: [
+        "",
+        Validators.compose([
+          Validators.minLength(3),
+          Validators.maxLength(40),
+          Validators.required
+        ]),
+      ],
+      description: [
+        "",
+        Validators.compose([
+          Validators.minLength(40),
+          Validators.maxLength(400),
+          Validators.required
+        ]),
+      ],
+      distance: [
+        "",
+        Validators.compose([
+          DistanceValidator.isValid,
+          Validators.required
+        ]),
+      ],
+      waitTime: [
+        "",
+        Validators.compose([
+          WaitTimeValidator.isValid,
+          Validators.required
+        ]),
+      ],
+    });
+  }
 
   ngOnInit() {
     this.geoCoder = new google.maps.Geocoder;
+    if(this.params && this.params.data && this.params.data.isChange){
+      if( this.params.data.activityId){
+        this.isChange   = this.params.data.isChange;
+        this.activityId = this.params.data.activityId;
+      } else {
+        this.goBack();
+      }
+    }
     var tmpDate = new Date();
     this.minDate    = tmpDate.toISOString().split("T")[0];
     this.maxDate    = (new Date(new Date().setFullYear(new Date().getFullYear() + 1))).toISOString().split("T")[0];
@@ -76,6 +131,28 @@ export class CreatePage {
         message: state.getIn(['eventData', 'message'])
       }
     });
+    if(this.isChange && this.activityId){
+      this.activity$ = this.ngRedux.select(state=>{
+          return state.getIn(['eventData', 'items', this.activityId]).toJS();
+      });
+      this.activitySub$ = this.activity$.subscribe((activity) => {
+        if(!!activity) {
+          this.isPublic = activity.isPublic;
+          this.eventType = activity.eventType;
+          this.name = activity.name;
+          this.description = activity.description;
+          this.distance = activity.distance;
+          var d = new Date(activity.startDate.iso);
+          this.startTime = d.toLocaleTimeString();
+          this.startDate = d.toISOString().split("T")[0];//d.getFullYear() + "-" + d.getMonth() + "-"+ d.getDate();
+          this.startLocation = activity.startLocation.coordinates;
+          this.intensity = activity.intensity;
+          this.waitTime = activity.waitTime;
+          console.log(this.waitTime);
+        }
+      });
+
+    }
     this.userId$ = this.ngRedux.select(state=>state.getIn(['currentUser', 'id']));
 
     this.createdSub$ = this.created$.subscribe(eventStatus => {
@@ -96,7 +173,7 @@ export class CreatePage {
         break;
         case 'CREATING': 
           this.createModal = Loading.create({
-          content: "Creating...",
+          content: !!this.isChange ? : "Saving...",
           dismissOnPageChange : true,
         })
 
@@ -111,10 +188,9 @@ export class CreatePage {
     this.userIdSub$ = this.userId$.subscribe(userId => {
       this.currentUserId = userId;
     })
-    console.log(this.created$);
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     if(!!this.createdSub$){
       this.createdSub$.unsubscribe();
     }
@@ -131,6 +207,15 @@ export class CreatePage {
 		if(!this.eventType) {
       this.nav.present(Loading.create({
         content: 'Select an event type... please!',
+        spinner: 'hide',
+        dismissOnPageChange : true,
+        duration: 1000,
+      }))
+      return;
+		}
+		if(!this.intensity) {
+      this.nav.present(Loading.create({
+        content: 'Select an intensity... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
@@ -236,7 +321,7 @@ export class CreatePage {
       }))
       return
 		}
-		if(isNaN(this.waitMins)) {
+		if(isNaN(this.waitTime)) {
       this.nav.present(Loading.create({
         content: 'Tell us how long you can wait... please!',
         spinner: 'hide',
@@ -245,7 +330,7 @@ export class CreatePage {
       }))
       return;
 		}
-		if(this.waitMins < 0) {
+		if(this.waitTime < 0) {
       this.nav.present(Loading.create({
          content: "It's a bit rude to leave before people arrive!",
         spinner: 'hide',
@@ -254,7 +339,7 @@ export class CreatePage {
       }))
       return;
 		}
-		if(this.waitMins > 30) {
+		if(this.waitTime > 30) {
       this.nav.present(Loading.create({
         content: "You can't be waiting around that long! :O",
         spinner: 'hide',
@@ -290,7 +375,7 @@ export class CreatePage {
       'eventType'     : this.eventType,
       'startDate'     : convertedDate,
       // 'endDate'       : this.endDate  +  "T"+this.endTime + roundDateToISO,
-      'waitTime'      : Number(this.waitMins),
+      'waitTime'      : Number(this.waitTime),
       'isPublic'      : this.isPublic,
       'startLocation' : {
         longitude: this.startLocation.longitude,
@@ -301,7 +386,11 @@ export class CreatePage {
       //   latitude: this.endLocation.lat(),
       // },
     }
-    this.ngRedux.dispatch(eventDataActions.createActivity(data));
+    if(this.isChange){
+      this.ngRedux.dispatch(eventDataActions.updateActivity(this.activityId, data));
+    } else {
+      this.ngRedux.dispatch(eventDataActions.createActivity(data));
+    }
 	}
   openMap(type: string) {
     this.activeType = type;

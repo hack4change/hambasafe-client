@@ -1,12 +1,18 @@
-<!-->
 <ion-header>
-  <ion-toolbar class="icon-only">
-    <a class="clickable" menuToggle>
-      <ion-icon dark class="menu-icon" name="md-more"></ion-icon>
-    </a>
-  </ion-toolbar>
+	<ion-toolbar class="icon-only" primary>
+		<ion-buttons start>
+			<button (click)="goBack()" light>
+				<ion-icon name="close-circle"></ion-icon>
+			</button>
+		</ion-buttons>
+		<ion-title *ngIf="!isChange">
+			CREATE AN EVENT
+		</ion-title>
+		<ion-title *ngIf="isChange">
+			Change Away!
+		</ion-title>
+	</ion-toolbar>
 </ion-header>
--->
 <ion-content [ngSwitch]="activeType">
   <template ngSwitchCase="START_LOCATION">
     <map-component #startMap [radius]="0"></map-component>
@@ -15,11 +21,8 @@
     <map-component #endMap [radius]="0"></map-component>
   </template>
   <template ngSwitchDefault>
+    <form [ngFormModel]="createForm">
     <ion-list>
-      <ion-item class="list-title">
-        <ion-icon (click)="goBack()" name="md-close-circle" item-left></ion-icon>
-        CREATE AN EVENT
-      </ion-item>
       <ion-item>
         <ion-label>Public</ion-label>
         <ion-toggle [(ngModel)]="isPublic" checked="{{isPublic}}"></ion-toggle>
@@ -42,15 +45,15 @@
       </ion-item>
       <ion-item class="">
         <ion-label floating>Name</ion-label>
-        <ion-input [(ngModel)]="name" type="text" required></ion-input>
+        <ion-input [(ngModel)]="name" type="text" ngControl="name" required></ion-input>
       </ion-item>
       <ion-item class="">
         <ion-label floating>Description</ion-label>
-        <ion-input [(ngModel)]="description" type="text" required></ion-input>
+        <ion-input [(ngModel)]="description" ngControl="description" type="text" required></ion-input>
       </ion-item>
       <ion-item class="">
         <ion-label floating>Estimated distance(kilometers)</ion-label>
-        <ion-input [(ngModel)]="distance" type="number" required></ion-input>
+        <ion-input [(ngModel)]="distance" ngControl="distance" type="number" required></ion-input>
       </ion-item>
       <ion-item *ngIf="!startLocation" (click)="openMap('START_LOCATION')" class="clean">
         <ion-label floating>Where does it start?</ion-label>
@@ -64,7 +67,7 @@
         <ion-label floating>
           What time does it start?
         </ion-label>
-        <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime"></ion-datetime>
+        <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime"></ion-datetime> 
       </ion-item>
       <ion-item class="">
         <ion-label floating>
@@ -91,9 +94,10 @@
       -->
       <ion-item class="">
         <ion-label floating>Wait time(minutes)?</ion-label>
-        <ion-input [(ngModel)]="waitMins" type="number"></ion-input>
+        <ion-input ngControl="waitTime" [(ngModel)]="waitTime" type="number"></ion-input>
       </ion-item>
     </ion-list>
+    </form>
   </template>
 </ion-content>
 <ion-footer>
@@ -109,7 +113,10 @@
       </button>
     </template>
     <template ngSwitchDefault>
-      <button primary (click)="createActivity()" full>
+      <button primary *ngIf="isChange" (click)="createActivity()" full>
+        Save!
+      </button>
+      <button primary *ngIf="!isChange" (click)="createActivity()" full>
         Post!
       </button>
     </template>

@@ -5,7 +5,18 @@
         <ion-icon name="arrow-back"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-buttons end>
+    <ion-buttons *ngIf="!isAuthor" end>
+      <button dark class="indent" (click)="goHome()">
+        <ion-icon name="pin"></ion-icon>
+      </button>
+      <button dark (click)="goSearch()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons  *ngIf="isAuthor" end>
+      <button (click)="editActivity()">
+        <ion-icon name="create"></ion-icon>
+      </button>
       <button dark class="indent" (click)="goHome()">
         <ion-icon name="pin"></ion-icon>
       </button>
@@ -25,7 +36,7 @@
       </ion-row>
       <ion-row text-center>
         <ion-col>
-        <button *ngFor="let i of maxStars"  [ngClass]="getActivityRating(i)" style="height: 50px" (click)="setActivityRating(i)"> 
+        <button *ngFor="let i of maxStars" [ngClass]="getActivityRating(i)" style="height: 50px" (click)="setActivityRating(i)"> 
           <ion-icon style="font-size: 5rem;" name="star"></ion-icon>
         </button>
         </ion-col>
@@ -56,13 +67,13 @@
   </ion-list>
   <div>
     <p>
-    {{ description }}
+    {{ (activity$ | async)?.description }}
     </p>
   </div>
   <ion-item *ngIf="isAuthor" class="invite-button" no-lines>
-    <button (click)="inviteUsers()" primary>
-      Invite Hambaggers!
-    </button>
+      <button (click)="inviteUsers()" primary>
+        Invite Hambaggers!
+      </button>
   </ion-item>
 </ion-content>
 <ion-footer>

@@ -99,14 +99,14 @@ export class ProfilePage {
 	}
   goBack() {
     console.log('GoBack')
-    if(this.nav.canGoBack()){
+    if(this.nav.canGoBack()) {
       this.nav.pop();
     } else {
       this.nav.setRoot(HomePage);
     }
   }
   goEditProfile() {
-    this.nav.push(RegistrationPage, {
+    this.nav.setRoot(RegistrationPage, {
       'edit': true
     }) 
   }

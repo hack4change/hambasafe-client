@@ -3,8 +3,11 @@
       <img src="{{ activity.author.profilePicture}}">
     </ion-avatar>
   <ion-row>
-    <div class="activity-location">
+    <div class="activity-location" *ngIf="!!activity.startLocation.suburb">
     {{  activity.startLocation.suburb }}, {{  activity.startLocation.city }}
+    </div>
+    <div class="activity-location" *ngIf="!activity.startLocation.suburb">
+    {{  activity.startLocation.city }}
     </div>
     <div *ngIf="!mustRate" class="activity-date">
     {{  startFormatted }}

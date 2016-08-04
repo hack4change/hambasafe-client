@@ -148,7 +148,8 @@ export class ParseManager {
       if (!res.exists) {
         locationObj.save(null, {
           success: (res) => {
-            this.saveActivity(res, activity, error, success);
+            activity.set('startLocation', res);
+            this.saveActivity(activity, error, success);
           },
           error: (err, response) => {
             console.log('ERROR: LOCATION SAVE');
@@ -158,18 +159,73 @@ export class ParseManager {
 
         })
       } else {
-        this.saveActivity(res.obj, activity, error, success);
+        activity.set('startLocation', res.obj);
+        this.saveActivity(activity, error, success);
       }
     }, (err) => {})
-
   }
-  saveActivity(locationObj, activityObj, error: (res) => void, success: (res) => void) {
+  updateActivity(activityId: string, data: any, error: (res) => void, success: (res) => void) {
+    var activityObj;
+    var locationObj = new this.LocationClass();
+    
+    var activityQuery = new this.Parse.Query(this.ActivityClass);
+    activityQuery.get(activityId)
+    .then((activity) => {
+      if(!!activity) {
+        _.forEach(data, (value, key) => {
+          if (key == 'startLocation' || key == 'endLocation') {
+            // activity.set(key, new this.Parse.GeoPoint(value));
+            return;
+          } else if (key == 'startDate' || key == 'endDate') {
+            activity.set(key, new Date(value));
+          } else {
+            activity.set(key, value);
+          }
+        })
+        activityObj = activity;
+        return Parse.Cloud.run('checkLocationExists', {
+          'latitude': data.startLocation.latitude,
+          'longitude': data.startLocation.longitude,
+        })
+      } else {
+        return new this.Parse.Promise.error('failed to find activity');
+      } 
+    },
+    (err) => {
+
+    })
+    .then((res) => {
+      locationObj.set('coordinates', new this.Parse.GeoPoint(data.startLocation));
+      if (!res.exists) {
+        locationObj.save(null, {
+          success: (res) => {
+            activityObj.set('startLocation', res);
+            this.saveActivity(activityObj, error, success);
+          },
+          error: (err, response) => {
+            console.log('ERROR: LOCATION SAVE');
+            console.log(err);
+            console.log(response);
+          }
+
+        })
+      } else {
+        activityObj.set('startLocation', res.obj);
+        this.saveActivity(activityObj, error, success);
+      }
+    },
+    (err) => {
+      error("failed to tun location exist query");
+    })
+  }
+
+  saveActivity( activityObj, error: (res) => void, success: (res) => void) {
     var user = this.Parse.User.current();
     activityObj.set('author', user);
-    activityObj.set('startLocation', locationObj);
     activityObj.save(null, {
       success: (res) => {
         console.log('activity saved to parse server');
+        this.joinActivity(res.get('objectId'), error, success);
         var userRelation = user.relation('activities');
         var activity = activityObj.toJSON();
         userRelation.add(activityObj);

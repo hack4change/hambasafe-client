@@ -96,9 +96,9 @@ export class MyApp {
           this.setMenuAnonymous();
         }
       }
-      if(this.oldStatus !== 'AUTHENTICATED' && userStatus === 'ANONYMOUS') {
+      if(this.oldStatus === 'ATTEMPTING' && userStatus === 'ANONYMOUS') {
         this.nav.setRoot(LandingPage);
-      } else if (this.oldStatus !== 'AUTHENTICATED' && userStatus === 'AUTHENTICATED'){
+      } else if(this.oldStatus !== 'AUTHENTICATED' && userStatus === 'AUTHENTICATED') {
           this.ngRedux.dispatch(inviteActions.subscribe());
           this.ngRedux.dispatch(eventDataActions.subscribeAttending());
       }
@@ -113,13 +113,13 @@ export class MyApp {
    *  Sets active menu
    */
 	setMenuAuthenticated() {
-    this.menu.enable(true, 'authorised-menu');
     this.menu.enable(false, 'anonymous-menu');
+    this.menu.enable(true, 'authorised-menu');
   }
 
 	setMenuAnonymous() {
-    this.menu.enable(true, 'anonymous-menu');
     this.menu.enable(false, 'authorised-menu');
+    this.menu.enable(true, 'anonymous-menu');
   }
 
   /*

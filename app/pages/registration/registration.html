@@ -18,7 +18,7 @@
         <ion-avatar *ngIf="!!profilePicture" item-left>
           <img src="{{ profilePicture }}">
         </ion-avatar>
-        <input name="profile-picture" class="hidden-file-input" id="profile-picture" type="file" placeholder="Profile Picture" [(ngModel)]="uploadPicture" accept="image/*" required />
+        <!-- <input name="profile-picture" class="hidden-file-input" id="profile-picture" type="file" placeholder="Profile Picture" [(ngModel)]="uploadPicture" accept="image/*" required /> -->
         <!-- <input type="hidden" -->
         <!--        role="uploadcare-uploader" -->
         <!--        data-crop="1:1" -->
@@ -45,9 +45,6 @@
           <ion-checkbox primary (click)="selectGender(genderOpt.name)" checked="{{ genderOpt.selected }}"></ion-checkbox>
         </ion-item>
       </div>
-      <!-- <ion-item class="borderless input-modal-button" (click)="openLocation()"> -->
-      <!--   Location -->
-      <!-- </ion-item> -->
       <ion-item class="borderless">
         <ion-label floating>Date of Birth</ion-label>
         <ion-datetime displayFormat="DD MMM YY" pickerFormat="DD MMM YY" [(ngModel)]="dateOfBirth"></ion-datetime>
@@ -64,10 +61,10 @@
         <ion-label floating>Confirm Email</ion-label>
         <ion-input type="email"  [(ngModel)]="confirmEmail" required></ion-input>
       </ion-item>
-      <!-- <ion-item> -->
-      <!--   <input name="identification" class="hidden-file-input" type="file" accept="image/*" id="identification" [(ngModel)]="identification" required /> -->
-      <!--   <label for="identification">Scan my ID or Driver's License</label> -->
-      <!-- </ion-item> -->
+      <ion-item *ngIf="!isEdit">
+        <!-- <input name="identification" class="hidden-file-input" type="file" accept="image/*" id="identification" [(ngModel)]="identification" required /> -->
+        <!-- <label for="identification">Scan my ID or Driver's License</label> -->
+      </ion-item>
       <ion-item *ngIf="!isEdit" class="borderless" (click)="openTerms()">
         <h2 *ngIf="!termsAccepted">
           Accept the Terms of Use
@@ -92,36 +89,3 @@
   </ion-toolbar>
 </ion-footer>
 
-<!--
-        <label class="item item-input item-floating-label">
-					<span class="input-label">Surname</span>
-					<input type="text" placeholder="Surname" ng-model="user.lastName" required/>
-				</label>
-        <label class="item item-input item-floating-label">
-          <input type="date" placeholder="Date of Birth" ng-model="user.dateOfBirth" required>
-        </label>
-        <ion-item class="item" ng-click="toggleGenderOpen()" ng-class="{active: isGenderOpen()}">
-          Gender							
-          <i class="icon pull-right" ng-class="isGenderOpen() ? 'ion-chevron-up' : 'ion-chevron-down'"></i>
-        </ion-item>
-				<ion-checkbox class="item-checkbox-right item-accordion gender-group" ng-repeat="gender in genders" ng-show="isGenderOpen()" >{{ gender }}</ion-checkbox>
-
-        <label class="item item-input item-floating-label">
-					<span class="input-label">Cell number</span>
-					<input type="tel" placeholder="Cell Number" ng-model="user.phoneNumber" required/>
-				</label>
-        <label class="item item-input item-floating-label">
-					<span class="input-label">Email</span>
-					<input type="email" placeholder="Email" ng-model="user.email" required/>
-				</label>
-        <label class="item item-input item-floating-label">
-					<span class="input-label">Cell number</span>
-					<input type="tel" placeholder="Cell Number" ng-model="user.phoneNumber" required/>
-				</label>
-        <label class="item item-input item-floating-label">
-          <input type="email" placeholder="Confirm Email" ng-model="user.confirmEmail" required>
-        </label>
-        <div class="row">
-          <button class="button button-positive" type="submit">Sign Up</button>
-        </div>
--->

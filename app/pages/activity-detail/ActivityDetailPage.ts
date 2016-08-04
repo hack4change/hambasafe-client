@@ -28,6 +28,7 @@ import {usersActions}     from '../../actions/usersActions';
  *  Pages
  */
 import { HomePage } from '../home/HomePage';
+import { CreatePage } from '../create/CreatePage';
 import {SearchPage} from '../search/SearchPage';
 import {ActivityInvitePage} from '../activity-invite/ActivityInvitePage';
 
@@ -71,8 +72,6 @@ export class ActivityDetailPage {
   constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private zone: NgZone) {
     console.log("ActivityDetailPage");
     this.activityId = this.params.data['activityId'];
-    console.log(this.activityId);
-    console.log(this.activityId);
     this.mustRate = this.params.data['mustRate'];
   };
 
@@ -166,7 +165,7 @@ export class ActivityDetailPage {
 
   goBack() {
     console.log('GoBack')
-    if(this.nav.canGoBack()){
+    if(this.nav.canGoBack()) {
       this.nav.pop();
     } else {
       this.nav.setRoot(HomePage);
@@ -187,6 +186,12 @@ export class ActivityDetailPage {
     this.goBack();
   }
   
+  editActivity() {
+    this.nav.push(CreatePage, {
+      isChange: true,
+      activityId: this.activityId
+    });
+  }
   inviteUsers() {
     this.nav.push(ActivityInvitePage, {
       activityId : this.activityId
