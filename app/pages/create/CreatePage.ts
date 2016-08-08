@@ -166,6 +166,7 @@ export class CreatePage {
         console.log(eventStatus.status);
         console.log(eventStatus.message);
         // this.nav.setRoot(HomePage);
+        // this.ngRedux.dispatch(eventDataActions.joinActivity(eventStatus.message))
         this.nav.setRoot(ActivityDetailPage, {
           'activityId' : eventStatus.message
         })

@@ -19,6 +19,7 @@ const subscribe = ():any => {
       },
       (res) => {
         dispatch(setCreateSuccess(res));
+        dispatch(setCreateEvent(res.activityPtr));
       },
       (res) => {
         dispatch(setDeleteSuccess(res));
@@ -26,6 +27,21 @@ const subscribe = ():any => {
     )
   }
 }
+const deleteInvite = (activityId:string):any => {
+  return dispatch => {
+    console.log('delete invite');
+    window.parseManager.deleteInvite(
+      activityId, 
+      (err) => {
+        dispatch(setDeleteFailure(err));
+      },
+      (res) => {
+        dispatch(setDeleteSuccess(res));
+      }
+    )
+  }
+}
+
 const setSubscribeLoading = () => {
   return {
     type  : actionTypes.INVITE_SUBSCRIBE_INIT,
@@ -41,6 +57,16 @@ const setSubscribeSuccess = () => {
       'status': 'SUBSCRIBED',
     })
   }
+}
+
+const setCreateEvent = (res) => {
+  return {
+    data: fromJS({
+      items: _.keyBy([res], 'objectId'),
+      status: 'SUCCESS',
+    }),
+    type: actionTypes.EVENTS_FETCH_SUCCESS,
+  };
 }
 const setCreateSuccess = (res) => {
   return {
@@ -58,6 +84,16 @@ const setDeleteSuccess = (res) => {
     })
   }
 }
+const setDeleteFailure = (res) => {
+  return {
+    type  : actionTypes.INVITE_DELETE_FAIL,
+    data  : fromJS({
+      'objectId'  : res
+    })
+  }
+}
+
+
 const setSubscribeError = (err) => {
   console.log('INVITE SUBSCRIPTION ERROR');
   return {
@@ -80,4 +116,5 @@ const setIdle = (err) => {
 
 export const inviteActions = {
   subscribe,
+  deleteInvite,
 };

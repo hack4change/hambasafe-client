@@ -6,7 +6,7 @@ export default function users(state:any, action:any = {}) {
     case actionTypes.USER_FETCH_INIT:
       return state.set('status', action.data.get('status'))
     case actionTypes.USER_FETCH_SUCCESS:
-      return state.set('items', state.get('items').merge(action.data.get('items')));
+      return state.set('items', state.get('items').mergeDeep(action.data.get('items')));
     case actionTypes.USER_FETCH_FAIL:
       return state
     .set('status', action.data.get('status'))

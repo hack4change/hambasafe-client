@@ -27,6 +27,16 @@ const actionTypes = keyMirror({
   USER_SET_POSITION_SUCCESS     : undefined,
   USER_SET_STATUS               : undefined,
 
+//FRIENDS
+  
+  FRIEND_SUBSCRIBE_INIT         : undefined, 
+  FRIEND_SUBSCRIBE_SUCCESS      : undefined, 
+  FRIEND_SUBSCRIBE_FAIL         : undefined, 
+
+  FRIEND_DELETE_INIT            : undefined, 
+  FRIEND_DELETE_SUCCESS         : undefined, 
+  FRIEND_DELETE_FAIL            : undefined, 
+
 //EVENTS
 
   EVENT_VISIBLE_SET             : undefined,

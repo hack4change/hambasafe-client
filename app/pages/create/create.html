@@ -75,23 +75,6 @@
         </ion-label>
         <ion-datetime min="{{ minDate }}" max="{{ maxDate }}" displayFormat="DD/MMM/YY" value="startDate" pickerFormat="DD MM YYYY" [(ngModel)]="startDate"></ion-datetime>
       </ion-item>
-      <!-->
-      <ion-item class="">
-        <ion-label floating>
-          What time does it end?
-        </ion-label>
-        <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="endTime"></ion-datetime>
-      </ion-item>
-      <ion-item class="">
-        <ion-label floating>
-          What day does it end?
-        </ion-label>
-        <ion-datetime displayFormat="DD/MMM/YY" pickerFormat="DD MMM YY" [(ngModel)]="endDate"></ion-datetime>
-      </ion-item>
-      <ion-item (click)="openMap('END_LOCATION')" class="">
-        Where does it end?
-      </ion-item>
-      -->
       <ion-item class="">
         <ion-label floating>Wait time(minutes)?</ion-label>
         <ion-input ngControl="waitTime" [(ngModel)]="waitTime" type="number"></ion-input>
@@ -122,6 +105,23 @@
     </template>
   </ion-toolbar>
 </ion-footer>
+<!-->
+  <ion-item class="">
+  <ion-label floating>
+  What time does it end?
+  </ion-label>
+  <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="endTime"></ion-datetime>
+  </ion-item>
+  <ion-item class="">
+  <ion-label floating>
+  What day does it end?
+  </ion-label>
+  <ion-datetime displayFormat="DD/MMM/YY" pickerFormat="DD MMM YY" [(ngModel)]="endDate"></ion-datetime>
+  </ion-item>
+  <ion-item (click)="openMap('END_LOCATION')" class="">
+  Where does it end?
+  </ion-item>
+-->
 <!--
 
 

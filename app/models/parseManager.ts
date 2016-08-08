@@ -10,12 +10,13 @@ export class ParseManager {
   AttendanceClass: any;
   LocationClass: any;
   InviteClass: any;
-  FriendsClass: any;
+  FriendClass: any;
   UserRatingClass: any;
   ActivityRatingClass: any;
   Parse: any;
-  inviteSubscription;
   attendingSubscription;
+  friendSubscription;
+  inviteSubscription;
   constructor() {
     console.log('CONSTRUCTOR')
     this.Parse = Parse;
@@ -23,7 +24,7 @@ export class ParseManager {
     this.AttendanceClass = this.Parse.Object.extend("Attendance");
     this.LocationClass = this.Parse.Object.extend("Location");
     this.InviteClass = this.Parse.Object.extend("Invite");
-    this.FriendsClass = this.Parse.Object.extend("Friends");
+    this.FriendClass = this.Parse.Object.extend("Friend");
     this.UserRatingClass = this.Parse.Object.extend("UserRating");
     this.ActivityRatingClass = this.Parse.Object.extend("ActivityRating");
     this.Parse.Object.registerSubclass('Activity', this.ActivityClass);
@@ -91,9 +92,14 @@ export class ParseManager {
     })
 
   }
+
   subscribeToInvites(success: any, error: any, createCb: any, deleteCb: any) {
     var query = new Parse.Query(this.InviteClass);
     query.equalTo('inviteePtr', this.Parse.User.current());
+    query.include('inviteePtr');
+    query.include('invitorPtr');
+    query.include('activityPtr');
+    query.include('activityPtr.author');
     this.inviteSubscription = query.subscribe();
     this.inviteSubscription.on('create', (invite) => {
       console.log('add to invites');
@@ -120,6 +126,86 @@ export class ParseManager {
     success();
   }
 
+  subscribeToFriends(success: any, error: any, createCb: any, deleteCb: any) {
+    var query = new Parse.Query(this.FriendClass);
+    var query2 = new Parse.Query(this.FriendClass);
+
+    query.equalTo('userPtr', this.Parse.User.current());
+    // query.equalTo('confirmed', true);
+
+    query.include('friendPtr');
+    query.include('userPtr');
+
+    query2.equalTo('friendPtr', this.Parse.User.current());
+    query2.include('userPtr');
+    query.include('friendPtr');
+
+    var friendQuery = this.Parse.Query.or(query, query2);
+    this.friendSubscription = friendQuery.subscribe();
+    this.friendSubscription.on('create', (friend) => {
+      console.log('add to friends');
+      console.log(friend);
+      createCb(friend.toJSON());
+    })
+    this.friendSubscription.on('delete', (friend) => {
+      console.log('delete from friends');
+      deleteCb(friend.toJSON()['objectId']);
+    })
+    this.friendSubscription.on('error', (err) => {
+      error(err);
+    })
+    friendQuery.find({
+      success: (friends) => {
+        console.log('add to friends');
+        _.each(friends, (friend)=>{
+          var friendId: string = "";
+          var getUser = new this.Parse.Query(this.Parse.User)
+          if(friend.get('userPtr')['id'] !== this.Parse.User.current()['id']){
+            friendId = friend.get('userPtr')['id'];
+          } else {
+            friendId = friend.get('friendPtr')['id'];
+          }
+          getUser.get(friendId)
+          .then((res) => {
+            var friendRes = res.toJSON();
+            friendRes.isFriend= true;
+            createCb(friendRes);
+          })
+        })
+      },
+      error: (err) => {
+        error(err);
+      }
+    })
+    success();
+  }
+
+  /**
+   * INVITES
+   **/
+  deleteInvite(activityId: string, error: (res) => void, success: (res) => void) {
+    var query = new Parse.Query(this.InviteClass);
+    query.equalTo('inviteePtr', this.Parse.User.current());
+    query.equalTo('activityPtr', {
+      __type: "Pointer",
+      className: "Activity",
+      objectId: activityId
+    });
+    query.find()
+    .then((invites) => {
+      console.log('found invites');
+      console.log();
+      var promise = Parse.Promise.as();
+      _.each(invites, function(result) {
+        // For each item, extend the promise with a function to delete it.
+        promise = promise.then(function() {
+          // Return a promise that will be resolved when the delete is finished.
+          return result.destroy();
+        });
+      });
+      return promise;
+    }).then((res)=>success(res));
+  }
 
   /***
    * ACTIVITIES
@@ -164,6 +250,7 @@ export class ParseManager {
       }
     }, (err) => {})
   }
+
   updateActivity(activityId: string, data: any, error: (res) => void, success: (res) => void) {
     var activityObj;
     var locationObj = new this.LocationClass();
@@ -219,7 +306,7 @@ export class ParseManager {
     })
   }
 
-  saveActivity( activityObj, error: (res) => void, success: (res) => void) {
+  saveActivity(activityObj, error: (res) => void, success: (res) => void) {
     var user = this.Parse.User.current();
     activityObj.set('author', user);
     activityObj.save(null, {
@@ -360,7 +447,24 @@ export class ParseManager {
   /*
    * Activity Fetching
    */
-  getActivity(objectId: String, error: (res) => void, success: (res) => void) {}
+  getActivity(activityId: String, error: (res) => void, success: (res) => void) {
+    var activityQuery = new this.Parse.Query(this.ActivityClass);
+    activityQuery.include('author');
+    activityQuery.get(activityId, {
+      success: (res) => {
+        console.log(res);
+        for (var i = 0; i < res.length; i++) {
+          success([
+            res[i].toJSON()
+          ]);
+        }
+      },
+      error: (err) => {
+        console.log('parse saving error');
+        error(err);
+      }
+    });
+  }
 
   getActivitiesByLocation(distance: number, latitude: number, longitude: number, error: (res) => void, success: (res) => void) {
     var point = new this.Parse.GeoPoint({
@@ -624,10 +728,33 @@ export class ParseManager {
    * Friend Functions
    */
   addFriends(userArray, success: (res) => void, error: (res) => void) {
-      // for (var i = 0; i < userArray.length; i++) {}
-  }
-  fetchFriends(success: (res) => void, error: (res) => void) {
-      var user = this.Parse.current();
+    var currUser = this.Parse.User.current();
+    _.each(userArray, (userId) => {
+      if(userId === currUser['id']){
+        return;
+      }
+      var userQuery = new this.Parse.Query(this.Parse.User);
+      userQuery.get(userId)
+      .then((res) => {
+        if(!!res) {
+          var friendObj = new this.FriendClass();
+          friendObj.set('userPtr', currUser);
+          friendObj.set('friendPtr', {
+            __type: "Pointer",
+            className: "_User",
+            objectId: userId
+          })
+          return friendObj.save()
+        }
+      })
+      .then((res)=>{
+        // success() 
+        console.log('FRIENDS!!! :-)');
+      })
+
+    
+    })
+
   }
 
   /*

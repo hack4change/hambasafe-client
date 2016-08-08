@@ -10,6 +10,27 @@ declare var window;
 
 const API_ROOT = 'http://hambasafetesting.azurewebsites.net/v1/Users';
 
+const subscribeToFriends = ():any => {
+  return dispatch => {
+    dispatch(setSubscribeLoading());
+    window.parseManager.subscribeToFriends(
+      () => {
+        dispatch(setSubscribeSuccess());
+      },
+      (err) => {
+        dispatch(setSubscribeError(err));
+      },
+      (res) => {
+        dispatch(setFetchSuccess(res));
+      },
+      (res) => {
+        dispatch(setDeleteSuccess(res));
+      }
+    )
+  };
+};
+
+
 /*
  *  FETCH USER
  */
@@ -23,6 +44,7 @@ const findUsers = (query):any => {
     )
   };
 };
+
 /**
  *  Fetch Users that have an attending reference to an event
  */
@@ -41,6 +63,7 @@ const fetchByAttendance = (activityId: string):any => {
  *  FETCH USER
  */
 const fetchFriends = ():any => {
+  //TODO:
   return dispatch => {
     dispatch(setFetchLoading());
   };
@@ -49,43 +72,15 @@ const fetchFriends = ():any => {
 /*
  *  ADD FRIENDS
  */
-const addFriends = (userKeys):any => {
+const addFriends = (userKeys: any):any => {
   return dispatch => {
+    console.log('add friend action');
     dispatch(setFetchLoading());
     window.parseManager.addFriends(
       userKeys,
      (res) => dispatch(setAddFriendSuccess(res)),
      (err) => dispatch(setAddFriendError(err))
     )
-  };
-};
-const setAddFriendSuccess = (response) => {
-  console.log(response);
-  return {
-    data: fromJS({
-      items: _.keyBy([response], 'objectId'),//response.data.children.map((p)=>User.fromJS(p.data)),
-      status: 'SUCCESS',
-    }),
-    type: actionTypes.USER_ADD_FRIEND_SUCCESS,
-  };
-};
-const setAddFriendError = (error) => {
-  return {
-    data: fromJS({
-      items: {},
-      message: error,
-      status: 'ERROR',
-    }),
-    type: actionTypes.USER_ADD_FRIEND_FAIL,
-  };
-};
-const setAddFriendLoading = () => {
-  return {
-    data: fromJS({
-      items: [],
-      status: 'ADDING',
-    }),
-    type: actionTypes.USER_ADD_FRIEND_INIT,
   };
 };
 
@@ -96,78 +91,18 @@ const fetchUser = ():any => {
   return dispatch => {
   };
 };
-const setFetchSuccess = (response) => {
-  console.log(response);
-  return {
-    data: fromJS({
-      items: _.keyBy([response], 'objectId'),//response.data.children.map((p)=>User.fromJS(p.data)),
-      status: 'SUCCESS',
-    }),
-    type: actionTypes.USER_FETCH_SUCCESS,
-  };
-};
-const setFetchError = (error) => {
-  return {
-    data: fromJS({
-      items: {},
-      message: error,
-      status: 'ERROR',
-    }),
-    type: actionTypes.USER_FETCH_FAIL,
-  };
-};
-const setFetchLoading = () => {
-  return {
-    data: fromJS({
-      items: [],
-      status: 'LOADING',
-    }),
-    type: actionTypes.USER_FETCH_INIT,
-  };
-};
-
 
 /*
  *  CREATE USER
- *
  */
 const createUser = (data):any => {
   return dispatch => {
-    dispatch(setUsersCreating());
+    dispatch(setCreateUserInit());
     window.parseManager.signUp(
       data, 
-     (response) => dispatch(createUserSuccess()),
-     (error) => dispatch(createUserError(error))
+     (response) => dispatch(setCreateUserSuccess()),
+     (error) => dispatch(setCreateUserError(error))
     )
-  };
-};
-const createUserSuccess = () => {
-  console.log('success');
-  return {
-    data: fromJS({
-      'status': 'CREATE_SUCCESS',
-      // 'id' : response,
-    }),
-    type: actionTypes.USER_CREATE_SUCCESS,
-  };
-};
-const createUserError = (error) => {
-  console.log('error');
-  return {
-    data: fromJS({
-      message: error,
-      status: 'CREATE_ERROR',
-    }),
-    type: actionTypes.USER_CREATE_FAIL,
-  };
-}
-const setUsersCreating = () => {
-  return {
-    data: fromJS({
-      items: [],
-      status: 'CREATING',
-    }),
-    type: actionTypes.USER_CREATE_INIT,
   };
 };
 
@@ -242,16 +177,6 @@ const getLocation = ():any => {
   };
 }
 
-const setLocation = (longitude: number, latitude: number):any => {
-  console.log('set Location');
-  return {
-    data: fromJS({
-      longitude: longitude,
-      latitude: latitude
-    }),
-    type: actionTypes.USER_SET_POSITION,
-  };
-};
 
 const rateUser = (userId : string, activityId : string, rating:number):any => {
   return dispatch => {
@@ -269,14 +194,185 @@ const rateUser = (userId : string, activityId : string, rating:number):any => {
   }
 }
 
-const setRatingSuccess = () => {
+/**
+ *
+ */
+const setSubscribeLoading = () => {
+  return {
+    type  : actionTypes.FRIEND_SUBSCRIBE_INIT,
+    data  : fromJS({
+      'status': 'SUBSCRIBING',
+    })
+  }
+}
+const setSubscribeSuccess = () => {
+  return {
+    type  : actionTypes.FRIEND_SUBSCRIBE_SUCCESS,
+    data  : fromJS({
+      'status': 'SUBSCRIBED',
+    })
+  }
+}
+const setSubscribeError = (err) => {
+  console.log('INVITE SUBSCRIPTION ERROR');
+  return {
+    type  : actionTypes.FRIEND_SUBSCRIBE_FAIL,
+    data  : fromJS({
+      'status'    : 'UNSUBSCRIBED',
+    })
+  }
+}
 
+/**
+ *
+ */
+const setCreateUserInit = () => {
+  return {
+    data: fromJS({
+      items: [],
+      status: 'CREATING',
+    }),
+    type: actionTypes.USER_CREATE_INIT,
+  };
+};
+const setCreateUserSuccess = () => {
+  console.log('success');
+  return {
+    data: fromJS({
+      'status': 'CREATE_SUCCESS',
+      // 'id' : response,
+    }),
+    type: actionTypes.USER_CREATE_SUCCESS,
+  };
+};
+const setCreateUserError = (error) => {
+  console.log('error');
+  return {
+    data: fromJS({
+      message: error,
+      status: 'CREATE_ERROR',
+    }),
+    type: actionTypes.USER_CREATE_FAIL,
+  };
+}
+
+/**
+ *
+ */
+const setAddFriendLoading = () => {
+  return {
+    data: fromJS({
+      items: [],
+      status: 'ADDING',
+    }),
+    type: actionTypes.USER_ADD_FRIEND_INIT,
+  };
+};
+const setAddFriendSuccess = (response) => {
+  console.log(response);
+  return {
+    data: fromJS({
+      items: _.keyBy([response], 'objectId'),//response.data.children.map((p)=>User.fromJS(p.data)),
+      status: 'SUCCESS',
+    }),
+    type: actionTypes.USER_ADD_FRIEND_SUCCESS,
+  };
+};
+const setAddFriendError = (error) => {
+  return {
+    data: fromJS({
+      items: {},
+      message: error,
+      status: 'ERROR',
+    }),
+    type: actionTypes.USER_ADD_FRIEND_FAIL,
+  };
+};
+
+/**
+ *
+ */
+const setFetchLoading = () => {
+  return {
+    data: fromJS({
+      items: [],
+      status: 'LOADING',
+    }),
+    type: actionTypes.USER_FETCH_INIT,
+  };
+};
+const setFetchSuccess = (response) => {
+  console.log(response);
+  return {
+    data: fromJS({
+      items: _.keyBy([response], 'objectId'),//response.data.children.map((p)=>User.fromJS(p.data)),
+      status: 'SUCCESS',
+    }),
+    type: actionTypes.USER_FETCH_SUCCESS,
+  };
+};
+const setFetchError = (error) => {
+  return {
+    data: fromJS({
+      items: {},
+      message: error,
+      status: 'ERROR',
+    }),
+    type: actionTypes.USER_FETCH_FAIL,
+  };
+};
+
+/**
+ * 
+ */
+const setRatingInit = () => {
+//TODO:
+}
+const setRatingSuccess = () => {
+//TODO:
 }
 
 const setRatingFailure = (err) => {
-
+//TODO:
 }
+
+/**
+ * 
+ */
+const setDeleteInit = (res) => {
+  return {
+  }
+}
+const setDeleteSuccess = (res) => {
+  return {
+    type  : actionTypes.FRIEND_DELETE_SUCCESS,
+    data  : fromJS({
+      'objectId'  : res
+    })
+  }
+}
+const setDeleteFailure = (res) => {
+  return {
+    type  : actionTypes.FRIEND_DELETE_FAIL,
+    data  : fromJS({
+      'objectId'  : res
+    })
+  }
+}
+
+const setLocation = (longitude: number, latitude: number):any => {
+  console.log('set Location');
+  return {
+    data: fromJS({
+      longitude: longitude,
+      latitude: latitude
+    }),
+    type: actionTypes.USER_SET_POSITION,
+  };
+};
+
 export const usersActions = {
+  subscribeToFriends,
   fetchByAttendance,
   addFriends,
   createUser,

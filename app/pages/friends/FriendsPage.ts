@@ -27,6 +27,7 @@ import {usersActions} from '../../actions/usersActions';
  */
 import {HomePage} from '../home/HomePage';
 import {SearchPage} from '../search/SearchPage';
+import {AddFriendPage} from '../add-friend/AddFriendPage';
 
 /*
  * Pipes
@@ -34,12 +35,12 @@ import {SearchPage} from '../search/SearchPage';
 import { capitalize } from '../../utils/capitalize';
 
 @Component({
-  templateUrl: 'build/pages/add-friend/add-friend.html',
+  templateUrl: 'build/pages/friends/friends.html',
   pipes : [
     capitalize,
   ]
 })
-export class AddFriendPage {
+export class FriendsPage {
   currentQuery = '';
 
   visibleUsers$     : Observable<any>;
@@ -59,7 +60,11 @@ export class AddFriendPage {
       return state
         .getIn(['users', 'items'])
         .filter(item => {
-          return this.currentQuery !== '' && (item.get('firstName') + ' ' + item.get('lastName')).indexOf(this.currentQuery.toLowerCase()) !== -1 || !!this.selectedUsers[item.get('objectId')];
+          console.log('item');
+          return !!item.get('isFriend');
+        })
+        .filter(item => {
+          return this.currentQuery === '' || (item.get('firstName') + ' ' + item.get('lastName')).indexOf(this.currentQuery.toLowerCase()) !== -1 || !!this.selectedUsers[item.get('objectId')];
           // && this.selectUsers.tem.get('objectId')
         })
         .toList()
@@ -97,10 +102,11 @@ export class AddFriendPage {
   /*
    * 
    */
-  befriend() {
-    console.log('befriending');
-    this.ngRedux.dispatch(usersActions.addFriends(Object.keys(this.selectedUsers)));
-    this.goBack();
+  addFriend(){
+    this.nav.push(AddFriendPage, {});
+  }
+  viewUser(userId:string){
+     
   }
   toggleSelect(userItem){
     console.log('toggle Select')
@@ -125,3 +131,4 @@ export class AddFriendPage {
     return Object.keys(this.selectedUsers).length == 0;
   }
 }
+

@@ -18,8 +18,16 @@ import {InvitesPage} from '../invites/InvitesPage';
 import {ActivityListPage} from '../activity-list/ActivityListPage';
 import {AddFriendPage} from '../add-friend/AddFriendPage';
 
+/*
+ * Pipes
+ */
+import { capitalize } from '../../utils/capitalize';
+
 @Component({
-  templateUrl: 'build/pages/profile/profile.html'
+  templateUrl: 'build/pages/profile/profile.html',
+  pipes : [
+    capitalize,
+  ]
 })
 export class ProfilePage {
   currentUser$: Observable<any>;
@@ -82,21 +90,26 @@ export class ProfilePage {
 	goHome() {
     this.nav.setRoot(HomePage);
 	}
+
 	goSearch() {
     this.nav.setRoot(SearchPage);
 	}
+
 	goCreate() {
     this.nav.push(CreatePage);
 	}
+
 	goInvites() {
     this.nav.push(InvitesPage, {});
 	}
+
 	goActivityList(index: number) {
     this.nav.push(ActivityListPage, {
       'header' : this.listTypes[index]['header'],
       'filter' : this.listTypes[index]['filterExpression'],
     });
 	}
+
   goBack() {
     console.log('GoBack')
     if(this.nav.canGoBack()) {
@@ -105,6 +118,7 @@ export class ProfilePage {
       this.nav.setRoot(HomePage);
     }
   }
+
   goEditProfile() {
     this.nav.setRoot(RegistrationPage, {
       'edit': true

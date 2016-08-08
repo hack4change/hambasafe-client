@@ -18,32 +18,35 @@ import store from './stores/store';
 /*
  * Actions
  */
-import {authActions} from './actions/authActions';
-import {inviteActions} from './actions/inviteActions';
+import {authActions}      from './actions/authActions';
+import {usersActions}      from './actions/usersActions';
+import {inviteActions}    from './actions/inviteActions';
 import {eventDataActions} from './actions/eventDataActions';
 
 
 /*
  *  Pages
  */
-import {CreatePage} from "./pages/create/CreatePage";
-import {HomePage} from "./pages/home/HomePage";
-import {SplashPage} from "./pages/splash/SplashPage";
-import {SearchPage} from "./pages/search/SearchPage";
-import {EmergencyPage} from './pages/emergency/EmergencyPage';
-import {TermsPage} from './pages/terms/TermsPage';
-import {AboutPage} from './pages/about/AboutPage';
-import {LandingPage} from './pages/landing/LandingPage';
-import {LatestPage} from './pages/latest/LatestPage';
-import {ProfilePage} from './pages/profile/ProfilePage';
-import {RatingPage} from './pages/rating/RatingPage';
+import {AboutPage}        from './pages/about/AboutPage';
+import {CreatePage}       from "./pages/create/CreatePage";
+import {EmergencyPage}    from './pages/emergency/EmergencyPage';
+import {FriendsPage}      from './pages/friends/FriendsPage';
+import {HomePage}         from "./pages/home/HomePage";
+import {LandingPage}      from './pages/landing/LandingPage';
+import {LatestPage}       from './pages/latest/LatestPage';
+import {ProfilePage}      from './pages/profile/ProfilePage';
+import {RatingPage}       from './pages/rating/RatingPage';
 import {RegistrationPage} from './pages/registration/RegistrationPage';
+import {SplashPage}       from "./pages/splash/SplashPage";
+import {SearchPage}       from "./pages/search/SearchPage";
+import {TermsPage}        from './pages/terms/TermsPage';
 
-import {ParseManager} from './models/parseManager';
 
 /*
+ * ParseManager
  * TODO: Alternative method to defining parseManager Globally
  */
+import {ParseManager} from './models/parseManager';
 
 @Component({
   templateUrl: 'build/pages/app.html',
@@ -101,6 +104,7 @@ export class MyApp {
       } else if(this.oldStatus !== 'AUTHENTICATED' && userStatus === 'AUTHENTICATED') {
           this.ngRedux.dispatch(inviteActions.subscribe());
           this.ngRedux.dispatch(eventDataActions.subscribeAttending());
+          this.ngRedux.dispatch(usersActions.subscribeToFriends());
       }
       console.log('Root userStatus');
       console.log(userStatus);
@@ -127,6 +131,10 @@ export class MyApp {
    */
   goToHome() {
     this.nav.setRoot(HomePage);
+  }
+
+  goToFriends() {
+    this.nav.setRoot(FriendsPage);
   }
 
   goToAbout() {

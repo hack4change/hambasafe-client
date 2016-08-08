@@ -82,7 +82,7 @@ export class HomePage {
       }
     })
     this.locationSub$ = this.location$.subscribe((pos) => {
-      if(pos.longitude === null || pos.latitude === null) {
+      if(!pos.longitude && pos.longitude !== 0 || !pos.latitude && pos.latitude !== 0) {
         this.ngRedux.dispatch(usersActions.getLocation());
       } else {
         if(!_.isEqual(pos, this.coordinates)) {
@@ -98,6 +98,7 @@ export class HomePage {
       }
     });
   }
+
   activityConnector() {
     this.activities$ = this.ngRedux.select((state) => {
       console.log('activity update');
@@ -115,6 +116,7 @@ console.log(distanceCalculator(
               item.get('startLocation').get('coordinates').get('latitude'),
               item.get('startLocation').get('coordinates').get('longitude')
             ));
+            console.log(this.searchDistance);
             return distanceCalculator(
               this.coordinates.latitude,
               this.coordinates.longitude,

@@ -84,10 +84,10 @@ export class ActivityDetailPage {
       return state
       .getIn(['users', 'items'])
       .filter((user) => {
-        return user.get('attendance').includes(this.activityId);
+        return !!user.get('attendance') ? user.get('attendance').includes(this.activityId): false;
       })
       .toList()
-      .toJSON()
+      .toJS()
     }) 
     this.activity$ = this.ngRedux.select(
       state => {
@@ -96,7 +96,7 @@ export class ActivityDetailPage {
           console.log(item.get('objectId') === this.activityId);
           return item.get('objectId') === this.activityId;
         })
-        .toJSON()
+        .toJS()
       }
     ); 
     this.userIdSub$ = this.userId$.subscribe((userId) => {

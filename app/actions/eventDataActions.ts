@@ -15,8 +15,6 @@ const API_ROOT = 'http://hambasafetesting.azurewebsites.net/v1';
  */
 // Success.
 const setFetchSuccessState = (response) => {
-  console.log('fet')
-  console.log(response);
   return {
     data: fromJS({
       items: _.keyBy(response, 'objectId'),
@@ -48,6 +46,19 @@ const setFetchLoadingState = () => {
   };
 };
 
+const fetchEvent = (activityId: string) : any => {
+  return dispatch => {
+    console.log('dispatch');
+    // Set loading state.
+    dispatch(setFetchLoadingState());
+
+    window.parseManager.getActivity(
+      activityId,
+      (error) => dispatch(setFetchErrorState(error)),
+        (response) => dispatch(setFetchSuccessState(response))
+    );
+  };
+};
 const fetchEvents = () : any => {
   return dispatch => {
     console.log('dispatch');
@@ -334,6 +345,7 @@ const setRatingFailure = (err) => {
 }
 
 export const eventDataActions = {
+  fetchEvent,
   fetchEvents,
   fetchEventsBySuburb,
   fetchEventsByCoordinates,

@@ -17,12 +17,20 @@ export class capitalize {
   transform(value) {
     if(!value || !value.length) return undefined;
     value = value.toLowerCase();
-    var splitValue = value.split(' ');
+    var spaceSplit = value.split(' ');
     var result = '';
-    for(var i = 0; i < splitValue.length; i++){
-      result += splitValue[i].charAt(0).toUpperCase();
+    for(var i = 0; i < spaceSplit.length; i++){
+      var quoteSplit = spaceSplit[i].split("'");
+      result += quoteSplit[0].charAt(0).toUpperCase();
       if(value.length > 1) {
-        result += splitValue[i].substring(1);
+        result += quoteSplit[0].substring(1);
+      }
+      for(var j = 1; j < quoteSplit.length; j++){
+        result += "'";
+        result += quoteSplit[j].charAt(0).toUpperCase();
+        if(value.length > 1) {
+          result += quoteSplit[j].substring(1);
+        }
       }
       result += " ";
     }

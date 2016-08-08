@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar class="main-bar">
+  <ion-toolbar class="main-bar" >
     <ion-buttons class="order-left" start>
       <button dark menuToggle>
         <ion-icon name="menu"></ion-icon>
@@ -8,9 +8,6 @@
     <ion-buttons end>
       <button dark (click)="goInvites()" class="indent">
         <ion-icon name="mail"></ion-icon>
-      </button>
-      <button dark (click)="addFriend()" class="indent">
-        <ion-icon name="person-add"></ion-icon>
       </button>
       <button dark (click)="goHome()" class="indent">
         <ion-icon name="pin"></ion-icon>
@@ -27,7 +24,7 @@
       </ion-avatar>
       <div>
         <ion-item  no-lines class="profile-row profile-name">
-          {{(currentUser$| async)?.firstName}} {{(currentUser$| async)?.lastName}}
+          {{(currentUser$| async)?.firstName | capitalize}} {{(currentUser$| async)?.lastName | capitalize}}
           <ion-icon item-right class="pull-right" name="md-create" (click)="goEditProfile()"></ion-icon>
         </ion-item>
         <ion-item  no-lines class="profile-row">
