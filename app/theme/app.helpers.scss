@@ -123,3 +123,13 @@ ion-toolbar{
 ion-item.borderless > .item-inner{
   border: 0px;
 }
+ion-menu {
+  ion-item {
+    ion-icon[item-left] {
+      background-color: $positive;
+      // margin-left: 11px;
+      padding: 4px 8.66px;
+      border-radius: 50%;
+    }
+  }
+}

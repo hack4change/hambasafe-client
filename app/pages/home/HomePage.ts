@@ -102,6 +102,9 @@ export class HomePage {
   activityConnector() {
     this.activities$ = this.ngRedux.select((state) => {
       console.log('activity update');
+      var friends = state.getIn(['users', 'items']).filter((user)=>{
+        return true;//user.isFriend;
+      })
       return state.getIn(['eventData', 'items'])
       .filter((item)=> {
         if((new Date(item.get('startDate').get('iso'))).getTime() <= Date.now()){
@@ -127,6 +130,8 @@ console.log(distanceCalculator(
         }
         return false;
       })
+      .filter((item)=> {
+      })
       .toList()
       .toJS()
       .sort(function(a, b) {
@@ -141,6 +146,9 @@ console.log(distanceCalculator(
           return false
         };
         return !!item.get('isAttending') && !!item.get('mustRate');
+      })
+      .filter((item) => {
+        return true;
       })
       .toList()
       .toJS().sort(function(a, b) {

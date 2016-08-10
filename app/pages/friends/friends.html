@@ -25,12 +25,14 @@
 <ion-content>
   <ion-searchbar (ionInput)="getFromInput($event)"></ion-searchbar>
   <ion-list *ngFor="let user of visibleUsers$ | async" >
-    <ion-item>
-<!-- (click)="view(user.objectId)" -->
-      <ion-avatar item-left>
-        <img src="{{ user.profilePicture}}">
-      </ion-avatar>
-      {{ user.lastName | capitalize}}, {{ user.firstName | capitalize}} 
-    </ion-item>
+    <user-item [user]="user" [options]="true">
+    </user-item>
+    <!-- <ion-item> -->
+<!-- <1!-- (click)="view(user.objectId)" --1> -->
+    <!--   <ion-avatar item-left> -->
+    <!--     <img src="{{ user.profilePicture}}"> -->
+    <!--   </ion-avatar> -->
+    <!--   {{ user.lastName | capitalize}}, {{ user.firstName | capitalize}} --> 
+    <!-- </ion-item> -->
   </ion-list>
 </ion-content>

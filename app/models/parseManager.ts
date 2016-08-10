@@ -131,25 +131,78 @@ export class ParseManager {
     var query2 = new Parse.Query(this.FriendClass);
 
     query.equalTo('userPtr', this.Parse.User.current());
-    // query.equalTo('confirmed', true);
+    query.equalTo('confirmed', true);
 
     query.include('friendPtr');
     query.include('userPtr');
 
     query2.equalTo('friendPtr', this.Parse.User.current());
     query2.include('userPtr');
-    query.include('friendPtr');
+    query2.include('friendPtr');
 
     var friendQuery = this.Parse.Query.or(query, query2);
     this.friendSubscription = friendQuery.subscribe();
     this.friendSubscription.on('create', (friend) => {
-      console.log('add to friends');
-      console.log(friend);
-      createCb(friend.toJSON());
+      var friendId: string = "";
+      var isConfirmed : boolean = true;
+      var getUser = new this.Parse.Query(this.Parse.User)
+      if(friend.get('userPtr')['id'] !== this.Parse.User.current()['id']){
+        friendId = friend.get('userPtr')['id'];
+        isConfirmed = friend.get('confirmed');
+      } else {
+        friendId = friend.get('friendPtr')['id'];
+      }
+      getUser.get(friendId)
+      .then((res) => {
+        var friendRes = res.toJSON();
+        friendRes.isFriend= true;
+        friendRes.isConfirmed = isConfirmed;
+        createCb(friendRes);
+      })
+    })
+    this.friendSubscription.on('enter', (friend) => {
+      var friendId: string = "";
+      var isConfirmed : boolean = true;
+      var getUser = new this.Parse.Query(this.Parse.User)
+      if(friend.get('userPtr')['id'] !== this.Parse.User.current()['id']){
+        friendId = friend.get('userPtr')['id'];
+        isConfirmed = friend.get('confirmed');
+      } else {
+        friendId = friend.get('friendPtr')['id'];
+      }
+      getUser.get(friendId)
+      .then((res) => {
+        var friendRes = res.toJSON();
+        friendRes.isFriend= true;
+        friendRes.isConfirmed = isConfirmed;
+        createCb(friendRes);
+      })
+    })
+    this.friendSubscription.on('update', (friend) => {
+      var friendId: string = "";
+      var isConfirmed : boolean = true;
+      var getUser = new this.Parse.Query(this.Parse.User)
+      if(friend.get('userPtr')['id'] !== this.Parse.User.current()['id']){
+        friendId = friend.get('userPtr')['id'];
+        isConfirmed = friend.get('confirmed');
+      } else {
+        friendId = friend.get('friendPtr')['id'];
+      }
+      getUser.get(friendId)
+      .then((res) => {
+        var friendRes = res.toJSON();
+        friendRes.isFriend= true;
+        friendRes.isConfirmed = isConfirmed;
+        createCb(friendRes);
+      })
     })
     this.friendSubscription.on('delete', (friend) => {
       console.log('delete from friends');
-      deleteCb(friend.toJSON()['objectId']);
+      if(friend.get('userPtr')['id'] !== this.Parse.User.current()['id']){
+        deleteCb(friend.get('userPtr').toJSON()['objectId']);
+      } else {
+        deleteCb(friend.get('friendPtr').toJSON()['objectId']);
+      }
     })
     this.friendSubscription.on('error', (err) => {
       error(err);
@@ -159,9 +212,11 @@ export class ParseManager {
         console.log('add to friends');
         _.each(friends, (friend)=>{
           var friendId: string = "";
+          var isConfirmed : boolean = true;
           var getUser = new this.Parse.Query(this.Parse.User)
           if(friend.get('userPtr')['id'] !== this.Parse.User.current()['id']){
             friendId = friend.get('userPtr')['id'];
+            isConfirmed = friend.get('confirmed');
           } else {
             friendId = friend.get('friendPtr')['id'];
           }
@@ -169,6 +224,7 @@ export class ParseManager {
           .then((res) => {
             var friendRes = res.toJSON();
             friendRes.isFriend= true;
+            friendRes.isConfirmed = isConfirmed;
             createCb(friendRes);
           })
         })
@@ -178,6 +234,80 @@ export class ParseManager {
       }
     })
     success();
+  }
+  /**
+   *  FRIENDS
+   */
+  confirmFriend(friendId, error: (res) => void, success: (res) => void) {
+    var query = new Parse.Query(this.FriendClass);
+    var query2 = new Parse.Query(this.FriendClass);
+
+    query.equalTo('userPtr', this.Parse.User.current());
+    query.equalTo('friendPtr', {
+      __type: "Pointer",
+      className: "_User",
+      objectId: friendId
+    });
+
+    query2.equalTo('friendPtr', this.Parse.User.current());
+    query.equalTo('userPtr', {
+      __type: "Pointer",
+      className: "_User",
+      objectId: friendId
+    });
+
+    var friendQuery = this.Parse.Query.or(query, query2);
+     friendQuery.find()
+    .then((friends) => {
+      console.log('found invites');
+      console.log();
+      var promise = Parse.Promise.as();
+      _.each(friends, function(friend) {
+        // For each item, extend the promise with a function to delete it.
+        promise = promise.then(function() {
+          // Return a promise that will be resolved when the delete is finished.
+          friend.set('confirmed', true);
+          return friend.save();
+        });
+      });
+      return promise;
+    }).then((res)=>success(res));
+  }
+
+  deleteFriend(friendId, error: (res) => void, success: (res) => void) {
+    var query = new Parse.Query(this.FriendClass);
+    var query2 = new Parse.Query(this.FriendClass);
+
+    query.equalTo('userPtr', this.Parse.User.current());
+    query.equalTo('friendPtr', {
+      __type: "Pointer",
+      className: "_User",
+      objectId: friendId
+    });
+
+    query2.equalTo('friendPtr', this.Parse.User.current());
+    query2.equalTo('userPtr', {
+      __type: "Pointer",
+      className: "_User",
+      objectId: friendId
+    });
+
+    var friendQuery = this.Parse.Query.or(query, query2);
+     friendQuery.find()
+    .then((friends) => {
+      console.log('found invites');
+      console.log();
+      var promise = Parse.Promise.as();
+      _.each(friends, function(friend) {
+        // For each item, extend the promise with a function to delete it.
+        promise = promise.then(function() {
+          // Return a promise that will be resolved when the delete is finished.
+          return friend.destroy();
+        });
+      });
+      return promise;
+    })
+    // .then((res)=>success(res));
   }
 
   /**
@@ -196,11 +326,11 @@ export class ParseManager {
       console.log('found invites');
       console.log();
       var promise = Parse.Promise.as();
-      _.each(invites, function(result) {
+      _.each(invites, function(invite) {
         // For each item, extend the promise with a function to delete it.
         promise = promise.then(function() {
           // Return a promise that will be resolved when the delete is finished.
-          return result.destroy();
+          return invite.destroy();
         });
       });
       return promise;

@@ -10,6 +10,9 @@ declare var window;
 
 const API_ROOT = 'http://hambasafetesting.azurewebsites.net/v1/Users';
 
+/*
+ * Subscriptions
+ */
 const subscribeToFriends = ():any => {
   return dispatch => {
     dispatch(setSubscribeLoading());
@@ -30,6 +33,35 @@ const subscribeToFriends = ():any => {
   };
 };
 
+const confirmFriend = (friendId: string): any => {
+  return dispatch => {
+    window.parseManager.confirmFriend(
+      friendId,
+      (res) => {
+      },
+      (res) => {
+      }
+    )
+  }
+}
+const removeFriend = (friendId: string): any => {
+  return dispatch => {
+    window.parseManager.deleteFriend(
+      friendId,
+      (res) => {
+        dispatch(setDeleteFailure(res));
+      },
+      (res) => {
+        dispatch(setDeleteSuccess(res));
+      }
+    )
+  }
+}
+// const blockFriend = (): any => {
+//   return dispatch => {
+      
+//   }
+// }
 
 /*
  *  FETCH USER
@@ -373,6 +405,8 @@ const setLocation = (longitude: number, latitude: number):any => {
 
 export const usersActions = {
   subscribeToFriends,
+  confirmFriend,
+  removeFriend,
   fetchByAttendance,
   addFriends,
   createUser,

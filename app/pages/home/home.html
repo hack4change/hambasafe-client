@@ -14,27 +14,44 @@
       </button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar class="buttonbar">
-    <button (click)="toggleView('public')" class="square-corner" [ngClass]="{active: isActive('public'), 'not-active': !isActive('public')}" clear block ion-row center>
-      <ion-icon name="globe" item-left></ion-icon>
-      Public
-    </button>
-    <button (click)="toggleView('friends')" class="square-corner" [ngClass]="{active: isActive('friends'), 'not-active': !isActive('friends')}" clear block ion-row center>
-      <ion-icon name="people" item-left></ion-icon>
-      Friends
-    </button>
-  </ion-toolbar>
-  <ion-toolbar>
-    <ion-item class="no-border" no-lines>
-      <ion-range primary min="2" max="18" step="2" snaps="true" pin="false" (ngModelChange)="sliderChange()" [(ngModel)]="searchDistance">
-        <ion-icon range-left small>Closer</ion-icon>
-        <ion-icon range-right small>Further</ion-icon>
-      </ion-range>
-    </ion-item>
-  </ion-toolbar>
 </ion-header>
 
 <ion-content [ngSwitch]="isEmpty">
+  <div padding>
+    <ion-segment [(ngModel)]="isFiltered" light>
+      <ion-segment-button (click)="toggleView('public')" value="public">
+        <!-- <ion-icon name="globe" item-left></ion-icon> -->
+        Public
+      </ion-segment-button>
+      <ion-segment-button (click)="toggleView('friends')" class="square-corner" value="friends">
+        <!-- <ion-icon name="people" item-left></ion-icon> -->
+        Friends
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+<!-- <ion-grid> -->
+<!--   <ion-row> -->
+<!--     <ion-col width-50> -->
+
+<!--     </ion-col> -->
+<!--     <ion-col width-50> -->
+<!--     </ion-col> -->
+<!--   </ion-row> -->
+<!-- </ion-grid> -->
+
+  <!-- <ion-toolbar light class="buttonbar"> -->
+  <!--   <button (click)="toggleView('public')" class="square-corner" [ngClass]="{active: isActive('public'), 'not-active': !isActive('public')}" clear block ion-row center> -->
+  <!--     <ion-icon name="globe" item-left></ion-icon> -->
+  <!--     Public -->
+  <!--   </button> -->
+  <!--   <button (click)="toggleView('friends')" class="square-corner" [ngClass]="{active: isActive('friends'), 'not-active': !isActive('friends')}" clear block ion-row center> -->
+  <!--     <ion-icon name="people" item-left></ion-icon> -->
+  <!--     Friends -->
+  <!--   </button> -->
+  <!-- </ion-toolbar> -->
+  <!-- <ion-toolbar light> -->
+  <!-- </ion-toolbar> -->
   <template ngSwitchCase="true">
     <div class="home-container valign-outer">
       <div class="valign-inner valign-mid-top">
@@ -88,3 +105,14 @@
       </button>
   </template>
 </ion-content>
+<ion-footer>
+
+  <ion-toolbar primary>
+  <ion-item class="no-border" no-lines>
+    <ion-range primary min="2" max="18" step="2" snaps="true" pin="false" (ngModelChange)="sliderChange()" [(ngModel)]="searchDistance">
+      <ion-icon range-left small>Closer</ion-icon>
+      <ion-icon range-right small>Further</ion-icon>
+    </ion-range>
+  </ion-item>
+  </ion-toolbar>
+</ion-footer>

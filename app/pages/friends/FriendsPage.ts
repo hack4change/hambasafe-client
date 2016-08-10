@@ -19,15 +19,20 @@ import {Observable, Subscription} from 'rxjs';
 /*
  * Actions
  */
-import {eventDataActions} from '../../actions/eventDataActions';
-import {usersActions} from '../../actions/usersActions';
+import { eventDataActions } from '../../actions/eventDataActions';
+import { usersActions } from '../../actions/usersActions';
 
 /*
  *  Pages
  */
-import {HomePage} from '../home/HomePage';
-import {SearchPage} from '../search/SearchPage';
-import {AddFriendPage} from '../add-friend/AddFriendPage';
+import { HomePage } from '../home/HomePage';
+import { SearchPage } from '../search/SearchPage';
+import { AddFriendPage } from '../add-friend/AddFriendPage';
+
+/*
+ * Components
+ */
+import { UserItemComponent } from '../../components/user-item/user-item.component.ts';
 
 /*
  * Pipes
@@ -36,6 +41,9 @@ import { capitalize } from '../../utils/capitalize';
 
 @Component({
   templateUrl: 'build/pages/friends/friends.html',
+  directives : [
+    UserItemComponent     
+  ],
   pipes : [
     capitalize,
   ]
@@ -70,11 +78,11 @@ export class FriendsPage {
         .toList()
         .toJSON()
       });
-      this.visibleUsersSub$ = this.visibleUsers$.subscribe(() => {
-      
+      this.visibleUsersSub$ = this.visibleUsers$.subscribe((visibleSub) => {
+        console.log(visibleSub);
       })
   }
-  ngOnDestroy(){
+  ngOnDestroy() {
     if(!!this.visibleUsersSub$){
       this.visibleUsersSub$.unsubscribe();
     }
@@ -99,10 +107,11 @@ export class FriendsPage {
       this.nav.setRoot(HomePage);
     }
   }
+
   /*
    * 
    */
-  addFriend(){
+  addFriend() {
     this.nav.push(AddFriendPage, {});
   }
   viewUser(userId:string){

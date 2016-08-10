@@ -21,15 +21,15 @@
     <map-component #endMap [radius]="0"></map-component>
   </template>
   <template ngSwitchDefault>
-    <form [ngFormModel]="createForm">
+    <form [formGroup]="createForm">
     <ion-list>
       <ion-item>
         <ion-label>Public</ion-label>
-        <ion-toggle [(ngModel)]="isPublic" checked="{{isPublic}}"></ion-toggle>
+        <ion-toggle name="isPublic" [(ngModel)]="isPublic" checked="{{isPublic}}"></ion-toggle>
       </ion-item>
       <ion-item class="">
         <ion-label>Event Type</ion-label> <!-- replace tile with selected gender-->
-        <ion-select [(ngModel)]="eventType" required>
+        <ion-select name="eventType" [(ngModel)]="eventType" required>
           <ion-option value="WALK">Walk</ion-option>
           <ion-option value="RUN">Run</ion-option>
           <ion-option value="CYCLE">Cycle</ion-option>
@@ -37,7 +37,7 @@
       </ion-item>
       <ion-item class="">
         <ion-label>Intensity</ion-label> <!-- replace tile with selected gender-->
-        <ion-select [(ngModel)]="intensity" required>
+        <ion-select name="intensity"  [(ngModel)]="intensity" required>
           <ion-option value="NOVICE">NOVICE</ion-option>
           <ion-option value="INTERMEDIATE">INTERMEDIATE</ion-option>
           <ion-option value="INTENSE">INTENSE</ion-option>
@@ -45,15 +45,15 @@
       </ion-item>
       <ion-item class="">
         <ion-label floating>Name</ion-label>
-        <ion-input [(ngModel)]="name" type="text" ngControl="name" required></ion-input>
+        <ion-input name="name" [(ngModel)]="name" type="text" ngControl="name" required></ion-input>
       </ion-item>
       <ion-item class="">
         <ion-label floating>Description</ion-label>
-        <ion-input [(ngModel)]="description" ngControl="description" type="text" required></ion-input>
+        <ion-input name="description" [(ngModel)]="description" ngControl="description" type="text" required></ion-input>
       </ion-item>
       <ion-item class="">
         <ion-label floating>Estimated distance(kilometers)</ion-label>
-        <ion-input [(ngModel)]="distance" ngControl="distance" type="number" required></ion-input>
+        <ion-input name="distance" [(ngModel)]="distance" ngControl="distance" type="number" required></ion-input>
       </ion-item>
       <ion-item *ngIf="!startLocation" (click)="openMap('START_LOCATION')" class="clean">
         <ion-label floating>Where does it start?</ion-label>
@@ -67,17 +67,17 @@
         <ion-label floating>
           What time does it start?
         </ion-label>
-        <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime"></ion-datetime> 
+        <ion-datetime name="startTime" displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime"></ion-datetime> 
       </ion-item>
       <ion-item class="">
         <ion-label floating>
           What day does it start?
         </ion-label>
-        <ion-datetime min="{{ minDate }}" max="{{ maxDate }}" displayFormat="DD/MMM/YY" value="startDate" pickerFormat="DD MM YYYY" [(ngModel)]="startDate"></ion-datetime>
+        <ion-datetime name="startDate" min="{{ minDate }}" max="{{ maxDate }}" displayFormat="DD/MMM/YY" value="startDate" pickerFormat="DD MM YYYY" [(ngModel)]="startDate"></ion-datetime>
       </ion-item>
       <ion-item class="">
         <ion-label floating>Wait time(minutes)?</ion-label>
-        <ion-input ngControl="waitTime" [(ngModel)]="waitTime" type="number"></ion-input>
+        <ion-input name="waitTime" ngControl="waitTime" [(ngModel)]="waitTime" type="number"></ion-input>
       </ion-item>
     </ion-list>
     </form>

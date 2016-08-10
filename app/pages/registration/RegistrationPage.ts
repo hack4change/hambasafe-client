@@ -10,7 +10,7 @@ import {
   animate
 } from '@angular/core';
 import {AsyncPipe} from '@angular/common';
-import {Modal, NavController, NavParams, ViewController, Loading} from 'ionic-angular';
+import {Modal, NavController, NavParams, ViewController, LoadingController} from 'ionic-angular';
 const _ = require('lodash');
 
 /**
@@ -108,7 +108,7 @@ export class RegistrationPage {
     },
   ];
 
-  constructor(private nav: NavController, private params: NavParams, private viewCtrl: ViewController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
+  constructor(private loadingCtrl: LoadingController, private nav: NavController, private params: NavParams, private viewCtrl: ViewController, private ngRedux: NgRedux<any>, private zone: NgZone) { }
 
   ngOnInit() {
     this.isEdit = this.params.data.edit? this.params.data.edit : false;
@@ -155,7 +155,7 @@ export class RegistrationPage {
           case 'CREATE_SUCCESS':
             break;
           case 'CREATE_ERROR':
-            // this.createModal = Loading.create({
+            // this.createModal = this.loadingCtrl.create({
             // content: userData.message,
             // // spinner: 'crescent',
             // dismissOnPageChange : true,
@@ -202,68 +202,68 @@ export class RegistrationPage {
       'email'           :   this.email,
     }
     if(!this.profilePicture){
-      this.nav.present( Loading.create({
+      this.loadingCtrl.create({
         content: 'Please add a profile picture on facebook',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }));
+      }).present();
       return;
     } else if(!this.firstName) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'Firstname... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
     } else if(!this.lastName) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'Surname... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
     } else if(!this.genderHeader || !(this.genderHeader == 'Male' || this.genderHeader == 'Female' || this.genderHeader == 'Other')) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'Gender... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
     } else if(!this.dateOfBirth || !(new Date(this.dateOfBirth))) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'Date Of Birth... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
     } else if(!this.mobileNumber) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'mobile number... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
     } else if(!this.email) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'email... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
     } else if(this.confirmEmail !== this.email) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: "The email fields don't match! O.o",
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
     }
     console.log(userData);

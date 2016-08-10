@@ -2,8 +2,8 @@ declare var google;
 declare var uploadcare;
 
 import {Component, ViewChild, OnInit} from '@angular/core';
-import {NavController, NavParams, Loading} from 'ionic-angular';
-import {FormBuilder, ControlGroup, Validators} from '@angular/common';
+import {NavController, NavParams, LoadingController} from 'ionic-angular';
+import {FormBuilder, NgForm, ControlGroup, Validators} from '@angular/common';
 
 /**
  *  Redux
@@ -76,8 +76,17 @@ export class CreatePage {
   minDate: string;
   maxDate: string;
 
-  constructor(private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private fb: FormBuilder) {
+  constructor(private loadingCtrl : LoadingController, private nav: NavController, private params: NavParams, private ngRedux: NgRedux<any>, private fb: FormBuilder) {
     this.createForm = this.fb.group({
+      isPublic: [
+        "",
+      ],
+      eventType: [
+        "",
+      ],
+      intensity: [
+        "",
+      ],
       name: [
         "",
         Validators.compose([
@@ -100,6 +109,12 @@ export class CreatePage {
           DistanceValidator.isValid,
           Validators.required
         ]),
+      ],
+      startTime: [
+        "",
+      ],
+      startDate: [
+        "",
       ],
       waitTime: [
         "",
@@ -173,12 +188,12 @@ export class CreatePage {
         this.ngRedux.dispatch(eventDataActions.setIdle());
         break;
         case 'CREATING': 
-          this.createModal = Loading.create({
+          this.createModal = this.loadingCtrl.create({
           content: !!this.isChange ?  "Saving...": "Creating...",
           dismissOnPageChange : true,
         })
 
-        this.nav.present(this.createModal);
+        this.createModal.present();
         break;
         case 'CREATE_ERROR': 
           if(this.createModal) {
@@ -206,147 +221,147 @@ export class CreatePage {
     console.log(this.startTime);
     console.log(this.eventType);
 		if(!this.eventType) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'Select an event type... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(!this.intensity) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'Select an intensity... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(!this.name) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'Enter a name for the event... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(!this.description) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'Enter a description... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(this.description.length < 40) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: '40 character minimum for the description! :-P (40-400)',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(this.description.length > 400) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: "Hate to be stickler, but your description's a touch long! (40-400)",
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(isNaN(this.distance)) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'Enter a distance... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(this.distance < 0) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: "Hey, distance not displacement!",
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(this.distance > 150) {
-      this.nav.present( Loading.create({
+       this.loadingCtrl.create({
         content: "The maximum distance for an event is 150Km!",
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(!this.startTime) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'Tell us what time it starts... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(!this.startDate) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'Tell us what day it starts... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(!this.startLocation) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'Tell us where it starts... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(Math.abs(this.startLocation.longitude) > 90 || Math.abs(this.startLocation.longitude) > 180) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'A location on earth please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return
 		}
 		if(isNaN(this.waitTime)) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: 'Tell us how long you can wait... please!',
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(this.waitTime < 0) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
          content: "It's a bit rude to leave before people arrive!",
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		if(this.waitTime > 30) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: "You can't be waiting around that long! :O",
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
 		}
 		// if(!this.endTime) {
@@ -360,12 +375,12 @@ export class CreatePage {
 		// }
     var convertedDate = new Date(this.startDate  + " " + this.startTime);
     if( Date.now() >= convertedDate.getTime() - 60*60000) {
-      this.nav.present(Loading.create({
+      this.loadingCtrl.create({
         content: "It has to start at least one hour from now! :-D",
         spinner: 'hide',
         dismissOnPageChange : true,
         duration: 1000,
-      }))
+      }).present();
       return;
     }
     var data = {

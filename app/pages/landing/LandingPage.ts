@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Platform, NavController, Loading} from 'ionic-angular';
+import {Platform, NavController, LoadingController} from 'ionic-angular';
 
 /**
  *  Redux
@@ -36,7 +36,7 @@ export class LandingPage {
 
   loadingPopup: any;
 
-  constructor(private platform: Platform, private nav: NavController, private ngRedux: NgRedux<any>) {};
+  constructor(private platform: Platform, private nav: NavController, private loadingCtrl:  LoadingController, private ngRedux: NgRedux<any>) {};
 
   ngOnInit() {
     this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
@@ -68,11 +68,12 @@ export class LandingPage {
   }
 
   fbLogin() {
-    this.loadingPopup = Loading.create({
+    this.loadingPopup = this.loadingCtrl.create({
       content: 'Logging in...',
       dismissOnPageChange : true,
+      duration: 1000,
     })
-    this.nav.present(this.loadingPopup);
+   this.loadingPopup.present();
     if(this.platform.is('cordova')) {
       this.ngRedux.dispatch(authActions.authDevice());
     } else {

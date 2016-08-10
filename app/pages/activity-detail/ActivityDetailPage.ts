@@ -129,6 +129,9 @@ export class ActivityDetailPage {
     }
   }
 
+  ratingRequired(){
+    return this.mustRate.toString();
+  }
   getActivityRating(index: number) {
     return index <= this.activityRating ? {
       'rated': 'true'

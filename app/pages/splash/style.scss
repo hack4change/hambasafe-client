@@ -1,4 +1,7 @@
 .splash-page {
+  ion-header::after {
+    background-image: none;
+  }
   scroll-content {
     overflow-y: auto;
     height:90%;
