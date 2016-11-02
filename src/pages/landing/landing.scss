@@ -1,0 +1,73 @@
+page-landing {
+  background: url('../assets/img/landing.jpg') no-repeat;
+  background-size: cover;
+  background-position: 55%;
+  height: 100%;
+  ion-header::after {
+    background-image: none;
+  }
+  scroll-content {
+    overflow-y: auto;
+    height:90%;
+  }
+  .landing-wrapper {
+    height: 100%;
+    width:100%;
+    .menu-icon {
+      margin-left: 0.4em;
+      color: $light;
+      font-size: 2em;
+    }
+
+
+    .landing-container {
+      display: block;
+      width: 50%;
+      max-width: 15em;
+      margin: 0 auto;
+      text-align: center;
+
+      h1,h2, h3, h4, h5, h6 {
+        color: $light;
+      }
+      img {
+        width: 128px;
+      }
+      .landing-intro-one {
+        padding-top:5%;
+        font-weight: bold; 
+      }
+      .landing-intro-two {
+        padding-top:15%;
+      }
+      .landing-intro-button {
+        padding-top:10%;
+        padding-bottom:50%;
+        width: 90%;
+        margin: 0 auto;
+        button {
+          // width: 75%;
+          border-radius: 4px !important;
+          // color: #3b5998;
+          color: $light;
+          font-weight:bold;
+          .item-inner {
+          }
+        }
+        button.activated {
+          background-color:  rgba(59, 89, 152, 0.9);
+        }
+      }
+    }
+  }
+  ion-toolbar {
+    .toolbar-title{
+      text-align: center;
+      a {
+        color: white; 
+      }
+
+    }
+  }
+
+}

@@ -1,0 +1,41 @@
+<ion-header>
+  <ion-toolbar class="icon-only">
+    <a class="clickable" menuToggle>
+      <ion-icon light class="menu-icon" name="menu"></ion-icon>
+    </a>
+  </ion-toolbar>
+</ion-header>
+<ion-content>
+  <div class="valign-outer landing-wrapper">
+    <div class="valign-inner">
+      <div class="landing-container">
+        <img src="assets/img/hambasafe_app_icon_logo.png">
+        <div class="landing-intro-one">
+            <h1>
+              HambaSafe
+            </h1>
+        </div>
+        <div class="landing-intro-two">
+          <h5>
+            Login or Sign Up
+          </h5>
+        </div>
+      <div class="landing-intro-button">
+        <button class="facebook-button" light full block ion-item no-lines (click)="fbLogin()" detail-none text-center>
+          <ion-icon name="logo-facebook" item-left></ion-icon>
+            Facebook
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+</ion-content>
+<ion-footer>
+  <ion-toolbar position="bottom">
+    <ion-title class="text-footer">
+      <a (click)="goToTerms()">
+        Terms of Use
+      </a>
+    </ion-title>
+  </ion-toolbar>
+</ion-footer>
