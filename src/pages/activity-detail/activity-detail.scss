@@ -1,0 +1,13 @@
+page-activity-detail {
+  ion-item{
+    activity-item {
+      border-left: 6px solid #0C9EF9;
+      .item .item-inner {
+        padding-right: 0px;
+      }
+    }
+  }
+  .invite-button {
+    text-align: center;
+  }
+}

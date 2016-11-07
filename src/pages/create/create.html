@@ -1,0 +1,205 @@
+<ion-header>
+	<ion-toolbar class="icon-only" primary>
+		<ion-buttons start>
+			<button (click)="goBack()" light>
+				<ion-icon name="close-circle"></ion-icon>
+			</button>
+		</ion-buttons>
+		<ion-title *ngIf="!isChange">
+			CREATE AN EVENT
+		</ion-title>
+		<ion-title *ngIf="isChange">
+			Change Away!
+		</ion-title>
+	</ion-toolbar>
+</ion-header>
+<ion-content [ngSwitch]="activeType">
+  <template ngSwitchCase="START_LOCATION">
+    <map #startMap [radius]="0"></map>
+  </template>
+  <template ngSwitchCase="END_LOCATION">
+    <map #endMap [radius]="0"></map>
+  </template>
+  <template ngSwitchDefault>
+    <form [formGroup]="createForm">
+    <ion-list>
+      <ion-item>
+        <ion-label>Public</ion-label>
+        <ion-toggle name="isPublic" [(ngModel)]="isPublic" checked="{{isPublic}}"></ion-toggle>
+      </ion-item>
+      <ion-item class="">
+        <ion-label>Event Type</ion-label> <!-- replace tile with selected gender-->
+        <ion-select name="eventType" [(ngModel)]="eventType" required>
+          <ion-option value="WALK">Walk</ion-option>
+          <ion-option value="RUN">Run</ion-option>
+          <ion-option value="CYCLE">Cycle</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item class="">
+        <ion-label>Intensity</ion-label> <!-- replace tile with selected gender-->
+        <ion-select name="intensity"  [(ngModel)]="intensity" required>
+          <ion-option value="NOVICE">NOVICE</ion-option>
+          <ion-option value="INTERMEDIATE">INTERMEDIATE</ion-option>
+          <ion-option value="INTENSE">INTENSE</ion-option>
+        </ion-select>
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>Name</ion-label>
+        <ion-input name="name" [(ngModel)]="name" type="text" ngControl="name" required></ion-input>
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>Description</ion-label>
+        <ion-input name="description" [(ngModel)]="description" ngControl="description" type="text" required></ion-input>
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>Estimated distance(kilometers)</ion-label>
+        <ion-input name="distance" [(ngModel)]="distance" ngControl="distance" type="number" required></ion-input>
+      </ion-item>
+      <ion-item *ngIf="!startLocation" (click)="openMap('START_LOCATION')" class="clean">
+        <ion-label floating>Where does it start?</ion-label>
+        <ion-input type="text" value="" required></ion-input>
+      </ion-item>
+      <ion-item *ngIf="startLocation" (click)="openMap('START_LOCATION')" class="">
+        <ion-label floating>Where does it start?</ion-label>
+        <ion-input type="text" value="{{ startLocation.latitude }}, {{ startLocation.longitude }}" required></ion-input>
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>
+          What time does it start?
+        </ion-label>
+        <ion-datetime name="startTime" displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime"></ion-datetime> 
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>
+          What day does it start?
+        </ion-label>
+        <ion-datetime name="startDate" min="{{ minDate }}" max="{{ maxDate }}" displayFormat="DD/MMM/YY" value="startDate" pickerFormat="DD MM YYYY" [(ngModel)]="startDate"></ion-datetime>
+      </ion-item>
+      <ion-item class="">
+        <ion-label floating>Wait time(minutes)?</ion-label>
+        <ion-input name="waitTime" ngControl="waitTime" [(ngModel)]="waitTime" type="number"></ion-input>
+      </ion-item>
+    </ion-list>
+    </form>
+  </template>
+</ion-content>
+<ion-footer>
+  <ion-toolbar [ngSwitch]="activeType">
+    <template ngSwitchCase="START_LOCATION">
+      <button primary (click)="closeMap('START_LOCATION')" full>
+        Start Here!
+      </button>
+    </template>
+    <template ngSwitchCase="END_LOCATION">
+      <button primary (click)="closeMap('END_LOCATION')" full>
+        End Here!
+      </button>
+    </template>
+    <template ngSwitchDefault>
+      <button primary *ngIf="isChange" (click)="createActivity()" full>
+        Save!
+      </button>
+      <button primary *ngIf="!isChange" (click)="createActivity()" full>
+        Post!
+      </button>
+    </template>
+  </ion-toolbar>
+</ion-footer>
+<!-->
+  <ion-item class="">
+  <ion-label floating>
+  What time does it end?
+  </ion-label>
+  <ion-datetime displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="endTime"></ion-datetime>
+  </ion-item>
+  <ion-item class="">
+  <ion-label floating>
+  What day does it end?
+  </ion-label>
+  <ion-datetime displayFormat="DD/MMM/YY" pickerFormat="DD MMM YY" [(ngModel)]="endDate"></ion-datetime>
+  </ion-item>
+  <ion-item (click)="openMap('END_LOCATION')" class="">
+  Where does it end?
+  </ion-item>
+-->
+<!--
+
+
+    <ion-nav-bar class="bar-positive">
+      <ion-nav-buttons side="left">
+        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+      </ion-nav-buttons>
+      <ion-nav-view>
+        <ion-nav-title>
+          <h1 class="title">CREATE AN EVENT</h1>
+        </ion-nav-title>
+
+
+        <div class="has-header list">
+
+          <ion-list>
+            <div>
+              <ion-item class="item-stable"
+                        ng-click="toggleGroup(group)"
+                        ng-class="{active: isGroupShown(group)}">
+                <i class="icon pull-right" style="float:right" ng-class="isGroupShown(group) ? 'ion-chevron-up' : 'ion-chevron-down'"></i>
+                &nbsp;
+                <b>{{typeSelected}}</b>
+              </ion-item>
+              <ion-item class="item-accordion"
+                        ng-repeat="type in eventType"
+                        ng-show="isShown(type, group)" style="border-top: 0px" ng-click="toggleSelection(type, group)">
+                <b>{{type}}</b>
+              </ion-item>
+              <ion-item class="item-accordion"
+                        ng-repeat="type in eventType"
+                        ng-show="isShown(type, group)" style="border-top: 0px" ng-click="toggleSelection(type, group)">
+                <b>{{type}}</b>
+              </ion-item>
+            </div>
+          </ion-list>
+          <label class="item item-input">
+            <span class="input-label">Date</span>
+            <input type="date" ng-model="eventData.EventDate">
+          </label>
+
+          <label class="item item-input">
+            <span class="input-label">Start time</span>
+            <input type="time" ng-model="eventData.EventDateTimeStart">
+          </label>
+          <label class="item item-input">
+            <span class="input-label">Start time</span>
+            <input type="time" ng-model="eventData.EventDateTimeStart">
+          </label>
+
+          <label class="item item-input">
+            <span class="input-label">End time</span>
+            <input type="time" ng-model="eventData.EventDateTimeEnd">
+          </label>
+
+          <label class="item item-input">
+            <input placeholder="Location" type="text" ng-autocomplete ng-model="result" options="options" details="details" />
+          </label>
+
+          <label class="item item-input">
+            <textarea placeholder="Description" ng-model="eventData.Description"></textarea>
+          </label>
+
+          <label>
+
+            <ion-checkbox ng-model="filter.blue" style="">Private</ion-checkbox>
+
+          </label>
+
+
+          <div>
+            <button class="button button-block button-positive" ng-click="create()">
+              CREATE
+            </button>
+          </div>
+        </div>
+      </ion-nav-view>
+    </ion-nav-bar>
+  </ion-side-menu-content>
+</ion-side-menus>
+-->

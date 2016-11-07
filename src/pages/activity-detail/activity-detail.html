@@ -1,0 +1,91 @@
+<ion-header>
+  <ion-toolbar class="main-bar">
+    <ion-buttons start>
+      <button dark (click)="goBack()">
+        <ion-icon name="arrow-back"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons *ngIf="!isAuthor" end>
+      <button dark class="indent" (click)="goHome()">
+        <ion-icon name="pin"></ion-icon>
+      </button>
+      <button dark (click)="goSearch()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-buttons  *ngIf="isAuthor" end>
+      <button (click)="editActivity()">
+        <ion-icon name="create"></ion-icon>
+      </button>
+      <button dark class="indent" (click)="goHome()">
+        <ion-icon name="pin"></ion-icon>
+      </button>
+      <button dark (click)="goSearch()">
+        <ion-icon name="search"></ion-icon>
+      </button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+<ion-content [ngSwitch]="ratingRequired()">
+  <template ngSwitchCase="false">
+    <ion-list>
+      <activity-item detailed="true" [activity]="activity$ | async"></activity-item>
+    </ion-list>
+    <div>
+      <p>
+      {{ (activity$ | async)?.description }}
+      </p>
+    </div>
+    <ion-item *ngIf="isAuthor" class="invite-button" no-lines>
+      <button (click)="inviteUsers()" primary>
+        Invite Hambaggers!
+      </button>
+    </ion-item>
+  </template>
+  <template ngSwitchDefault>
+    <ion-list>
+      <ion-item>
+        <ion-row text-center>
+          <ion-col>
+            Activity Rating
+          </ion-col>
+        </ion-row>
+        <ion-row text-center>
+          <ion-col>
+            <button *ngFor="let i of maxStars" [ngClass]="getActivityRating(i)" style="height: 50px" (click)="setActivityRating(i)"> 
+              <ion-icon style="font-size: 5rem;" name="star"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+      <ion-item>
+        <ion-row text-center>
+          <ion-col>
+            Group Rating
+          </ion-col>
+        </ion-row>
+        <ion-row text-center>
+          <ion-col>
+            <button *ngFor="let i of maxStars"  [ngClass]="getGroupRating(i)" style="height: 50px" (click)="setGroupRating(i)"> 
+              <ion-icon style="font-size: 5rem;" name="star"></ion-icon>
+            </button>
+          </ion-col>
+        </ion-row>
+      </ion-item>
+    </ion-list>
+    <ion-list>
+      <user-item *ngFor="let user of users$ | async" [user]="user" [mustRate]="true"></user-item>
+    </ion-list>
+  </template>
+</ion-content>
+<ion-footer>
+  <ion-toolbar calm class="main-bar">
+    <button *ngIf="!mustRate" (click)="joinActivity()" [disabled]="(activity$ | async)?.isAttending" full primary>
+      Join!
+    </button>
+    <button *ngIf="mustRate" (click)="rateActivity()" [disabled]="activityRating == 0" full primary>
+      Rate!
+    </button>
+  </ion-toolbar>
+</ion-footer>
+

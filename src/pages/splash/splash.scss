@@ -1,0 +1,65 @@
+page-splash {
+  ion-header::after {
+    background-image: none;
+  }
+  scroll-content {
+    overflow-y: auto;
+    height:90%;
+  }
+  background-color: $positive;
+  .splash-wrapper {
+    height: 100%;
+    width:100%;
+    .menu-icon {
+      margin-left: 0.4em;
+      color: $light;
+      font-size: 2em;
+    }
+
+
+    .splash-container {
+      display: block;
+      width: 50%;
+      max-width: 15em;
+      margin: 0 auto;
+      text-align: center;
+      img {
+        width: 128px;
+      }
+      .splash-intro-one {
+        padding-top:5%;
+        h3 {
+          font-weight: bold; 
+          color: $light;
+        }
+      }
+      .splash-intro-two {
+        padding-top:15%;
+        h4 {
+          color: $light;
+        }
+      }
+      .splash-intro-button {
+        padding-top:10%;
+        padding-bottom:50%;
+        width: 100%;
+        button {
+          width: 75%;
+          border-radius: 4px !important;
+          color: $positive;
+          font-weight:bold;
+        }
+      }
+    }
+  }
+  ion-toolbar {
+    .toolbar-title{
+      text-align: center;
+      a {
+        color: white; 
+      }
+    
+    }
+  }
+
+}
