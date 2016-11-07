@@ -202,3 +202,138 @@ ion-range {
   color: $energized;
   font-weight: bold;
 }
+.pull-right {
+  float: right !important;
+}
+.pull-left {
+  float: left !important;
+}
+.hide {
+  display: none !important;
+}
+.show {
+  display: block !important;
+}
+.invisible {
+  visibility: hidden;
+}
+.icon-l{
+   font-size:32px !important;
+ }
+.facebook-color {
+    color: #3b5998;
+}
+.linkedin-color {
+    color: #007bb5;
+}
+.facebook-button {
+  background-color: #3b5998;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.square-corner {
+  border-radius: 0px;
+}
+.block-center {
+  display:block;
+  margin: 0 auto;
+}
+.text-center {
+  text-align:center;
+}
+
+.flex-grow {
+  flex-grow: 1;
+}
+.flex-single {
+  flex: 1;
+  justify-content: space-between;
+}
+.flex-double {
+  flex: 2;
+}
+.flex-triple {
+  flex: 3;
+}
+.flex-quadruple {
+  flex: 4;
+}
+.flex-grow {
+  flex-grow: 1;
+}
+
+.valign-outer {
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  transform-style: preserve-3d;
+}
+
+.valign-inner{
+  position: relative;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -moz-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+.valign-mid-top{
+  top: 25%;
+}
+
+ion-list.list-borderless div {
+  border: 0;
+}
+.borderless{
+  border: 0 !important;
+}
+
+.item-text-center
+{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -moz-box;
+  display: -moz-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  -moz-align-items: center;
+  align-items: center;
+  position: absolute;
+  top: 0;
+  height: 100%;
+}
+
+
+ion-content{
+  border: 0px;
+  background: transparent;
+}
+scroll-content {
+  overflow-y: auto;
+}
+
+ion-toolbar{
+  .toolbar-background {
+    border: 0px;
+    background: transparent ;
+  }
+}
+
+ion-item.borderless > .item-inner{
+  border: 0px;
+}
+ion-menu {
+  ion-item {
+    ion-icon[item-left] {
+      background-color: $positive;
+      // margin-left: 11px;
+      padding: 4px 8.66px;
+      border-radius: 50%;
+    }
+  }
+}

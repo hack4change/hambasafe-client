@@ -1,16 +1,41 @@
-import actionTypes from '../actionTypes.ts';
+import actionTypes from '../actionTypes';
+import {fromJS, Map} from 'immutable';
+// const _ = require('lodash');
 
-export default function currentUser(state:any, action: any= {}) {
+const INIT_STATE =  Map<string, any>(fromJS({
+  status: "ANONYMOUS",
+  // id : '',
+  // fbId : '',
+  // accessToken: '',
+  firstName: '',
+  lastName: '',
+  gender: '',
+  dateOfBirth: '',
+  location: {
+    longtiude: null,
+    latitude : null,
+  },
+  mobileNumber: '',
+  email : '',
+  profilePicture: '',
+  message: '',
+}))
+
+export default function currentUser(state:any = INIT_STATE, action: any= {}) {
   console.log(action);
   switch (action && action.type) {
     case actionTypes.USER_CREATE_INIT:
       return state.set('status', action.data.get('status'));
     case actionTypes.USER_CREATE_SUCCESS:
-      var retState = state.set('status', action.data.get('status'));
-      return retState.set('message', action.data.get('message'));
+      return  state.set({
+      'status': action.data.get('status'),
+      'message': action.data.get('message')
+    });
     case actionTypes.USER_CREATE_FAIL:
-      var retState = state.set('status', action.data.get('status'));
-      return retState.set('message', action.data.get('message'));
+      return state.set({
+      'status': action.data.get('status'),
+      'message': action.data.get('message')
+    });
     case actionTypes.USER_AUTH_INIT:
       return state.set('status', action.data.get('status'));
     case actionTypes.USER_AUTH_SUCCESS:
@@ -31,6 +56,10 @@ export default function currentUser(state:any, action: any= {}) {
       return state;
   }
 };
+
+// interface actionsState<T>{
+//   data:Immutable<T>
+// }
 /*
  *
  *

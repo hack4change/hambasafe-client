@@ -59,19 +59,21 @@
       </ion-item>
     </ion-list>
   </ion-content>
-  <ion-toolbar position="bottom">
-    <ion-title>
-      <!-- <button clear fab-bottom> -->
-      <!--   <ion-avatar> -->
-      <!--     <img src="img/hambasafe_app_icon_logo.png"> -->
-      <!--   </ion-avatar> -->
-      <!-- </button> -->
-      <a (click)="goToTerms()">
-        Terms of Use
-      </a> 
-    </ion-title>
-  </ion-toolbar>
 
+  <ion-footer>
+    <ion-toolbar>
+      <ion-title>
+        <!-- <button clear fab-bottom> -->
+        <!--   <ion-avatar> -->
+        <!--     <img src="img/hambasafe_app_icon_logo.png"> -->
+        <!--   </ion-avatar> -->
+        <!-- </button> -->
+        <a (click)="goToTerms()">
+          Terms of Use
+        </a> 
+      </ion-title>
+    </ion-toolbar>
+  </ion-footer>
 </ion-menu>
 
 <ion-menu [content]="myNavRoot" id="authorised-menu">

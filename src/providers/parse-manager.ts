@@ -13,6 +13,7 @@ import {Parse} from 'parse';
 @Injectable()
 export class ParseManager {
   private Parse = Parse;
+  // private isFBSdk = false;
 
   private ActivityClass: any;
   private AttendanceClass: any;
@@ -29,6 +30,12 @@ export class ParseManager {
     console.log('Hello ParseManager Provider');
     this.Parse.initialize('test1234');
     this.Parse.serverURL = 'https://mainstream.ninja/parse'
+
+    // this.Parse.FacebookUtils.init({
+    //   appId      : '1824765444411364',
+    //   xfbml      : true,
+    //   version    : 'v2.6'
+    // })
 
     this.ActivityClass = this.Parse.Object.extend("Activity");
     this.AttendanceClass = this.Parse.Object.extend("Attendance");
@@ -903,7 +910,7 @@ export class ParseManager {
   /*
    *  Registration Function
    */
-  signUp(data, success: () => void, error: (res) => void) {
+  signUp(data, success: (res) => void, error: (err) => void) {
     console.log('signUp');
     console.log(data);
     _.forEach(data, (value, key) => {
@@ -915,12 +922,12 @@ export class ParseManager {
     })
     this.Parse.User.current().save(null, {
       success: (res) => {
-        success();
+        success(res);
       },
-      error: (res) => {
+      error: (err) => {
         console.log("error");
-        console.log(res);
-        error(res);
+        console.log(err);
+        error(err);
       }
     });
     console.log('here');
@@ -960,6 +967,7 @@ export class ParseManager {
       }
     });
   }
+
   facebookLogin(perms, success: any, error: any) {
     this.Parse.FacebookUtils.logIn(perms, {
       success: (response) => {

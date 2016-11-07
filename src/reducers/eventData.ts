@@ -1,9 +1,16 @@
-import actionTypes from '../actionTypes.ts';
+import actionTypes from '../actionTypes';
 
-import {Map} from 'immutable';
-const _ = require('lodash');
+import {fromJS, Map} from 'immutable';
+// const _ = require('lodash');
 
-export default function eventData(state:any, action:any = {}) {
+
+const INIT_STATE =  Map<string, any>(fromJS({
+  status: "idle",
+  visibleType: '',
+  items: {},
+}))
+
+export default function eventData(state:any = INIT_STATE, action:any = {}) {
   console.log('action');
   console.log(action);
   switch (action && action.type) {

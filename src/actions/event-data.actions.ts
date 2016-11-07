@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
+import actionTypes from '../actionTypes';
+import {fromJS} from 'immutable';
+import { ParseManager } from '../providers/parse-manager';
+const _ = require('lodash');
 
 /*
   Generated class for the EventDataActions provider.
@@ -11,8 +14,315 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class EventDataActions {
 
-  constructor(public http: Http) {
+  constructor(public http: Http, public parseManager : ParseManager) {
     console.log('Hello EventDataActions Provider');
+  }
+
+  setFetchSuccessState(response) {
+    return {
+      data: fromJS({
+        items: _.keyBy(response, 'objectId'),
+        status: 'SUCCESS',
+      }),
+      type: actionTypes.EVENTS_FETCH_SUCCESS,
+    };
+  };
+
+  // Error.
+  setFetchErrorState(error) {
+    return {
+      data: fromJS({
+        items: {},
+        message: error,
+        status: 'ERROR',
+      }),
+      type: actionTypes.EVENTS_FETCH_FAIL,
+    };
+  };
+
+  setFetchLoadingState() {
+    return {
+      data: fromJS({
+        items: {},
+        status: 'loading',
+      }),
+      type: actionTypes.EVENTS_FETCH_INIT,
+    };
+  };
+
+  fetchEvent(activityId: string) : any {
+    return dispatch => {
+      console.log('dispatch');
+      // Set loading state.
+      dispatch(this.setFetchLoadingState());
+
+      this.parseManager.getActivity(
+        activityId,
+        (error) => dispatch(this.setFetchErrorState(error)),
+          (response) => dispatch(this.setFetchSuccessState(response))
+      );
+    };
+  }
+
+  fetchEvents() : any {
+    return dispatch => {
+      console.log('dispatch');
+      // Set loading state.
+      dispatch(this.setFetchLoadingState());
+
+    };
+  };
+  fetchEventsBySuburb(suburb: string) : any {
+    return dispatch => {
+      console.log('dispatch');
+      // const url = API_ROOT + '/Events/events-by-suburb';
+
+      // Set loading state.
+      dispatch(this.setFetchLoadingState());
+
+    };
+  }
+
+  fetchEventsByCoordinates(distance: number, latitude: number, longitude: number) : any {
+    return dispatch => {
+      console.log('dispatch');
+
+      // Set loading state.
+      dispatch(this.setFetchLoadingState());
+      // Do request.
+      this.parseManager.getActivitiesByLocation(
+        distance,
+        latitude,
+        longitude,
+        (error) => dispatch(this.setFetchErrorState(error)),
+          (response) => dispatch(this.setFetchSuccessState(response))
+      );
+    };
+  }
+
+  /**
+   * CREATE
+   */
+  createActivity(data) : any {
+    return dispatch => {
+      console.log('event Create')
+      dispatch(this.setCreateLoadingState());
+      this.parseManager.createActivity(
+        data,
+        (error) => dispatch(this.setCreateErrorState(error)),
+          (response) => dispatch(this.setCreateSuccessState(response))
+      );
+      // Set loading state.
+
+      // Do request.
+    };
+  }
+
+  /**
+   * UPDATE
+   */
+  updateActivity(activityId, data) : any {
+    return dispatch => {
+      console.log('event Create')
+      dispatch(this.setCreateLoadingState());
+      this.parseManager.updateActivity(
+        activityId,
+        data,
+        (error) => dispatch(this.setCreateErrorState(error)),
+          (response) => dispatch(this.setCreateSuccessState(response))
+      );
+      // Set loading state.
+
+      // Do request.
+    };
+  }
+  setCreateSuccessState(response) {
+    return {
+      data: fromJS({
+        status: 'CREATED',
+        message: response.message,
+        items: _.keyBy([response.item], 'objectId')
+      }),
+      type: actionTypes.EVENT_CREATE_SUCCESS,
+    };
+  };
+
+  // Error.
+  setCreateErrorState(error) {
+    return {
+      data: fromJS({
+        message: error,
+        status: 'CREATE_ERROR',
+      }),
+      type: actionTypes.EVENT_CREATE_FAIL,
+    };
+  };
+  setCreateLoadingState() {
+    console.log('loadingState');
+    return {
+      data: fromJS({
+        status: 'CREATING',
+      }),
+      type: actionTypes.EVENT_CREATE_INIT,
+    };
+  }
+
+  /*
+   *  JOIN
+   */
+
+  joinActivity(activityId) : any {
+    return dispatch => {
+      console.log('event Join')
+      dispatch(this.setJoinLoadingState());
+      this.parseManager.joinActivity(
+        activityId,
+        (error) => dispatch(this.setJoinErrorState(error)),
+          (response) => dispatch(this.setJoinSuccessState(response))
+      );
+    };
+  };
+
+  setJoinSuccessState(response) {
+    console.log('Join SUCCESS');
+    console.log(response);
+    return {
+      data: fromJS({
+        activityId: response['objectId'],
+        status: 'JOINED',
+      }),
+      type: actionTypes.EVENT_JOIN_SUCCESS,
+    };
+  };
+
+  // Error.
+  setJoinErrorState(error) {
+    return {
+      data: fromJS({
+        message: error,
+        status: 'JOIN_ERROR',
+      }),
+      type: actionTypes.EVENT_JOIN_FAIL,
+    };
+  };
+  setJoinLoadingState() {
+    console.log('loadingState');
+    return {
+      data: fromJS({
+        status: 'JOINING',
+      }),
+      type: actionTypes.EVENT_JOIN_INIT,
+    };
+  }
+
+  setVisible(filterString) : any {
+    console.log('setting visible')
+    return {
+      data: fromJS({
+        'visible' : filterString
+      }),
+      type: actionTypes.EVENTS_VISIBLE_SET,
+    };
+  };
+
+  setIdle() : any {
+    return {
+      data: fromJS({
+        message:  '',
+        status:   'idle',
+      }),
+      type: actionTypes.EVENTS_STATUS_SET,
+    };
+  };
+  inviteToActivity(activityId, userKeys):any {
+    return dispatch => {
+      dispatch(this.setInviteLoadingState());
+      this.parseManager.inviteToActivity(
+        activityId,
+        userKeys,
+        (res) => dispatch(this.setInviteSuccessState(res)),
+          (res) => dispatch(this.setInviteErrorState(res))
+      )
+    }
+  }
+  setInviteSuccessState(response) {
+    console.log('Invite SUCCESS');
+    console.log(response);
+    return {
+      data: fromJS({
+        activityId: response['objectId'],
+        status: 'INVITED',
+      }),
+      type: actionTypes.EVENT_INVITE_SUCCESS,
+    };
+  };
+
+  // Error.
+  setInviteErrorState(error) {
+    return {
+      data: fromJS({
+        message: error,
+        status: 'INVITE_ERROR',
+      }),
+      type: actionTypes.EVENT_INVITE_FAIL,
+    };
+  };
+  setInviteLoadingState() {
+    console.log('loadingState');
+    return {
+      data: fromJS({
+        status: 'INVITING',
+      }),
+      type: actionTypes.EVENT_INVITE_INIT,
+    };
+  }
+  subscribeAttending() : any {
+    return dispatch => {
+      this.parseManager.subscribeToAttending(
+        (err) => {
+          dispatch(this.setSubscribeAttendingFail(err))
+        },
+        (res) => {
+          dispatch(this.setFetchSuccessState(res))
+        },
+        (res) => {
+          dispatch(this.setDeleteAttending(res))
+        }
+      );
+    }
+  }
+  setCreateAttending(res) : any {
+
+  }
+  setDeleteAttending(res) : any {
+
+  }
+  setSubscribeAttendingSuccess() : any {
+
+  }
+  setSubscribeAttendingFail(err) : any {
+
+  }
+  rateActivity(activityId : string, rating:number) : any {
+    return dispatch => {
+      this.parseManager.rateActivity(
+        activityId,
+        rating,
+        (res) => {
+          this.setRatingSuccess();
+        },
+        (err) => {
+          this.setRatingFailure(err);
+        }
+      )
+    }
+  }
+
+  setRatingSuccess() {
+
+  }
+  setRatingFailure(err){
+
   }
 
 }

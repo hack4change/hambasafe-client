@@ -1,4 +1,10 @@
 page-landing {
+  .header-md::after, .footer-md::before {
+    background-image: none;
+  }
+  ion-content, .content-md {
+    background: transparent;
+  }
   background: url('../assets/img/landing.jpg') no-repeat;
   background-size: cover;
   background-position: 55%;

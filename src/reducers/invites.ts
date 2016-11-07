@@ -1,9 +1,15 @@
-import actionTypes from '../actionTypes.ts';
+import {fromJS, Map} from 'immutable';
+// const _ = require('lodash');
 
-import {Map} from 'immutable';
-const _ = require('lodash');
+import actionTypes from '../actionTypes';
 
-export default function invites(state:any, action:any = {}) {
+
+const INIT_STATE = Map<string, any>(fromJS({
+  status: "UNSUBSCRIBED",
+  items: {} 
+}))
+
+export default function invites(state:any = INIT_STATE, action:any = {}) {
   console.log('action');
   console.log(action);
   switch (action && action.type) {

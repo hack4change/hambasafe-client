@@ -10,13 +10,13 @@ import {Observable, Subscription} from 'rxjs';
 // /*
 //  *  Actions
 //  */
-// import {authActions} from '../../actions/authActions';
+import {AuthActions} from '../../actions/auth.actions';
 
 // /*
 //  *  Pages
 //  */
-// import {HomePage} from '../home/HomePage';
-// import {TermsPage} from '../terms/TermsPage';
+import {HomePage} from '../home/home';
+import {TermsPage} from '../terms/terms';
 
 // //TODO: REMOVE
 // import {SearchPage} from '../search/SearchPage';
@@ -41,18 +41,21 @@ export class LandingPage implements OnInit {
 
   loadingPopup: any;
 
-  constructor(private platform: Platform, private nav: NavController, private loadingCtrl:  LoadingController, private ngRedux: NgRedux<any>) {};
+  constructor(private platform: Platform, private nav: NavController, private loadingCtrl:  LoadingController, private ngRedux: NgRedux<any>, private authActions: AuthActions) {};
 
   ngOnInit() {
-    this.authStatus$ =  this.ngRedux.select(state=>state.getIn(['currentUser', 'status']))
+    this.authStatus$ =  this.ngRedux.select(['currentUser', 'status'])
     this.authStatusSub$ = this.authStatus$.subscribe((userStatus) => {
+      console.log('User Status');
+      console.log(userStatus);
       switch(userStatus) {
         case 'AUTHENTICATED':
+          console.log('AUTHENTICATED');
           if(!!this.loadingPopup){
           this.loadingPopup.dismiss();
         }
         // this.nav.setRoot(ProfilePage);
-          // this.nav.setRoot(HomePage);
+          this.nav.setRoot(HomePage);
         break;
         case 'ATTEMPTING':
           break;
@@ -79,12 +82,12 @@ export class LandingPage implements OnInit {
     })
     this.loadingPopup.present();
     if(this.platform.is('cordova')) {
-      // this.ngRedux.dispatch(authActions.authDevice());
+      this.ngRedux.dispatch(this.authActions.authDevice());
     } else {
-      // this.ngRedux.dispatch(authActions.authUser());
+      this.ngRedux.dispatch(this.authActions.authUser());
     }
   }
   goToTerms() {
-    // this.nav.push(TermsPage);
+    this.nav.push(TermsPage);
   }
 }
