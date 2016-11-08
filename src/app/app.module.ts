@@ -1,7 +1,23 @@
-import { NgModule } from '@angular/core';
-import { NgReduxModule, DevToolsExtension } from 'ng2-redux';
-import { IonicApp, IonicModule } from 'ionic-angular';
-import { MyApp } from './app.component';
+import { 
+  NgModule,
+} from '@angular/core';
+import { 
+  CommonModule
+} from '@angular/common';
+import { 
+  FormsModule
+} from '@angular/forms';
+import {
+  NgReduxModule,
+  DevToolsExtension
+} from 'ng2-redux';
+import { 
+  IonicApp,
+  IonicModule 
+} from 'ionic-angular';
+import {
+  MyApp 
+} from './app.component';
 
 /**
  * Providers
@@ -54,6 +70,11 @@ import { UserItem } from '../components/user-item/user-item';
  */
 import { Capitalize } from '../utils/capitalize';
 
+/*
+ *  Validators
+ */
+// import {DistanceValidator} from  '../validators/distance';
+// import {WaitTimeValidator} from  '../validators/waitTime';
 
 @NgModule({
   declarations: [
@@ -86,8 +107,13 @@ import { Capitalize } from '../utils/capitalize';
     UserItem,
 
     Capitalize,
+
+    //DistanceValidator,
+    //WaitTimeValidator,
   ],
   imports: [
+    FormsModule,
+    CommonModule,
     IonicModule.forRoot(MyApp),
     NgReduxModule.forRoot(),
   ],

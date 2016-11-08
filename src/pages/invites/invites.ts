@@ -67,19 +67,19 @@ export class InvitesPage implements OnInit{
 
   ngOnInit() {
     console.log(this.viewType);
-    this.userId$ = this.ngRedux.select((state) => state.getIn(['currentUser', 'objectId']))
+    this.userId$ = this.ngRedux.select(['currentUser', 'objectId']);
     this.userIdSub$ = this.userId$.subscribe((storeUserId)=>this.currentUserId=storeUserId);
 
     this.activityInvitesIn$ = this.ngRedux.select((state) => {
       console.log('here');
-      var invites = state.getIn(['invites', 'items'])
+      var invites = state['invites'].get('items')
       .filter((item)=>{
         console.log(item);
         return item.get('inviteePtr').get('objectId') == this.currentUserId
       })
       .toList()
       .toJS();
-      var activities = state.getIn(['eventData', 'items']);
+      var activities = state['eventData'].get('items');
       var invitedActivities = [];
       for(var i = 0; i < invites.length; i++) {
         var activityToPush = activities.get(invites[i].activityPtr['objectId'])
@@ -94,8 +94,8 @@ export class InvitesPage implements OnInit{
     })
     this.activityInvitesOut$ = this.ngRedux.select((state) => {
       console.log('here');
-      var invites = state.getIn(['invites', 'items']).toList().toJS();
-      var activities = state.getIn(['eventData', 'items']);
+      var invites = state['invites'].get('items').toList().toJS();
+      var activities = state['eventData'].get('items');
       var invitedActivities = [];
       for(var i = 0; i < invites.length; i++) {
         var activityToPush = activities.get(invites[i].activityPtr['objectId'])

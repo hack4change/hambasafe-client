@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar class="icon-only">
     <a class="clickable" menuToggle>
-      <ion-icon light class="menu-icon" name="menu"></ion-icon>
+      <ion-icon color="light" class="menu-icon" name="menu"></ion-icon>
     </a>
   </ion-toolbar>
 </ion-header>
@@ -21,9 +21,11 @@
           </h5>
         </div>
       <div class="landing-intro-button">
-        <button class="facebook-button" light full block ion-item no-lines (click)="fbLogin()" detail-none text-center>
-          <ion-icon name="logo-facebook" item-left></ion-icon>
+        <button ion-button class="facebook-button" color="light" full block (click)="fbLogin()" icon-left>
+          <ion-icon name="logo-facebook"></ion-icon>
+          <span>
             Facebook
+          </span>
         </button>
       </div>
     </div>

@@ -127,13 +127,14 @@ ion-page {
   text-align: center;
   width: 100%;
   white-space: nowrap;
+  min-height: 56px;
   button {
     margin: 0px;
     /* use width: 23% for 4 buttons, width: 18.2% for 5 buttons */
     display:inline-block;
     width: 50%;
     font-size: 1.25em;
-    height: 40px;
+    height: 56px;
     ion-col {
       text-align: center;
       ion-icon {
@@ -288,6 +289,9 @@ ion-list.list-borderless div {
 }
 .borderless{
   border: 0 !important;
+  .item-inner{
+    border: 0 !important;
+  }
 }
 
 .item-text-center

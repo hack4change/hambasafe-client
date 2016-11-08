@@ -1,23 +1,20 @@
 <ion-header>
-  <ion-toolbar class="main-bar">
+  <ion-toolbar color="primary" class="main-bar">
     <ion-buttons class="order-left" start>
-      <button dark menuToggle>
+      <button ion-button dark  icon-only menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
     <ion-buttons end>
-      <button primary class="indent">
-        <ion-icon name="pin"></ion-icon>
+      <button ion-button primary icon-only class="active">
+        <ion-icon name="home"></ion-icon>
       </button>
-      <button dark (click)="loadSearch()">
+      <button ion-button dark icon-only (click)="loadSearch()">
         <ion-icon name="search"></ion-icon>
       </button>
     </ion-buttons>
   </ion-toolbar>
-</ion-header>
-
-<ion-content [ngSwitch]="isEmpty">
-  <div padding>
+  <ion-toolbar>
     <ion-segment [(ngModel)]="isFiltered" light>
       <ion-segment-button (click)="toggleView('public')" value="public">
         <!-- <ion-icon name="globe" item-left></ion-icon> -->
@@ -28,6 +25,11 @@
         Friends
       </ion-segment-button>
     </ion-segment>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [ngSwitch]="isEmpty">
+  <div padding>
   </div>
 
 <!-- <ion-grid> -->
@@ -86,7 +88,7 @@
           </ion-col>
           <ion-col width-60>
             <div class="text-center">
-              <button class="calm-button" (click)="goToCreate()">
+              <button ion-button class="calm-button" (click)="goToCreate()">
                 Sure!
               </button>
             </div>
@@ -100,7 +102,7 @@
   <template ngSwitchDefault>
     <activity-item *ngFor="let activity of activitiesToRate$| async" [activity]="activity" mustRate="true"></activity-item>
     <activity-item *ngFor="let activity of activities$| async" [activity]="activity"></activity-item>
-      <button (click)="goToCreate()" class="calm-button create-fab"  fab>
+      <button ion-button (click)="goToCreate()" class="calm-button create-fab"  fab>
         <ion-icon name="add"></ion-icon>
       </button>
   </template>

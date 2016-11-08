@@ -13,10 +13,15 @@ import {
 import {
   NgRedux
 } from 'ng2-redux';
+
 import {
   Observable,
   Subscription
 } from 'rxjs';
+
+import {
+  Map
+} from 'immutable';
 
 /*
  *  Pages
@@ -40,6 +45,8 @@ export class ProfilePage implements OnInit {
   currentUserSub$     : Subscription;
   userActivitiesSub$  : Subscription;
 
+  currentUserId : string;
+
   maxStars : Object = [1, 2, 3, 4, 5];
   userRating : number = 3;
   createdCount: number = 0;
@@ -52,6 +59,9 @@ export class ProfilePage implements OnInit {
       },
       'filterExpression' : (activity) => {
         return activity.get('dateTimeStart') >= Date.now();
+      },
+      'sortExpression' : (activityOne, activityTwo) => {
+        return activityOne.get('dateTimeStart') <= activityTwo.get('dateTimeStart');
       }
     },
     {
@@ -60,6 +70,9 @@ export class ProfilePage implements OnInit {
       },
       'filterExpression' : (activity) => {
         return !!activity.get('isAttending') ? true : false;
+      },
+      'sortExpression' : (activityOne, activityTwo) => {
+        return activityOne.get('dateTimeStart') >= activityTwo.get('dateTimeStart');
       }
     },
     {
@@ -67,8 +80,11 @@ export class ProfilePage implements OnInit {
       'fetchExpression' : () => {
       },
       'filterExpression' : (activity) => {
-        // return activity.get('author').get('objectId') === .parseManager.getCurrentUser()['id'];
-        return true
+        console.log(this);
+        return activity.get('author').get('objectId') === this.currentUserId;
+      },
+      'sortExpression' : (activityOne, activityTwo) => {
+        return activityOne.get('dateTimeStart') >= activityTwo.get('dateTimeStart');
       }
     },
   ];
@@ -79,11 +95,19 @@ export class ProfilePage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.currentUser$ = this.ngRedux.select('currentUser');
+    this.currentUser$ = this.ngRedux.select('currentUser').map((currentUser: Map<string, any>)=> {
+      return currentUser.toJS();
+    });
+    this.currentUserSub$ = this.currentUser$.subscribe((currentUser) => {
+      this.currentUserId = currentUser['objectId'];
+    })
   }
 
   ngOnDestroy() {
     console.log('Destroying Subscriptions')
+    if(!!this.currentUserSub$){
+      this.currentUserSub$.unsubscribe();
+    }
   }
 	
 	goHome() {

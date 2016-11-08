@@ -1,26 +1,26 @@
 <ion-header>
-  <ion-toolbar class="main-bar">
+  <ion-toolbar class="main-bar" color="primary">
     <ion-buttons start>
-      <button dark (click)="goBack()">
+      <button ion-button icon-only dark (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
       </button>
     </ion-buttons>
     <ion-buttons *ngIf="!isAuthor" end>
-      <button dark class="indent" (click)="goHome()">
+      <button ion-button icon-only dark class="indent" (click)="goHome()">
         <ion-icon name="pin"></ion-icon>
       </button>
-      <button dark (click)="goSearch()">
+      <button ion-button icon-only dark (click)="goSearch()">
         <ion-icon name="search"></ion-icon>
       </button>
     </ion-buttons>
     <ion-buttons  *ngIf="isAuthor" end>
-      <button (click)="editActivity()">
+      <button ion-button icon-only (click)="editActivity()">
         <ion-icon name="create"></ion-icon>
       </button>
-      <button dark class="indent" (click)="goHome()">
+      <button ion-button icon-only dark class="indent" (click)="goHome()">
         <ion-icon name="pin"></ion-icon>
       </button>
-      <button dark (click)="goSearch()">
+      <button ion-button icon-only dark (click)="goSearch()">
         <ion-icon name="search"></ion-icon>
       </button>
     </ion-buttons>
@@ -37,7 +37,7 @@
       </p>
     </div>
     <ion-item *ngIf="isAuthor" class="invite-button" no-lines>
-      <button (click)="inviteUsers()" primary>
+      <button ion-button icon-only (click)="inviteUsers()" primary>
         Invite Hambaggers!
       </button>
     </ion-item>
@@ -52,7 +52,7 @@
         </ion-row>
         <ion-row text-center>
           <ion-col>
-            <button *ngFor="let i of maxStars" [ngClass]="getActivityRating(i)" style="height: 50px" (click)="setActivityRating(i)"> 
+            <button ion-button icon-only *ngFor="let i of maxStars" [ngClass]="getActivityRating(i)" style="height: 50px" (click)="setActivityRating(i)"> 
               <ion-icon style="font-size: 5rem;" name="star"></ion-icon>
             </button>
           </ion-col>
@@ -66,7 +66,7 @@
         </ion-row>
         <ion-row text-center>
           <ion-col>
-            <button *ngFor="let i of maxStars"  [ngClass]="getGroupRating(i)" style="height: 50px" (click)="setGroupRating(i)"> 
+            <button ion-button icon-only *ngFor="let i of maxStars"  [ngClass]="getGroupRating(i)" style="height: 50px" (click)="setGroupRating(i)"> 
               <ion-icon style="font-size: 5rem;" name="star"></ion-icon>
             </button>
           </ion-col>
@@ -80,10 +80,10 @@
 </ion-content>
 <ion-footer>
   <ion-toolbar calm class="main-bar">
-    <button *ngIf="!mustRate" (click)="joinActivity()" [disabled]="(activity$ | async)?.isAttending" full primary>
+    <button ion-button icon-only *ngIf="!mustRate" (click)="joinActivity()" [disabled]="(activity$ | async)?.isAttending" full primary>
       Join!
     </button>
-    <button *ngIf="mustRate" (click)="rateActivity()" [disabled]="activityRating == 0" full primary>
+    <button ion-button icon-only *ngIf="mustRate" (click)="rateActivity()" [disabled]="activityRating == 0" full primary>
       Rate!
     </button>
   </ion-toolbar>

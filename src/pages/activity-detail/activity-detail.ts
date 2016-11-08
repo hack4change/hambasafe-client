@@ -99,16 +99,21 @@ export class ActivityDetailPage implements OnInit {
     }
     this.userId$ = this.ngRedux.select(['currentUser', 'objectId']);
     this.users$ = this.ngRedux.select(['users', 'items'])
-    .filter((user:Map<string, any>) => {
-      return !!user.get('attendance') ? user.get('attendance').includes(this.activityId): false;
+    .map((user:Map<string, any>)=>{
+      return user
+      .filter((user : Map<string, any>) => {
+        return !!user.get('attendance') ? user.get('attendance').includes(this.activityId): false;
+      }).toList().toJS()
     })
-    .map((user:Map<string, any>)=>user.toList().toJS())
     this.activity$ = this.ngRedux.select(['eventData', 'items'])
-    .filter((item:Map<string, any>) => {
-      console.log(item.get('objectId') === this.activityId);
-      return item.get('objectId') === this.activityId;
-    })
-    .map((item:Map<string, any>)=>item.toJS());
+    .map((item:Map<string, any>)=>{
+      return item
+      .filter((item:Map<string, any>) => {
+        console.log(item.get('objectId') === this.activityId);
+        return item.get('objectId') === this.activityId;
+      })
+      .toJS()
+    });
     this.userIdSub$ = this.userId$.subscribe((userId) => {
       this.zone.run(() => {
         this.currentUserId = userId;

@@ -61,11 +61,10 @@ export class InvitesReceived implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.userId$ = this.ngRedux.select((state) => state.getIn(['currentUser', 'objectId']))
+    this.userId$ = this.ngRedux.select(['currentUser', 'objectId']);
     this.activities$ = this.ngRedux.select((state) => {
-      console.log('here');
-      var invites = state.getIn(['invites', 'items']).toList().toJS();
-      var activities = state.getIn(['eventData', 'items']);
+      var invites = state['invites'].get('items').toList().toJS();
+      var activities = state['eventData'].get('items');
       var invitedActivities = [];
       for(var i = 0; i < invites.length; i++) {
         // if(!){

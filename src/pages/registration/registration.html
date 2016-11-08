@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar class="icon-only" energized>
+  <ion-toolbar class="icon-only" color="energized">
     <a class="clickable" menuToggle>
       <ion-icon light class="menu-icon" name="menu"></ion-icon>
     </a>
@@ -78,11 +78,11 @@
 </ion-content>
 <ion-footer>
   <ion-toolbar position="bottom">
-    <button *ngIf="isEdit" [disabled]="!termsAccepted" full primary (click)="createUser()">
+    <button ion-button icon-only *ngIf="isEdit" [disabled]="!termsAccepted" full primary (click)="createUser()">
       <!--  -->
       Save
     </button>
-    <button *ngIf="!isEdit" [disabled]="!termsAccepted" full primary (click)="createUser()">
+    <button ion-button icon-only *ngIf="!isEdit" [disabled]="!termsAccepted" full primary (click)="createUser()">
       <!--  -->
       Next
     </button>

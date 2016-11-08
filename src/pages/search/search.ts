@@ -47,7 +47,7 @@ export class SearchPage implements OnInit{
   selectedSearch            : any;
   shownGroup                : any;
   searchDistance            : number  = 2;
-  activityType              : string  = '';
+  public activityType       : string  = '';
   activeType                : string  = 'TIME';
   mapSearched               : boolean = false;
   coordinates               : any     = {};
@@ -80,11 +80,11 @@ export class SearchPage implements OnInit{
 
   locationConnector() {
     this.ngRedux.dispatch(this.userActions.getLocation());
-    this.location$ = this.ngRedux.select((state) => {
-      var pos = state.get('location');
+    this.location$ = this.ngRedux.select('location')
+    .map((pos : any) => {
       return {
-        longitude : pos.get('longitude'),
-        latitude : pos.get('latitude')
+        longitude : !!pos ? pos.get('longitude') : 0,
+        latitude : !!pos ? pos.get('latitude') : 0
       }
     })
     this.locationSub$ = this.location$.subscribe((pos) => {
@@ -100,47 +100,50 @@ export class SearchPage implements OnInit{
 
   }
   activityConnector() {
-    this.activities$ = this.ngRedux.select((state) => {
-      console.log('search update');
-       return state.getIn(['eventData', 'items'])
-       .filter((item) => {
-         return (new Date(item.get('startDate').get('iso'))).getTime() > Date.now();
-       })
-       .filter((item) => {
-         console.log(this.activityType);
-         // if(this.activityType !== '' && this.activeType === 'TIME') {
-         //   console.log(this.activeType);
-         //   return item && item.get('eventType') ? this.activeType === item.get('eventType'): false;
-         // }
-         return true;
-       })
-       .filter((item) => {
-         if(this.activeType == 'SEARCH') {
-           if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-             if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
-               return distanceCalculator(
-                 this.coordinates.latitude,
-                 this.coordinates.longitude,
-                 item.get('startLocation').get('coordinates').get('latitude'),
-                 item.get('startLocation').get('coordinates').get('longitude')
-               ) <= this.searchDistance;
-             }
-           }
-           return false;
-         }
-         return distanceCalculator(
-           this.coordinates.latitude,
-           this.coordinates.longitude,
-           item.get('startLocation').get('coordinates').get('latitude'),
-           item.get('startLocation').get('coordinates').get('longitude')
-         ) <= 150;
-       }).toList()
-       .toJS().sort(function(a, b) {
-         console.log(a);
-         console.log(b);
-         return a.startDate.iso > b.startDate.iso;
-       })
-     });
+    this.activities$ = this.ngRedux
+    .select(['eventData', 'items'])
+    .map((items:any)=>{
+      return items
+      .filter((item) => {
+        return (new Date(item.get('startDate').get('iso'))).getTime() > Date.now();
+      })
+      .filter((item:any) => {
+        console.log(this.activityType);
+        // if(this.activityType !== '' && this.activeType === 'TIME') {
+        //   console.log(this.activeType);
+        //   return item && item.get('eventType') ? this.activeType === item.get('eventType'): false;
+        // }
+        return true;
+      })
+      .filter((item:any) => {
+        if(this.activeType == 'SEARCH') {
+          if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+            if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
+              return distanceCalculator(
+                this.coordinates.latitude,
+                this.coordinates.longitude,
+                item.get('startLocation').get('coordinates').get('latitude'),
+                item.get('startLocation').get('coordinates').get('longitude')
+              ) <= this.searchDistance;
+            }
+          }
+          return false;
+        }
+        return distanceCalculator(
+          this.coordinates.latitude,
+          this.coordinates.longitude,
+          item.get('startLocation').get('coordinates').get('latitude'),
+          item.get('startLocation').get('coordinates').get('longitude')
+        ) <= 150;
+      })
+      .toList()
+      .toJS()
+      .sort(function(a, b) {
+        console.log(a);
+        console.log(b);
+        return a.startDate.iso > b.startDate.iso;
+      })
+    })
     this.activitiesSub$ = this.activities$.subscribe((activity) => {
       console.log()
       this.zone.run(() => {
@@ -152,7 +155,7 @@ export class SearchPage implements OnInit{
   }
 
   filterConnector(){
-    this.filter$ = this.ngRedux.select((state) => state.getIn(['eventData', 'visible']))
+    this.filter$ = this.ngRedux.select(['eventData', 'visible']);
   
     this.filterSub$ = this.filter$.subscribe((filterString)=>{
       this.activityType = filterString;

@@ -1,4 +1,8 @@
-import {Component, OnInit, NgZone} from '@angular/core';
+import {
+  Component,
+  OnInit,
+  NgZone
+} from '@angular/core';
 // import {AsyncPipe} from '@angular/common';
 import {NavController} from 'ionic-angular';
 import distanceCalculator from '../../utils/distanceCalculator';
@@ -14,8 +18,16 @@ import {UserActions} from '../../actions/user.actions';
 /**
  *  Redux
  */
-import {NgRedux} from 'ng2-redux';
-import {Observable, Subscription} from 'rxjs';
+import {
+  NgRedux
+} from 'ng2-redux';
+import {
+  Observable, 
+  Subscription
+} from 'rxjs';
+import {
+  Map
+} from 'immutable';
 
 /*
  *  Pages
@@ -70,12 +82,12 @@ export class HomePage implements OnInit {
   }
 
   locationConnector() {
-    this.location$ = this.ngRedux.select((state) => {
-      var pos = state.getIn(['currentUser', 'location']);
+    this.location$ = this.ngRedux.select(['currentUser', 'location'])
+    .map((pos: Map<string, any>)=> {
       return {
         longitude : pos.get('longitude'),
         latitude : pos.get('latitude')
-      }
+      } 
     })
     this.locationSub$ = this.location$.subscribe((pos) => {
       if(!pos.longitude && pos.longitude !== 0 || !pos.latitude && pos.latitude !== 0) {
@@ -96,61 +108,55 @@ export class HomePage implements OnInit {
   }
 
   activityConnector() {
-    this.activities$ = this.ngRedux.select((state) => {
-      console.log('activity update');
-      // var friends = state.getIn(['users', 'items']).filter((user)=>{
-      //   return true;//user.isFriend;
-      // })
-      return state.getIn(['eventData', 'items'])
-      .filter((item)=> {
-        if((new Date(item.get('startDate').get('iso'))).getTime() <= Date.now()){
+    this.activities$ = this.ngRedux.select(['eventData', 'items'])
+    .map((item: any) => {
+      return item.filter((immutableItem: any)=>{
+
+        if((new Date(immutableItem.get('startDate').get('iso'))).getTime() <= Date.now()){
           return false
         };
-        console.log(item);
+        console.log(immutableItem);
         if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
           if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
-console.log(distanceCalculator(
+            console.log(distanceCalculator(
               this.coordinates.latitude,
               this.coordinates.longitude,
-              item.get('startLocation').get('coordinates').get('latitude'),
-              item.get('startLocation').get('coordinates').get('longitude')
+              immutableItem.get('startLocation').get('coordinates').get('latitude'),
+              immutableItem.get('startLocation').get('coordinates').get('longitude')
             ));
             console.log(this.searchDistance);
             return distanceCalculator(
               this.coordinates.latitude,
               this.coordinates.longitude,
-              item.get('startLocation').get('coordinates').get('latitude'),
-              item.get('startLocation').get('coordinates').get('longitude')
+              immutableItem.get('startLocation').get('coordinates').get('latitude'),
+              immutableItem.get('startLocation').get('coordinates').get('longitude')
             ) <= this.searchDistance;
           }
         }
         return false;
-      })
-      .filter((item)=> {
+
       })
       .toList()
       .toJS()
       .sort(function(a, b) {
         return a.startDate.iso > b.startDate.iso;
       })
-    });
-    this.activitiesToRate$ =  this.ngRedux.select((state) => {
-      console.log('activity update');
-      return state.getIn(['eventData', 'items'])
+    })
+    this.activitiesToRate$ =  this.ngRedux.select(['eventData', 'items'])
+    .map((item: Map<string, any>) => {
+      return item
       .filter((item) => {
         if((new Date(item.get('startDate').get('iso'))).getTime() > Date.now()){
           return false
         };
         return !!item.get('isAttending') && !!item.get('mustRate');
       })
-      .filter((item) => {
-        return true;
-      })
       .toList()
-      .toJS().sort(function(a, b) {
+      .toJS()
+      .sort(function(a, b) {
         return a.startDate.iso > b.startDate.iso;
       })
-    });
+    })
     this.activitiesSub$ = this.activities$.subscribe((x) => {
       console.log(x);
       this.zone.run(() => {
@@ -161,7 +167,6 @@ console.log(distanceCalculator(
     });
     this.activitiesToRateSub$ = this.activitiesToRate$.subscribe((activity)=> {
       console.log(activity);
-    
     });
   }
 

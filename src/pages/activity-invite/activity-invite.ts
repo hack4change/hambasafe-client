@@ -76,11 +76,15 @@ export class ActivityInvitePage implements OnInit {
     // this.ngRedux.dispatch(inviteActions.setIdle());
     // this.invitationStatus$ = this.ngRedux.select((state)=>state.getIn(['invite', 'status']))
     this.visibleUsers$ = this.ngRedux.select(['users', 'items'])
-        .filter((item: Map<string, any>) => {
-          return (this.currentQuery !== '' && (item.get('firstName') + ' ' + item.get('lastName')).indexOf(this.currentQuery.toLowerCase()) !== -1) || !!this.selectedUsers[item.get('objectId')];
-          // && this.selectUsers.tem.get('objectId')
-        })
-        .map((item: Map<string, any>) => item.toList().toJS())
+    .map((item: Map<string, any>) =>{
+      return item
+      .filter((item: Map<string, any>) => {
+        return (this.currentQuery !== '' && (item.get('firstName') + ' ' + item.get('lastName')).indexOf(this.currentQuery.toLowerCase()) !== -1) || !!this.selectedUsers[item.get('objectId')];
+        // && this.selectUsers.tem.get('objectId')
+      })
+      .toList()
+      .toJS()
+    })
     this.visibleUsersSub$ = this.visibleUsers$.subscribe(() => {
 
     })

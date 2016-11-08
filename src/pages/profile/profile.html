@@ -1,61 +1,64 @@
 <ion-header>
-  <ion-toolbar class="main-bar" >
+  <ion-toolbar class="main-bar" color="primary">
     <ion-buttons class="order-left" start>
-      <button dark menuToggle>
-        <ion-icon name="menu"></ion-icon>
+      <button ion-button icon-only dark menuToggle>
+        <ion-icon color="light" name="menu"></ion-icon>
       </button>
     </ion-buttons>
     <ion-buttons end>
-      <button dark (click)="goInvites()" class="indent">
+      <button ion-button icon-only dark (click)="goInvites()" class="indent">
         <ion-icon name="mail"></ion-icon>
       </button>
-      <button dark (click)="goHome()" class="indent">
-        <ion-icon name="pin"></ion-icon>
+      <button ion-button icon-only dark (click)="goHome()" class="indent">
+        <ion-icon name="home"></ion-icon>
       </button>
-      <button dark (click)="goSearch()">
+      <button ion-button icon-only dark (click)="goSearch()">
         <ion-icon name="search"></ion-icon>
       </button>
     </ion-buttons>
   </ion-toolbar>
-  </ion-header>
-  <ion-content>
-  <ion-toolbar class="profile-details">
-    <ion-item no-lines>
+  <ion-toolbar color="primary" class="profile-details">
+    <ion-item color="primary" no-lines>
       <ion-avatar item-left> 
         <img src="{{ (currentUser$ | async)?.profilePicture }}"/>
       </ion-avatar>
       <div>
-        <ion-item  no-lines class="profile-row profile-name">
-          {{(currentUser$| async)?.firstName | Capitalize}} {{(currentUser$| async)?.lastName | Capitalize}}
+        <ion-item color="primary" no-lines class="profile-row profile-name">
+          <span>
+          {{(currentUser$| async)?.firstName | Capitalize }} {{(currentUser$| async)?.lastName | Capitalize }}
+          </span>
           <ion-icon item-right class="pull-right" name="md-create" (click)="goEditProfile()"></ion-icon>
         </ion-item>
-        <ion-item  no-lines class="profile-row">
+        <ion-item color="primary" no-lines class="profile-row">
           <ion-icon *ngFor="let i of maxStars" [ngClass]="getIsRated(i)" name="star"></ion-icon>
           <ion-icon item-right name="ios-checkmark-circle"></ion-icon>
         </ion-item>
       </div>
     </ion-item>
   </ion-toolbar>
-  <ion-toolbar no-padding class="buttonbar event-actions">
+  <ion-toolbar color="primary" no-padding class="buttonbar event-actions">
     <ion-buttons>
-      <button class="square-corner borderless font-positive" (click)="goSearch()" block>
+      <button ion-button icon-only class="square-corner borderless font-positive" (click)="goSearch()" block>
         <ion-icon name="search"></ion-icon>
         Find 
       </button>
-      <button class="square-corner font-energized" (click)="goCreate()" block>
-      <ion-icon name="add"></ion-icon>
-      Create
+      <button ion-button icon-only class="square-corner font-energized" (click)="goCreate()" block>
+        <ion-icon name="add"></ion-icon>
+        Create
       </button>
     </ion-buttons>
   </ion-toolbar>
-  <ion-toolbar primary no-padding>
-    <div style="text-align:center; color:white;">
-      My Events
-    </div>
-  </ion-toolbar>
+  <!-- <ion-toolbar primary no-padding> -->
+    <!-- <div style="text-align:center;"> -->
+     <!-- color:white; -->
+     <!-- <ion-title> -->
+       <!-- My Events -->
+     <!-- </ion-title> -->
+    <!-- </div> -->
+  <!-- </ion-toolbar> -->
   <ion-toolbar class="action-bar">
     <ion-buttons class="split-three">
-      <button class="square-corner borderless" (click)="goActivityList(0)" block>
+      <button ion-button icon-only class="square-corner borderless" (click)="goActivityList(0)" block>
         <div class="button-number">
           24
         </div>
@@ -63,7 +66,7 @@
           Upcoming
         </div>
       </button>
-      <button class="square-corner" (click)="goActivityList(1)" block>
+      <button ion-button icon-only class="square-corner" (click)="goActivityList(1)" block>
         <div class="button-number">
           102
         </div>
@@ -71,7 +74,7 @@
           Joined
         </div>
       </button>
-      <button class="square-corner" (click)="goActivityList(2)" block>
+      <button ion-button icon-only class="square-corner" (click)="goActivityList(2)" block>
         <div class="button-number">
           2
         </div>
@@ -81,5 +84,7 @@
       </button>
     </ion-buttons>
   </ion-toolbar>
+</ion-header>
+<ion-content>
 
-  </ion-content>
+</ion-content>

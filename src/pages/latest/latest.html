@@ -1,42 +1,42 @@
 <ion-header>
-  <ion-toolbar primary>
-    <ion-buttons start>
-      <button (click)="goBack()">
-        <ion-icon light name="close-circle"></ion-icon>
-      </button>
-    </ion-buttons>
-    <ion-title>
-      Invites
-    </ion-title>
-  </ion-toolbar>
-  <ion-toolbar primary>
-    <ion-segment light [(ngModel)]="viewType">
-      <ion-segment-button value="RECEIVED">
-        Received
-      </ion-segment-button>
-      <ion-segment-button value="SENT">
-        Sent
-      </ion-segment-button>
-    </ion-segment>
-  </ion-toolbar>
+  <!-- <ion-toolbar color="primary"> -->
+  <!--   <ion-buttons start> -->
+  <!--     <button ion-button icon-only (click)="goBack()"> -->
+  <!--       <ion-icon light name="close-circle"></ion-icon> -->
+  <!--     </button> -->
+  <!--   </ion-buttons> -->
+  <!--   <ion-title> -->
+  <!--     Invites -->
+  <!--   </ion-title> -->
+  <!-- </ion-toolbar> -->
+  <!-- <ion-toolbar primary> -->
+  <!--   <ion-segment light [(ngModel)]="viewType"> -->
+  <!--     <ion-segment-button value="RECEIVED"> -->
+  <!--       Received -->
+  <!--     </ion-segment-button> -->
+  <!--     <ion-segment-button value="SENT"> -->
+  <!--       Sent -->
+  <!--     </ion-segment-button> -->
+  <!--   </ion-segment> -->
+  <!-- </ion-toolbar> -->
 </ion-header>
 <ion-content primary>
-  <div [ngSwitch]="viewType">
-    <ion-list *ngSwitchCase="'RECEIVED'">
-      <ion-item-sliding no-lines *ngFor="let activity of activityInvitesIn$ | async">
-        <ion-item detail-push>
-          <activity-item [activity]="activity"></activity-item>
-        </ion-item>
-        <ion-item-options side="right" (ionSwipe)="deleteInvite(activity.objectId)">
-          <button expandable danger>
-            <ion-icon name="trash" (click)="deleteInvite(activity.objectId)"></ion-icon>
-            Remove
-          </button>
-        </ion-item-options>
-      </ion-item-sliding>
-    </ion-list>
-    <ion-list *ngSwitchCase="'SENT'">
-      <activity-item *ngFor="let activity of activityInvitesOut$ | async" [activity]="activity"></activity-item>
-    </ion-list>
-  </div>
+  <!-- <div [ngSwitch]="viewType"> -->
+  <!--   <ion-list *ngSwitchCase="'RECEIVED'"> -->
+  <!--     <ion-item-sliding no-lines *ngFor="let activity of activityInvitesIn$ | async"> -->
+  <!--       <ion-item detail-push> -->
+  <!--         <activity-item [activity]="activity"></activity-item> -->
+  <!--       </ion-item> -->
+  <!--       <ion-item-options side="right" (ionSwipe)="deleteInvite(activity.objectId)"> -->
+  <!--         <button expandable danger> -->
+  <!--           <ion-icon name="trash" (click)="deleteInvite(activity.objectId)"></ion-icon> -->
+  <!--           Remove -->
+  <!--         </button> -->
+  <!--       </ion-item-options> -->
+  <!--     </ion-item-sliding> -->
+  <!--   </ion-list> -->
+  <!--   <ion-list *ngSwitchCase="'SENT'"> -->
+  <!--     <activity-item *ngFor="let activity of activityInvitesOut$ | async" [activity]="activity"></activity-item> -->
+  <!--   </ion-list> -->
+  <!-- </div> -->
 </ion-content>

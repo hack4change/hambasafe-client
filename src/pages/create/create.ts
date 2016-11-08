@@ -11,11 +11,13 @@ import {
   NavParams, 
   LoadingController
 } from 'ionic-angular';
-// import {
-//   FormBuilder, 
-//   ControlGroup, 
-//   Validators
-// } from '@angular/common';
+import {
+  FormBuilder, 
+  FormGroup, 
+  Validators
+} from '@angular/forms';
+
+import * as moment from 'moment';
 
 /**
  *  Redux
@@ -66,7 +68,7 @@ export class CreatePage implements OnInit {
   isChange    : boolean = false;
   activityId  : string = '';
 
-  // createForm: ControlGroup;
+  createForm: FormGroup;
   activeType: string = '';
   currentUserId: number;
   createModal = null; 
@@ -92,56 +94,71 @@ export class CreatePage implements OnInit {
     private nav: NavController,
     private params: NavParams,
     private ngRedux: NgRedux<any>,
-    // private fb: FormBuilder
+    private formBuilder: FormBuilder,
     private eventDataActions : EventDataActions
   ) {
-    // this.createForm = this.fb.group({
-    //   isPublic: [
-    //     "",
-    //   ],
-    //   eventType: [
-    //     "",
-    //   ],
-    //   intensity: [
-    //     "",
-    //   ],
-    //   name: [
-    //     "",
-    //     Validators.compose([
-    //       Validators.minLength(3),
-    //       Validators.maxLength(40),
-    //       Validators.required
-    //     ]),
-    //   ],
-    //   description: [
-    //     "",
-    //     Validators.compose([
-    //       Validators.minLength(40),
-    //       Validators.maxLength(400),
-    //       Validators.required
-    //     ]),
-    //   ],
-    //   distance: [
-    //     "",
-    //     Validators.compose([
-    //       DistanceValidator.isValid,
-    //       Validators.required
-    //     ]),
-    //   ],
-    //   startTime: [
-    //     "",
-    //   ],
-    //   startDate: [
-    //     "",
-    //   ],
-    //   waitTime: [
-    //     "",
-    //     Validators.compose([
-    //       WaitTimeValidator.isValid,
-    //       Validators.required
-    //     ]),
-    //   ],
-    // });
+    this.createForm = this.formBuilder.group({
+      isPublic: [
+        "",
+        Validators.compose([
+          Validators.required
+        ]),
+      ],
+      eventType: [
+        "",
+        Validators.compose([
+          Validators.required
+        ]),
+      ],
+      intensity: [
+        "",
+        Validators.compose([
+          Validators.required
+        ]),
+      ],
+      name: [
+        "",
+        Validators.compose([
+          Validators.minLength(3),
+          Validators.maxLength(40),
+          Validators.required
+        ]),
+      ],
+      description: [
+        "",
+        Validators.compose([
+          Validators.minLength(40),
+          Validators.maxLength(400),
+          Validators.required
+        ]),
+      ],
+      distance: [
+        "",
+        Validators.compose([
+          // DistanceValidator.isValid,
+          Validators.required
+        ]),
+      ],
+      startTime: [
+        "",
+        Validators.compose([
+          Validators.required
+        ]),
+      ],
+      startDate: [
+        "",
+        Validators.compose([
+          Validators.required
+        ]),
+      ],
+      waitTime: [
+        "",
+        Validators.compose([
+          Validators.required
+          // WaitTimeValidator.isValid,
+        ]),
+      ],
+    });
   }
 
   ngOnInit() {
@@ -158,15 +175,15 @@ export class CreatePage implements OnInit {
     this.minDate    = tmpDate.toISOString().split("T")[0];
     this.maxDate    = (new Date(new Date().setFullYear(new Date().getFullYear() + 1))).toISOString().split("T")[0];
     this.startDate  = this.minDate;
-    this.created$ = this.ngRedux.select(state=>{
+    this.created$ = this.ngRedux.select((state) => {
       return {
-        status: state.getIn(['eventData', 'status']),
-        message: state.getIn(['eventData', 'message'])
+        status: state['eventData'].get('status'),
+        message: state['eventData'].get('message')
       }
     });
     if(this.isChange && this.activityId){
       this.activity$ = this.ngRedux.select(state=>{
-          return state.getIn(['eventData', 'items', this.activityId]).toJS();
+          return state['eventData'].getIn(['items', this.activityId]).toJS();
       });
       this.activitySub$ = this.activity$.subscribe((activity) => {
         if(!!activity) {
@@ -186,7 +203,7 @@ export class CreatePage implements OnInit {
       });
 
     }
-    this.userId$ = this.ngRedux.select(state=>state.getIn(['currentUser', 'id']));
+    this.userId$ = this.ngRedux.select(state=>state['currentUser'].get('id'));
 
     this.createdSub$ = this.created$.subscribe(eventStatus => {
 
@@ -237,150 +254,152 @@ export class CreatePage implements OnInit {
 	createActivity() {
     console.log(this.startTime);
     console.log(this.eventType);
-		if(!this.eventType) {
-      this.loadingCtrl.create({
-        content: 'Select an event type... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(!this.intensity) {
-      this.loadingCtrl.create({
-        content: 'Select an intensity... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(!this.name) {
-      this.loadingCtrl.create({
-        content: 'Enter a name for the event... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(!this.description) {
-      this.loadingCtrl.create({
-        content: 'Enter a description... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(this.description.length < 40) {
-      this.loadingCtrl.create({
-        content: '40 character minimum for the description! :-P (40-400)',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(this.description.length > 400) {
-      this.loadingCtrl.create({
-        content: "Hate to be stickler, but your description's a touch long! (40-400)",
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(isNaN(this.distance)) {
-      this.loadingCtrl.create({
-        content: 'Enter a distance... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(this.distance < 0) {
-      this.loadingCtrl.create({
-        content: "Hey, distance not displacement!",
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(this.distance > 150) {
-       this.loadingCtrl.create({
-        content: "The maximum distance for an event is 150Km!",
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(!this.startTime) {
-      this.loadingCtrl.create({
-        content: 'Tell us what time it starts... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(!this.startDate) {
-      this.loadingCtrl.create({
-        content: 'Tell us what day it starts... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(!this.startLocation) {
-      this.loadingCtrl.create({
-        content: 'Tell us where it starts... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(Math.abs(this.startLocation.longitude) > 90 || Math.abs(this.startLocation.longitude) > 180) {
-      this.loadingCtrl.create({
-        content: 'A location on earth please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return
-		}
-		if(isNaN(this.waitTime)) {
-      this.loadingCtrl.create({
-        content: 'Tell us how long you can wait... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(this.waitTime < 0) {
-      this.loadingCtrl.create({
-         content: "It's a bit rude to leave before people arrive!",
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
-		if(this.waitTime > 30) {
-      this.loadingCtrl.create({
-        content: "You can't be waiting around that long! :O",
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-		}
+    console.log(this.createForm);
+    console.log(this.createForm.value);
+		// if(!this.eventType) {
+      // this.loadingCtrl.create({
+        // content: 'Select an event type... please!',
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(!this.intensity) {
+      // this.loadingCtrl.create({
+        // content: 'Select an intensity... please!',
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(!this.name) {
+      // this.loadingCtrl.create({
+        // content: 'Enter a name for the event... please!',
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(!this.description) {
+      // this.loadingCtrl.create({
+        // content: 'Enter a description... please!',
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(this.description.length < 40) {
+      // this.loadingCtrl.create({
+        // content: '40 character minimum for the description! :-P (40-400)',
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(this.description.length > 400) {
+      // this.loadingCtrl.create({
+        // content: "Hate to be stickler, but your description's a touch long! (40-400)",
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(isNaN(this.distance)) {
+      // this.loadingCtrl.create({
+        // content: 'Enter a distance... please!',
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(this.distance < 0) {
+      // this.loadingCtrl.create({
+        // content: "Hey, distance not displacement!",
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(this.distance > 150) {
+       // this.loadingCtrl.create({
+        // content: "The maximum distance for an event is 150Km!",
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(!this.startTime) {
+      // this.loadingCtrl.create({
+        // content: 'Tell us what time it starts... please!',
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(!this.startDate) {
+      // this.loadingCtrl.create({
+        // content: 'Tell us what day it starts... please!',
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(!this.startLocation) {
+      // this.loadingCtrl.create({
+        // content: 'Tell us where it starts... please!',
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(Math.abs(this.startLocation.longitude) > 90 || Math.abs(this.startLocation.longitude) > 180) {
+      // this.loadingCtrl.create({
+        // content: 'A location on earth please!',
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return
+		// }
+		// if(isNaN(this.waitTime)) {
+      // this.loadingCtrl.create({
+        // content: 'Tell us how long you can wait... please!',
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(this.waitTime < 0) {
+      // this.loadingCtrl.create({
+         // content: "It's a bit rude to leave before people arrive!",
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
+		// if(this.waitTime > 30) {
+      // this.loadingCtrl.create({
+        // content: "You can't be waiting around that long! :O",
+        // spinner: 'hide',
+        // dismissOnPageChange : true,
+        // duration: 1000,
+      // }).present();
+      // return;
+		// }
 		// if(!this.endTime) {
 		// 	return; 
 		// }
@@ -390,16 +409,16 @@ export class CreatePage implements OnInit {
 		// if(!this.endLocation) {
 		// 	return; 
 		// }
-    var convertedDate = new Date(this.startDate  + " " + this.startTime);
-    if( Date.now() >= convertedDate.getTime() - 60*60000) {
-      this.loadingCtrl.create({
-        content: "It has to start at least one hour from now! :-D",
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-    }
+    var convertedDate = moment(this.startDate  + " " + this.startTime);
+    // if( Date.now() >= convertedDate.toDate().getTime() - 60*60000) {
+    //   this.loadingCtrl.create({
+    //     content: "It has to start at least one hour from now! :-D",
+    //     spinner: 'hide',
+    //     dismissOnPageChange : true,
+    //     duration: 1000,
+    //   }).present();
+    //   return;
+    // }
     var data = {
       'name'          : this.name.trim(),
       'description'   : this.description.trim(),
@@ -407,7 +426,7 @@ export class CreatePage implements OnInit {
       'intensity'     : this.intensity,
       'eventType'     : this.eventType,
       'startDate'     : convertedDate,
-      // 'endDate'       : this.endDate  +  "T"+this.endTime + roundDateToISO,
+      // 'endDate'       : moment(this.endDate  + " " + this.endTime),
       'waitTime'      : Number(this.waitTime),
       'isPublic'      : this.isPublic,
       'startLocation' : {

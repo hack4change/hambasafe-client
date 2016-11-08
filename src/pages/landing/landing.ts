@@ -15,7 +15,8 @@ import {AuthActions} from '../../actions/auth.actions';
 // /*
 //  *  Pages
 //  */
-import {HomePage} from '../home/home';
+// import {HomePage} from '../home/home';
+import {ProfilePage} from '../profile/profile';
 import {TermsPage} from '../terms/terms';
 
 // //TODO: REMOVE
@@ -41,9 +42,10 @@ export class LandingPage implements OnInit {
 
   loadingPopup: any;
 
-  constructor(private platform: Platform, private nav: NavController, private loadingCtrl:  LoadingController, private ngRedux: NgRedux<any>, private authActions: AuthActions) {};
+  constructor(private platform: Platform, private navCtrl: NavController, private loadingCtrl:  LoadingController, private ngRedux: NgRedux<any>, private authActions: AuthActions) {};
 
   ngOnInit() {
+    // this.navCtrl.setRoot(HomePage);
     this.authStatus$ =  this.ngRedux.select(['currentUser', 'status'])
     this.authStatusSub$ = this.authStatus$.subscribe((userStatus) => {
       console.log('User Status');
@@ -54,11 +56,13 @@ export class LandingPage implements OnInit {
           if(!!this.loadingPopup){
           this.loadingPopup.dismiss();
         }
-        // this.nav.setRoot(ProfilePage);
-          this.nav.setRoot(HomePage);
+        this.navCtrl.setRoot(ProfilePage);
+          // this.navCtrl.setRoot(HomePage).catch(err=>{
+          //   console.log(err);
+          // });
         break;
-        case 'ATTEMPTING':
-          break;
+        // case 'ATTEMPTING':
+        //   break;
         case 'ERROR':
           if(!!this.loadingPopup){
           this.loadingPopup.dismiss();
@@ -88,6 +92,6 @@ export class LandingPage implements OnInit {
     }
   }
   goToTerms() {
-    this.nav.push(TermsPage);
+    this.navCtrl.push(TermsPage);
   }
 }

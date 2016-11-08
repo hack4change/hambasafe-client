@@ -2,7 +2,7 @@ page-landing {
   .header-md::after, .footer-md::before {
     background-image: none;
   }
-  ion-content, .content-md {
+  ion-content, .content-md, .content-ios, .content-wp {
     background: transparent;
   }
   background: url('../assets/img/landing.jpg') no-repeat;

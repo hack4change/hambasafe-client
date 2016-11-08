@@ -65,8 +65,8 @@ export class FriendsPage implements OnInit {
   ngOnInit() {
     this.visibleUsers$ = this.ngRedux.select(
       (state) => {
-      return state
-        .getIn(['users', 'items'])
+      return state['users']
+        .get('items')
         .filter(item => {
           console.log('item');
           return !!item.get('isFriend');
@@ -76,7 +76,7 @@ export class FriendsPage implements OnInit {
           // && this.selectUsers.tem.get('objectId')
         })
         .toList()
-        .toJSON()
+        .toJS()
       });
       this.visibleUsersSub$ = this.visibleUsers$.subscribe((visibleSub) => {
         console.log(visibleSub);

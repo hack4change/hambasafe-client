@@ -72,11 +72,13 @@ export class ActivityListPage implements OnInit {
 
   activityConnector() {
     this.activities$ = this.ngRedux.select(['eventData', 'items'])
-      // .filter((activity:Map<string, any>) => {
-      //   return this.shouldInclude(activity);
-      // })
-      // .toList()
-      // .toJS()
+    .map((activity:Map<string, any>) => {
+      return activity.filter((activity:Map<string, any>) => {
+        return this.shouldInclude(activity);
+      })
+      .toList()
+      .toJS()
+    })
 
     this.activitiesSub$ = this.activities$.subscribe(x => {
       this.zone.run(() => {

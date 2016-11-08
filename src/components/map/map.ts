@@ -62,11 +62,11 @@ export class Map implements OnInit {
     // }
   }
   locationConnector() {
-    this.location$ = this.ngRedux.select((state) => {
-      var pos = state.getIn(['currentUser', 'location']);
+    this.location$ = this.ngRedux.select(['currentUser', 'location'])
+    .map((pos:any)=>{
       return {
-        longitude : pos.get('longitude'),
-        latitude : pos.get('latitude')
+        longitude : !!pos ? pos.get('longitude') : 0,
+        latitude : !!pos ? pos.get('latitude') : 0
       }
     })
     this.locationSub$ = this.location$.subscribe((pos) => {

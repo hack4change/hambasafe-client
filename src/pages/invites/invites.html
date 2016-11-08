@@ -1,7 +1,7 @@
 <ion-header>
-  <ion-toolbar primary>
+  <ion-toolbar color="primary">
     <ion-buttons start>
-      <button (click)="goBack()">
+      <button ion-button icon-only (click)="goBack()">
         <ion-icon light name="close-circle"></ion-icon>
       </button>
     </ion-buttons>
@@ -28,7 +28,7 @@
           <activity-item [activity]="activity"></activity-item>
         </ion-item>
         <ion-item-options side="right" (ionSwipe)="deleteInvite(activity.objectId)">
-          <button expandable danger>
+          <button ion-button icon-only expandable danger>
             <ion-icon name="trash" (click)="deleteInvite(activity.objectId)"></ion-icon>
             Remove
           </button>

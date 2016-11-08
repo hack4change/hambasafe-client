@@ -60,11 +60,15 @@ export class MyApp implements OnInit {
     public ngRedux : NgRedux<any>,
     public devTools : DevToolsExtension) {
     // config as before 
-    this.ngRedux.configureStore(rootReducer, {}, [
-      createLogger()
-    ],[
-      applyMiddleware(thunk)
-    ]);
+    this.ngRedux.configureStore(
+      rootReducer,
+      {},
+      [
+        createLogger()
+      ],[
+        applyMiddleware(thunk),
+        devTools.enhancer() 
+      ]);
     platform.ready().then(() => {
       this.authActions.initializeFacebook();
       // Okay, so the platform is ready and our plugins are available.

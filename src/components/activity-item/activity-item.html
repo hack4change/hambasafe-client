@@ -1,24 +1,25 @@
 <ion-item  [ngClass]="getClasses()" (click)="viewActivity()">
-<!-- class="borderless" -->
-    <ion-avatar item-left>
-      <img src="{{ activity.author.profilePicture}}">
-    </ion-avatar>
+  <!-- class="borderless" -->
+  <ion-avatar item-left>
+    <img src="{{ activity?.author?.profilePicture}}">
+  </ion-avatar>
   <ion-row>
-    <div class="activity-location" *ngIf="!!activity.startLocation.suburb">
-    {{  activity.startLocation.suburb }}, {{  activity.startLocation.city }}
-    </div>
-    <div class="activity-location" *ngIf="!activity.startLocation.suburb">
-    {{  activity.startLocation.city }}
-    </div>
-    <div *ngIf="!mustRate" class="activity-date">
-    {{  startFormatted }}
-    </div>
+    <ion-col width-75>
+      <div class="activity-location">
+        <span *ngIf="!!activity.startLocation.suburb">{{ activity.startLocation.suburb }},</span><span> {{  activity.startLocation.city }}</span>
+      </div>
+    </ion-col>
+    <ion-col width-25>
+      <div *ngIf="!mustRate" class="activity-date">
+        {{  startFormatted }}
+      </div>
+    </ion-col>
   </ion-row>
   <ion-row>
     <ion-item class="borderless">
-    <h1 style="font-size: 2rem;">
-      {{ activity.name }}
-    </h1>
+      <h1 style="font-size: 2rem;">
+        {{ activity.name }}
+      </h1>
     </ion-item>
   </ion-row>
   <ion-row>
@@ -31,32 +32,32 @@
   <ion-icon *ngIf="mustRate" class="must-rate" name="md-star" light item-right></ion-icon>
   <!-- <ion-icon *ngIf="actionType == 'VIEW'" class="been-invited" name="ios-arrow-forward" light item-right></ion-icon> -->
 </ion-item>
-  <!-- <ion-card  (click)="viewActivity()"> -->
-  <!--   <ion-card-header> -->
-  <!--     {{ activity.name }} -->
-  <!--   </ion-card-header> -->
-  <!--     <img src="{{ activity.author.profilePicture}}" /> -->
+<!-- <ion-card  (click)="viewActivity()"> -->
+<!--   <ion-card-header> -->
+<!--     {{ activity.name }} -->
+<!--   </ion-card-header> -->
+<!--     <img src="{{ activity.author.profilePicture}}" /> -->
 
-		<!-- <ion-row no-padding> -->
-			<!-- <ion-col> -->
-  <!--       {{  activity.startLocation.suburb }}, --> 
-  <!--       {{  activity.startLocation.city }} -->
-			<!-- </ion-col> -->
-			<!-- <ion-col text-right> -->
-				<!-- {{  startFormatted }} -->
-			<!-- </ion-col> -->
-  <!--   </ion-row> -->
-		<!-- <ion-row no-padding> -->
-  <!--   </ion-row> -->
-		<!-- <ion-row no-padding> -->
-			<!-- <ion-col> -->
-					<!-- {{ getActivityType() }} -->
-			<!-- </ion-col> -->
-			<!-- <ion-col text-center> -->
-				<!-- {{ activity.distance }}Km -->
-			<!-- </ion-col> -->
-			<!-- <ion-col text-right> -->
-				<!-- {{ activity.intensity }} -->
-			<!-- </ion-col> -->
-		<!-- </ion-row> -->
+<!-- <ion-row no-padding> -->
+<!-- <ion-col> -->
+<!--       {{  activity.startLocation.suburb }}, --> 
+<!--       {{  activity.startLocation.city }} -->
+<!-- </ion-col> -->
+<!-- <ion-col text-right> -->
+<!-- {{  startFormatted }} -->
+<!-- </ion-col> -->
+<!--   </ion-row> -->
+<!-- <ion-row no-padding> -->
+<!--   </ion-row> -->
+<!-- <ion-row no-padding> -->
+<!-- <ion-col> -->
+<!-- {{ getActivityType() }} -->
+<!-- </ion-col> -->
+<!-- <ion-col text-center> -->
+<!-- {{ activity.distance }}Km -->
+<!-- </ion-col> -->
+<!-- <ion-col text-right> -->
+<!-- {{ activity.intensity }} -->
+<!-- </ion-col> -->
+<!-- </ion-row> -->
 <!-- </ion-card> -->

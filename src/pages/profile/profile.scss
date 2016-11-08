@@ -1,16 +1,19 @@
 page-profile {
   .profile-details {
     min-height: 70px;
-    border-top: 1px solid #EEE;
-    border-bottom: 1px solid #EEE;
+    // border-top: 1px solid #EEE;
+    // border-bottom: 1px solid #EEE;
     ion-label {
       margin: 0;
     }
     ion-avatar{
+      margin: 0;
       margin-right: 8px;
+      min-width: 7rem;
+      min-height: 7rem;
       img {
-        max-width: 5.6rem;
-        max-height: 5.6rem;
+        min-width: 7rem;
+        min-height: 7rem;
         border-radius: 50%;
       }
     }
@@ -41,19 +44,22 @@ page-profile {
         border-radius: 0.25rem;
       }
       ion-icon[name="ios-checkmark-circle"] {
-        color: $positive;
+        color: $light;
         padding-right: 0;
         font-size:3rem;
       }
     }
     .profile-name {
       font-size: 1.8rem;
+      span{
+        color: $light;
+        font-size: 24px;
+      }
     }
   }
   .event-actions {
     button {
       border-left: 1px solid #EEE;
-
     }
   }
   .action-bar {

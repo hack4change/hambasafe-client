@@ -56,8 +56,8 @@ export class AddFriendPage implements OnInit {
   ngOnInit() {
     this.visibleUsers$ = this.ngRedux.select(
       (state) => {
-      return state
-        .getIn(['users', 'items'])
+      return state['users']
+        .get('items')
         .filter(item => {
           return this.currentQuery !== '' && (item.get('firstName') + ' ' + item.get('lastName')).indexOf(this.currentQuery.toLowerCase()) !== -1 || !!this.selectedUsers[item.get('objectId')];
           // && this.selectUsers.tem.get('objectId')

@@ -126,8 +126,12 @@ export class AuthActions {
       this.parseManager.facebookLogin(
         'public_profile, email',
         (response) => this.getProfile(
-          (response) => dispatch(this.setAuthError(response)), 
-            (response) => dispatch(this.setAuthSuccess(response))
+          (response) => {
+            dispatch(this.setAuthError(response))
+          }, 
+          (response) =>{
+            dispatch(this.setAuthSuccess(response))
+          }
         ),
         (error) => dispatch(this.setAuthError(error))
       )
