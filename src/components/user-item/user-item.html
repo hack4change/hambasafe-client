@@ -7,18 +7,17 @@
     <ion-icon name="arrow-back" item-right></ion-icon>
   </ion-item>
   <ion-item-options side="right">
-    <button [hidden]="!mustRate" item-right *ngFor="let i of maxStars"  [ngClass]="getIsRated(i)" (click)="setRating(i, true)"> 
+    <button ion-button [hidden]="!mustRate" item-right *ngFor="let i of maxStars"  [ngClass]="getIsRated(i)" (click)="setRating(i, true)"> 
       <ion-icon name="star"></ion-icon>
- <!-- style="font-size: 5rem;" -->
     </button>
-    <button *ngIf="options" calm item-right style="/*height: 50px*/"> 
+    <button ion-button *ngIf="options" color="calm" item-right style="/*height: 50px*/"> 
       <ion-icon style="/*font-size: 5rem;*/" name="md-more"></ion-icon>
     </button>
-    <button *ngIf="options" danger item-right  [ngClass]="getIsRated(i)" (click)="removeFriend()"> 
-      <ion-icon style="/*font-size: 5rem;*/"  name="remove"></ion-icon>
+    <button ion-button *ngIf="options" color="danger" item-right  [ngClass]="getIsRated(i)" (click)="removeFriend()"> 
+      <ion-icon style="/*font-size: 5rem;*/" name="remove"></ion-icon>
     </button>
-    <button *ngIf="!user.isConfirmed" calm item-right  [ngClass]="getIsRated(i)" (click)="confirmFriend()"> 
-      <ion-icon style="/*font-size: 5rem;*/"  name="checkmark"></ion-icon>
+    <button ion-button *ngIf="!user.isConfirmed" color="calm" item-right  [ngClass]="getIsRated(i)" (click)="confirmFriend()"> 
+      <ion-icon style="/*font-size: 5rem;*/" name="checkmark"></ion-icon>
     </button>
   </ion-item-options>
 </ion-item-sliding>

@@ -1,14 +1,14 @@
 page-landing {
+  height: 100%;
   .header-md::after, .footer-md::before {
     background-image: none;
   }
   ion-content, .content-md, .content-ios, .content-wp {
-    background: transparent;
+    // background: transparent;
+    background: url('../assets/img/landing.jpg') no-repeat;
+    background-size: cover;
+    background-position: 55%;
   }
-  background: url('../assets/img/landing.jpg') no-repeat;
-  background-size: cover;
-  background-position: 55%;
-  height: 100%;
   ion-header::after {
     background-image: none;
   }

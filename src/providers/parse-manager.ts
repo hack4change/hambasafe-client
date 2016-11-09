@@ -463,7 +463,7 @@ export class ParseManager {
     activityObj.save(null, {
       success: (res) => {
         console.log('activity saved to parse server');
-        this.joinActivity(res.get('objectId'), error, success);
+        // this.joinActivity(res.get('objectId'), error, success);
         var userRelation = user.relation('activities');
         var activity = activityObj.toJSON();
         userRelation.add(activityObj);
@@ -948,39 +948,30 @@ export class ParseManager {
       /*
        *  LOGIN
        */
-  deviceLogin(authData, success: any, error: any) {
-    if (!this.Parse.User.current()) {
-      var user = new this.Parse.User();
-    } else {
-      var user = this.Parse.User.current();
-    }
-    this.Parse.FacebookUtils.logIn(authData, {
-      success: (response) => {
-        console.log('success');
-        console.log(response);
-        success(response);
-      },
-      error: (response) => {
-        console.log('error');
-        console.log(response);
-        error(response);
-      }
-    });
+  deviceLogin(authData) {
+    // if (!this.Parse.User.current()) {
+    //   var user = new this.Parse.User();
+    // } else {
+    //   var user = this.Parse.User.current();
+    // }
+    return this.Parse.FacebookUtils.logIn(authData);
   }
 
-  facebookLogin(perms, success: any, error: any) {
-    this.Parse.FacebookUtils.logIn(perms, {
-      success: (response) => {
-        console.log('success');
-        console.log(response);
-        success(response);
-      },
-      error: (response) => {
-        console.log('error');
-        console.log(response);
-        error(response);
-      }
-    });
+  facebookLogin(perms) {
+    return this.Parse.FacebookUtils.logIn(perms, {})
+// , {
+//       success: (response) => {
+//         console.log('success');
+//         console.log(response);
+//         success(response);
+//       },
+//       error: (response) => {
+//         console.log('error');
+//         console.log(response);
+//         error(response);
+//       }
+//     });
+
   }
       //LOGOUT
   logOut(success: any, error: any) {
@@ -1030,6 +1021,7 @@ export class ParseManager {
 
       version: 'v2.6',
     });
+
   }
 }
 

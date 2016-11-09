@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="com.ionicframework.hambasafe314776" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="com.ionicframework.hambasafe" version="0.0.1" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>hambaSafe</name>
     <description>An awesome Ionic/Cordova app.</description>
     <author email="hi@ionicframework" href="http://ionicframework.com/">Ionic Framework Team</author>
@@ -30,11 +30,23 @@
     <feature name="StatusBar">
         <param name="ios-package" onload="true" value="CDVStatusBar" />
     </feature>
-    <plugin name="cordova-plugin-device" spec="~1.1.3" />
     <plugin name="cordova-plugin-console" spec="~1.0.4" />
     <plugin name="cordova-plugin-whitelist" spec="~1.3.0" />
+    <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
+    <plugin name="cordova-plugin-crosswalk-webview" spec="~2.1.0">
+        <variable name="XWALK_VERSION" value="21+" />
+        <variable name="XWALK_LITEVERSION" value="xwalk_core_library_canary:17+" />
+        <variable name="XWALK_COMMANDLINE" value="--disable-pull-to-refresh-effect" />
+        <variable name="XWALK_MODE" value="embedded" />
+        <variable name="XWALK_MULTIPLEAPK" value="true" />
+    </plugin>
+    <plugin name="cordova-plugin-device" spec="~1.1.3" />
+    <plugin name="cordova.plugins.diagnostic" spec="~3.3.0" />
+    <plugin name="cordova-plugin-geolocation" spec="~2.4.0" />
     <plugin name="cordova-plugin-splashscreen" spec="~4.0.0" />
     <plugin name="cordova-plugin-statusbar" spec="~2.2.0" />
-    <plugin name="ionic-plugin-keyboard" spec="~2.2.1" />
-    <plugin name="cordova.plugins.diagnostic" spec="~3.3.0" />
+    <plugin name="cordova-plugin-facebook4" spec="~1.7.4">
+        <variable name="APP_ID" value="1824765444411364" />
+        <variable name="APP_NAME" value="hambasafe" />
+    </plugin>
 </widget>

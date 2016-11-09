@@ -75,10 +75,11 @@ ion-toolbar[position='bottom'] {
   ion-content{
     background-color: $light;
   }
-}#anonymous-menu {
+}
+#anonymous-menu {
   ion-toolbar{
     .toolbar-background {
-      background-color: $light;
+      // background-color: $light;
     }
   }
   ion-avatar {
@@ -86,15 +87,18 @@ ion-toolbar[position='bottom'] {
     background-color: $positive;
     text-align: center;
   }
-  ion-toolbar[position='bottom'] {
-    .toolbar-background {
-      background-color: $energized;
-    }
-    a {
-      color: white;
-      cursor: pointer;
-    }
+  ion-title a{
+    color: $light; 
   }
+  // ion-toolbar[position='bottom'] {
+  //   .toolbar-background {
+  //     background-color: $energized;
+  //   }
+  //   a {
+  //     color: white;
+  //     cursor: pointer;
+  //   }
+  // }
   ion-content{
     background-color: $light;
   }
@@ -128,13 +132,18 @@ ion-page {
   width: 100%;
   white-space: nowrap;
   min-height: 56px;
+  ion-buttons{
+    margin: 0;
+  }
   button {
     margin: 0px;
     /* use width: 23% for 4 buttons, width: 18.2% for 5 buttons */
     display:inline-block;
     width: 50%;
+    padding: 0;
     font-size: 1.25em;
     height: 56px;
+    color: $light;
     ion-col {
       text-align: center;
       ion-icon {
@@ -200,7 +209,7 @@ ion-range {
   font-weight: bold;
 }
 .font-energized {
-  color: $energized;
+  color: $energized !important;
   font-weight: bold;
 }
 .pull-right {
@@ -339,5 +348,11 @@ ion-menu {
       padding: 4px 8.66px;
       border-radius: 50%;
     }
+  }
+}
+ion-toolbar button[full] {
+  margin: 0; 
+  &.button-md {
+    height: 5.6rem;
   }
 }

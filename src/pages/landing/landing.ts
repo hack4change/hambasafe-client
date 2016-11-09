@@ -85,11 +85,7 @@ export class LandingPage implements OnInit {
       dismissOnPageChange : true,
     })
     this.loadingPopup.present();
-    if(this.platform.is('cordova')) {
-      this.ngRedux.dispatch(this.authActions.authDevice());
-    } else {
-      this.ngRedux.dispatch(this.authActions.authUser());
-    }
+    this.ngRedux.dispatch(this.authActions.fbAuth());
   }
   goToTerms() {
     this.navCtrl.push(TermsPage);

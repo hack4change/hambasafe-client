@@ -112,17 +112,16 @@ export class ActivityDetailPage implements OnInit {
         console.log(item.get('objectId') === this.activityId);
         return item.get('objectId') === this.activityId;
       })
-      .toJS()
+      .toList()
+      .toJS();
     });
     this.userIdSub$ = this.userId$.subscribe((userId) => {
-      this.zone.run(() => {
-        this.currentUserId = userId;
-        this.activitySub$ = this.activity$.subscribe(activity => {
-          this.zone.run(() => {
-            if(activity.author.objectId == this.currentUserId) {
-              this.isAuthor = true;  
-            }
-          })
+      this.currentUserId = userId;
+      this.activitySub$ = this.activity$.subscribe(activity => {
+        this.zone.run(() => {
+          if(!!activity && activity[0].author.objectId == this.currentUserId) {
+            this.isAuthor = true;  
+          }
         })
       })
     })

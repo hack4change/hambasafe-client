@@ -26,7 +26,7 @@
     <ion-list>
       <ion-item>
         <ion-label>Public</ion-label>
-        <ion-toggle name="isPublic" formControlName="isPublic" checked="{{isPublic}}"></ion-toggle>
+        <ion-toggle name="isPublic" formControlName="isPublic" [(ngModel)]="isPublic"></ion-toggle>
       </ion-item>
       <ion-item class="form-group">
         <ion-label>Event Type</ion-label> <!-- replace tile with selected gender-->
@@ -72,6 +72,8 @@
       <ion-item *ngIf="startLocation" (click)="openMap('START_LOCATION')" class="">
         <ion-label floating>Where does it start?</ion-label>
         <ion-input type="text" value="{{ startLocation.latitude }}, {{ startLocation.longitude }}" required></ion-input>
+        <ion-input [hidden]="true" formControlName="latitude" [(ngModel)]="startLocation.latitude"></ion-input>
+        <ion-input [hidden]="true" formControlName="longitude" [(ngModel)]="startLocation.longitude"></ion-input>
       </ion-item>
       <ion-item class="">
         <ion-label floating>
@@ -106,10 +108,11 @@
       </button>
     </template>
     <template ngSwitchDefault>
-      <button [disabled]="!createForm.valid" ion-button icon-only primary *ngIf="isChange" (click)="createActivity()" full>
-        Save!
+      <button [disabled]="!createForm.valid" ion-button icon-only *ngIf="isChange" (click)="createActivity()" full>
+        Update!
       </button>
-      <button [disabled]="!createForm.valid" ion-button icon-only primary *ngIf="!isChange" (click)="createActivity()" full>
+ <!-- TODO: -->
+      <button [disabled]="!createForm.valid" ion-button icon-only *ngIf="!isChange" (click)="createActivity()" full>
         Post!
       </button>
     </template>

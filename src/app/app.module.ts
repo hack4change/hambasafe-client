@@ -9,6 +9,7 @@ import {
 } from '@angular/forms';
 import {
   NgReduxModule,
+  NgRedux,
   DevToolsExtension
 } from 'ng2-redux';
 import { 
@@ -18,6 +19,12 @@ import {
 import {
   MyApp 
 } from './app.component';
+
+import { applyMiddleware } from 'redux';
+const createLogger = require('redux-logger');
+import thunk from 'redux-thunk';
+
+import rootReducer from '../reducers/rootReducer';
 
 /**
  * Providers
@@ -156,4 +163,21 @@ import { Capitalize } from '../utils/capitalize';
     DevToolsExtension,
   ]
 })
-export class AppModule {}
+export class AppModule {
+  constructor(
+    // public navCtrl : NavController,
+    public ngRedux : NgRedux<any>,
+    public devTools : DevToolsExtension
+  ) {
+    // config as before 
+    this.ngRedux.configureStore(
+      rootReducer,
+      {},
+      [
+        createLogger()
+      ],[
+        applyMiddleware(thunk),
+        // devTools.enhancer() 
+      ]);
+  }
+}

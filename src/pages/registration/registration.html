@@ -9,7 +9,7 @@
   </ion-toolbar>
 </ion-header>
 <ion-content>
-  <form name="registrationForm" ng-submit="doRegister(signupForm.$valid)" novalidate>
+  <form [formGroup]="registrationForm" name="registrationForm">
     <ion-list class="borderless">
       <ion-item (click)="getProfilePicture()">
         <!-- || isSilhouette-->
@@ -18,7 +18,7 @@
         <ion-avatar *ngIf="!!profilePicture" item-left>
           <img src="{{ profilePicture }}">
         </ion-avatar>
-        <!-- <input name="profile-picture" class="hidden-file-input" id="profile-picture" type="file" placeholder="Profile Picture" [(ngModel)]="uploadPicture" accept="image/*" required /> -->
+        <!-- <input name="profile-picture" class="hidden-file-input" id="profile-picture" type="file" placeholder="Profile Picture" formControlName="uploadPicture" accept="image/*" required /> -->
         <!-- <input type="hidden" -->
         <!--        role="uploadcare-uploader" -->
         <!--        data-crop="1:1" -->
@@ -28,16 +28,19 @@
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Firstname</ion-label>
-        <ion-input  type="text" [(ngModel)]="firstName" value="{{ firstName | Capitalize }}" required></ion-input>
+        <ion-input  type="text" formControlName="firstName" value="{{ firstName | Capitalize }}" required></ion-input>
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Surname</ion-label>
-        <ion-input type="text" [(ngModel)]="lastName" value="{{ lastName | Capitalize }}" required></ion-input>
+        <ion-input type="text" formControlName="lastName" value="{{ lastName | Capitalize }}" required></ion-input>
       </ion-item>
       <ion-item (click)="toggleGenderOpen()" [ngClass]="{clean: genderSelected(), active: isGenderOpen()}">
         {{ genderHeader }}
         <ion-icon name="ios-arrow-up" *ngIf="isGenderOpen()" item-right></ion-icon>
         <ion-icon name="ios-arrow-down" *ngIf="!isGenderOpen()" item-right></ion-icon>
+      </ion-item>
+      <ion-item [hidden]="true">
+        <ion-input formControlName="gender" [(ngModel)]="genderHeader"></ion-input>
       </ion-item>
       <div [hidden]="!isGenderOpen()"><!-- @genderCollapseState="aniState" -->
         <ion-item *ngFor="let genderOpt of genderOptions" >
@@ -47,25 +50,25 @@
       </div>
       <ion-item class="borderless">
         <ion-label floating>Date of Birth</ion-label>
-        <ion-datetime displayFormat="DD MMM YY" pickerFormat="DD MMM YY" [(ngModel)]="dateOfBirth"></ion-datetime>
+        <ion-datetime displayFormat="DD MMM YY" pickerFormat="DD MMM YY" formControlName="dateOfBirth"></ion-datetime>
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Cell Number</ion-label>
-        <ion-input type="tel" [(ngModel)]="mobileNumber" required></ion-input>
+        <ion-input type="tel" formControlName="mobileNumber" required></ion-input>
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Email</ion-label>
-        <ion-input type="email"  [(ngModel)]="email" required></ion-input>
+        <ion-input type="email"  formControlName="email" required></ion-input>
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Confirm Email</ion-label>
-        <ion-input type="email"  [(ngModel)]="confirmEmail" required></ion-input>
+        <ion-input type="email"  formControlName="confirmEmail" required></ion-input>
       </ion-item>
       <ion-item *ngIf="!isEdit">
-        <!-- <input name="identification" class="hidden-file-input" type="file" accept="image/*" id="identification" [(ngModel)]="identification" required /> -->
+        <!-- <input name="identification" class="hidden-file-input" type="file" accept="image/*" id="identification" formControlName="identification" required /> -->
         <!-- <label for="identification">Scan my ID or Driver's License</label> -->
       </ion-item>
-      <ion-item *ngIf="!isEdit" class="borderless" (click)="openTerms()">
+      <ion-item class="borderless" (click)="openTerms()">
         <h2 *ngIf="!termsAccepted">
           Accept the Terms of Use
         </h2>
@@ -78,13 +81,13 @@
 </ion-content>
 <ion-footer>
   <ion-toolbar position="bottom">
-    <button ion-button icon-only *ngIf="isEdit" [disabled]="!termsAccepted" full primary (click)="createUser()">
+    <button [disabled]="!registrationForm.valid" ion-button icon-only *ngIf="isEdit" [disabled]="!termsAccepted" full primary (click)="createUser()">
       <!--  -->
       Save
     </button>
-    <button ion-button icon-only *ngIf="!isEdit" [disabled]="!termsAccepted" full primary (click)="createUser()">
+    <button [disabled]="!registrationForm.valid" ion-button icon-only *ngIf="!isEdit" [disabled]="!termsAccepted" full primary (click)="createUser()">
       <!--  -->
-      Next
+      Sign Up!
     </button>
   </ion-toolbar>
 </ion-footer>

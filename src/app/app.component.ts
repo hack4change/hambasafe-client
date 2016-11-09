@@ -1,17 +1,12 @@
 import { Component, ViewChild, OnInit } from '@angular/core';
 import { Platform, NavController, MenuController } from 'ionic-angular';
-import { StatusBar, Splashscreen } from 'ionic-native';
+import { StatusBar, Splashscreen, ScreenOrientation } from 'ionic-native';
 import {
   Observable,
   Subscription
 } from 'rxjs';
 import { NgRedux, DevToolsExtension } from 'ng2-redux';
 
-import { applyMiddleware } from 'redux';
-const createLogger = require('redux-logger');
-import thunk from 'redux-thunk';
-
-import rootReducer from '../reducers/rootReducer';
 
 /*
  * Actions
@@ -58,23 +53,27 @@ export class MyApp implements OnInit {
     public inviteActions : InviteActions,
     public eventDataActions : EventDataActions,
     public ngRedux : NgRedux<any>,
-    public devTools : DevToolsExtension) {
+    public devTools : DevToolsExtension
+  ) {
     // config as before 
-    this.ngRedux.configureStore(
-      rootReducer,
-      {},
-      [
-        createLogger()
-      ],[
-        applyMiddleware(thunk),
-        devTools.enhancer() 
-      ]);
+    // this.ngRedux.configureStore(
+    //   rootReducer,
+    //   {},
+    //   [
+    //     createLogger()
+    //   ],[
+    //     applyMiddleware(thunk),
+    //     devTools.enhancer() 
+    //   ]);
     platform.ready().then(() => {
       this.authActions.initializeFacebook();
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      StatusBar.styleDefault();
-      Splashscreen.hide();
+      if(platform.is('cordova')){
+        StatusBar.styleDefault();
+        Splashscreen.hide();
+        ScreenOrientation.lockOrientation('portrait');
+      }
     });
   }
 
@@ -172,6 +171,6 @@ export class MyApp implements OnInit {
     this.navCtrl.push(TermsPage);
   }
   logOut() {
-    this.ngRedux.dispatch(this.authActions.logoutUser(this.platform.is('cordova')));
+    this.ngRedux.dispatch(this.authActions.logoutUser());
   }
 }

@@ -6,4 +6,9 @@ user-item {
     background-color: $calm;
     color: $light;
   }
+  ion-item-sliding {
+    item-inner {
+      // border-bottom: 0; 
+    } 
+  }
 }

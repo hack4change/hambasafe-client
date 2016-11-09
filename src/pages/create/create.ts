@@ -17,8 +17,6 @@ import {
   Validators
 } from '@angular/forms';
 
-import * as moment from 'moment';
-
 /**
  *  Redux
  */
@@ -46,7 +44,7 @@ import { ActivityDetailPage } from '../activity-detail/activity-detail';
 /*
  * Components
  */
-// import {MapComponent} from '../../components/map/map.component.ts';
+// import { MapComponent } from '../../components/map/map.component.ts';
 
 
 @Component({
@@ -68,7 +66,7 @@ export class CreatePage implements OnInit {
   isChange    : boolean = false;
   activityId  : string = '';
 
-  createForm: FormGroup;
+  public createForm: FormGroup;
   activeType: string = '';
   currentUserId: number;
   createModal = null; 
@@ -99,9 +97,9 @@ export class CreatePage implements OnInit {
   ) {
     this.createForm = this.formBuilder.group({
       isPublic: [
-        "",
+        true,
         Validators.compose([
-          Validators.required
+          // Validators.required
         ]),
       ],
       eventType: [
@@ -152,6 +150,20 @@ export class CreatePage implements OnInit {
         ]),
       ],
       waitTime: [
+        "",
+        Validators.compose([
+          Validators.required
+          // WaitTimeValidator.isValid,
+        ]),
+      ],
+      latitude: [
+        "",
+        Validators.compose([
+          Validators.required
+          // WaitTimeValidator.isValid,
+        ]),
+      ],
+      longitude: [
         "",
         Validators.compose([
           Validators.required
@@ -256,182 +268,22 @@ export class CreatePage implements OnInit {
     console.log(this.eventType);
     console.log(this.createForm);
     console.log(this.createForm.value);
-		// if(!this.eventType) {
-      // this.loadingCtrl.create({
-        // content: 'Select an event type... please!',
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(!this.intensity) {
-      // this.loadingCtrl.create({
-        // content: 'Select an intensity... please!',
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(!this.name) {
-      // this.loadingCtrl.create({
-        // content: 'Enter a name for the event... please!',
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(!this.description) {
-      // this.loadingCtrl.create({
-        // content: 'Enter a description... please!',
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(this.description.length < 40) {
-      // this.loadingCtrl.create({
-        // content: '40 character minimum for the description! :-P (40-400)',
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(this.description.length > 400) {
-      // this.loadingCtrl.create({
-        // content: "Hate to be stickler, but your description's a touch long! (40-400)",
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(isNaN(this.distance)) {
-      // this.loadingCtrl.create({
-        // content: 'Enter a distance... please!',
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(this.distance < 0) {
-      // this.loadingCtrl.create({
-        // content: "Hey, distance not displacement!",
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(this.distance > 150) {
-       // this.loadingCtrl.create({
-        // content: "The maximum distance for an event is 150Km!",
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(!this.startTime) {
-      // this.loadingCtrl.create({
-        // content: 'Tell us what time it starts... please!',
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(!this.startDate) {
-      // this.loadingCtrl.create({
-        // content: 'Tell us what day it starts... please!',
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(!this.startLocation) {
-      // this.loadingCtrl.create({
-        // content: 'Tell us where it starts... please!',
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(Math.abs(this.startLocation.longitude) > 90 || Math.abs(this.startLocation.longitude) > 180) {
-      // this.loadingCtrl.create({
-        // content: 'A location on earth please!',
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return
-		// }
-		// if(isNaN(this.waitTime)) {
-      // this.loadingCtrl.create({
-        // content: 'Tell us how long you can wait... please!',
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(this.waitTime < 0) {
-      // this.loadingCtrl.create({
-         // content: "It's a bit rude to leave before people arrive!",
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(this.waitTime > 30) {
-      // this.loadingCtrl.create({
-        // content: "You can't be waiting around that long! :O",
-        // spinner: 'hide',
-        // dismissOnPageChange : true,
-        // duration: 1000,
-      // }).present();
-      // return;
-		// }
-		// if(!this.endTime) {
-		// 	return; 
-		// }
-		// if(!this.endDate) {
-		// 	return; 
-		// }
-		// if(!this.endLocation) {
-		// 	return; 
-		// }
-    var convertedDate = moment(this.startDate  + " " + this.startTime);
-    // if( Date.now() >= convertedDate.toDate().getTime() - 60*60000) {
-    //   this.loadingCtrl.create({
-    //     content: "It has to start at least one hour from now! :-D",
-    //     spinner: 'hide',
-    //     dismissOnPageChange : true,
-    //     duration: 1000,
-    //   }).present();
-    //   return;
-    // }
+    console.log(this.createForm.value.startDate);
+    console.log(this.createForm.value.startTime);
+    var convertedDate = new Date(this.createForm.value.startDate  + " " + this.createForm.value.startTime);
     var data = {
-      'name'          : this.name.trim(),
-      'description'   : this.description.trim(),
-      'distance'      : Number(this.distance),
-      'intensity'     : this.intensity,
-      'eventType'     : this.eventType,
+      'name'          : this.createForm.value.name.trim(),
+      'description'   : this.createForm.value.description.trim(),
+      'distance'      : Number(this.createForm.value.distance),
+      'intensity'     : this.createForm.value.intensity,
+      'eventType'     : this.createForm.value.eventType,
       'startDate'     : convertedDate,
-      // 'endDate'       : moment(this.endDate  + " " + this.endTime),
-      'waitTime'      : Number(this.waitTime),
-      'isPublic'      : this.isPublic,
+      // 'endDate'       : momethis.createForm.value.value.nt(this.endDate  + " " + this.endTime),
+      'waitTime'      : Number(this.createForm.value.waitTime),
+      'isPublic'      : this.createForm.value.isPublic,
       'startLocation' : {
-        longitude: this.startLocation.longitude,
-        latitude: this.startLocation.latitude,
+        longitude: this.createForm.value.longitude,
+        latitude: this.createForm.value.latitude,
       },
       // 'endLocation' : {
       //   longitude: this.endLocation.lng(),

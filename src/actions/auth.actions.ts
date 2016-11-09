@@ -7,7 +7,8 @@ import { fromJS } from 'immutable';
 import { Platform } from 'ionic-angular';
 import { Facebook } from 'ionic-native';
 const _ = require('lodash');
-// const thunk = require( 'redux-thunk').default;
+
+import {NgRedux} from 'ng2-redux';
 
 import actionTypes from '../actionTypes';
 
@@ -22,34 +23,29 @@ import {ParseManager} from '../providers/parse-manager';
 @Injectable()
 export class AuthActions {
 
-  constructor(public http: Http, public parseManager: ParseManager, public platform: Platform) {
+  constructor(public http: Http, public parseManager: ParseManager, public platform: Platform, public ngRedux: NgRedux<any>) {
     console.log('Hello AuthActions Provider');
   }
 
-  fbLogin(errorCallback, successCallback):any {
-    console.log('fbLogin');
-    // this.parseManager.facebookLogin(
-    //   'public_profile, email',
-    //   successCallback(response),
-    //   errorCallback(response)
-    // )
-    // console.log(typeof(FB.getLoginStatus));
-  }
-
-  deviceLogout(errorCallback, successCallback):any{
-    Facebook.getLoginStatus().then( (response:any) => {
-      if (response.status === 'connected') {
-        Facebook.logout().then((response: any) => {
-          console.log(response);
-          if (response.authResponse) {
-            successCallback()
+  deviceLogout(errorCallback, successCallback) : any {
+    Facebook.getLoginStatus().then((res:any) => {
+      if (res.status === 'connected') {
+        return Facebook.logout().then((res: any) => {
+          console.log(res);
+          if (res.authres) {
+            this.parseManager.logOut(
+              successCallback,
+              errorCallback
+            )
           } else {
-            errorCallback(response);
+            throw new Error(res);
           }
         }) 
-      } else {
-        successCallback(response);
       }
+    }).then((res)=>{
+      return successCallback(res);
+    }).catch((err)=>{
+      errorCallback(err);
     })
   }
   fbLogout(errorCallback, successCallback):any{
@@ -119,77 +115,76 @@ export class AuthActions {
     };
   };
 
-  authUser():any {
+  fbAuth() : any {
     return dispatch => {
-      // Set loading state.
       dispatch(this.setAuthTrying());
-      this.parseManager.facebookLogin(
-        'public_profile, email',
-        (response) => this.getProfile(
-          (response) => {
-            dispatch(this.setAuthError(response))
-          }, 
-          (response) =>{
-            dispatch(this.setAuthSuccess(response))
-          }
-        ),
-        (error) => dispatch(this.setAuthError(error))
-      )
-    };
+      var promise = null;
+      if(this.platform.is('cordova')) {
+        promise = this.authDevice();
+      } else {
+        promise = this.authBrowser();
+      }
+      promise
+      .then((res) => {
+        return this.getProfile();
+      })
+      .then((res) => {
+        this.ngRedux.dispatch(this.setAuthSuccess(res));
+      }).catch((err)=>{
+        this.ngRedux.dispatch(this.setAuthError(err));
+      })
+    }
+  }
+  authBrowser():any {
+    return this.parseManager.facebookLogin('public_profile, email')
+      // (response) => 
+      //   (response) => {
+      //   }, 
+      //   (response) =>{
+      //     this.ngRedux.dispatch(this.setAuthSuccess(response))
+      //   }
+      // ),
+      // (error) => this.ngRedux.dispatch(this.setAuthError(error))
   }
 
-  authDevice():any{
-    return dispatch => {
-      console.log('dispatching auth Device');
-      // Set loading state.
-      dispatch(this.setAuthTrying());
-      Facebook.getLoginStatus().then((res)=>{
-        console.log('login Status');
-        console.log(res);
-        if(res.status !== 'connected') {
-          Facebook.login(['public_profile', 'email']).then((res)=>{
-            // var expDate = new Date(new Date().getTime() + res.authResponse.expiresIn * 1000 ).toISOString();
-            // var authData = {
-            //   id: String(res.authResponse.userID),
-            //   access_token: res.authResponse.accessToken,
-            //   expiration_date: expDate
-            // }
-            this.parseManager.deviceLogin(
-              // (response) => console.log(response),
-              res.authResponse,
-              (response) => this.getDeviceProfile(
-                (response) => dispatch(this.setAuthError(response)), 
-                  (response) => dispatch(this.setAuthSuccess(response))
-              ),
-              (error) => dispatch(this.setAuthError(error))
-            )
-          })
-        } else {
-          var expDate = new Date(new Date().getTime() + res.authResponse.expiresIn * 1000 ).toISOString();
-          var authData = {
-            id: String(res.authResponse.userID),
-            access_token: res.authResponse.accessToken,
-            expiration_date: expDate
-          }
-
-          this.parseManager.deviceLogin(
-            // (response) => console.log(response),
-            authData,
-            (response) => this.getDeviceProfile(
-              (response) => dispatch(this.setAuthError(response)), 
-                (response) => dispatch(this.setAuthSuccess(response))
-            ),
-            (error) => dispatch(this.setAuthError(error))
-          )
+  authDevice() : any {
+    // Set loading state.
+    console.log('dispatching auth Device');
+    return Facebook.getLoginStatus()
+    .then((res) => {
+      console.log('login Status');
+      console.log(res);
+      if(res.status !== 'connected') {
+        return Facebook.login(['public_profile', 'email']).then((res)=>{
+          return Promise.resolve(res.authResponse);
+        })
+      } else {
+        var expDate = new Date(new Date().getTime() + res.authResponse.expiresIn * 1000 ).toISOString();
+        var authData = {
+          id: String(res.authResponse.userID),
+          access_token: res.authResponse.accessToken,
+          expiration_date: expDate
         }
-      });
-    };
+        return Promise.resolve(authData);
+      }
+    })
+    .then((res) => {
+      return this.parseManager.facebookLogin(res);
+    })
   }
+
+  // deviceLogin(authData) : any { 
+      // (response) => this.getProfile(
+      //   (response) => this.ngRedux.dispatch(this.setAuthError(response)), 
+      //     (response) => this.ngRedux.dispatch(this.setAuthSuccess(response))
+      // ),
+      // (error) => this.ngRedux.dispatch(this.setAuthError(error))
+  // }
 
   /**
    *  Logout Success
    */
-  setLogoutSuccess(){
+  setLogoutSuccess() {
     console.log('Logout Success')
     return {
       data: fromJS({
@@ -223,14 +218,14 @@ export class AuthActions {
     };
   };
 
-  logoutUser(isCordova):any{
+  logoutUser():any{
     return dispatch => {
       // const url = 'https://www.reddit.com/top/.json?limit=10';
       //
       // Set loading state.
       //
       dispatch(this.setAuthTrying());
-      if(isCordova){
+      if(this.platform.is('cordova')){
         this.deviceLogout(
           (error) => dispatch(this.setLogoutError(error)),
             () => dispatch(this.setLogoutSuccess())
@@ -252,6 +247,7 @@ export class AuthActions {
       type: actionTypes.USER_SET_STATUS,
     }
   }
+
   setAuthenticated():any{
     return {
       data: fromJS({
@@ -264,45 +260,44 @@ export class AuthActions {
   /**
    * getFacebookProfile
    */
-  getProfile(errorCallback, successCallback): any{
-    console.log('get Profile');
+  getProfile() : any {
     var userRegistered = this.parseManager.userRegistered();
+    console.log('userRegistered');
+    console.log(userRegistered);
     if(userRegistered) {
-      this.getParseProfile(errorCallback, successCallback);
+      return this.getParseProfile();
+    } else if(this.platform.is('cordova')) {
+      return this.getDeviceFacebookProfile();
     } else {
-      this.getFacebookProfile(errorCallback, successCallback);
+      return this.getFacebookProfile();
     }
   }
 
   /**
    * getFacebookProfile
    */
-  getDeviceProfile(errorCallback, successCallback): any{
-    console.log('get Profile');
-    var userRegistered = this.parseManager.userRegistered();
-    if(userRegistered) {
-      this.getParseProfile(errorCallback, successCallback);
-    } else {
-      this.getDeviceFacebookProfile(errorCallback, successCallback);
-    }
-  }
+  // getDeviceProfile(errorCallback, successCallback): any{
+  //   console.log('get Profile');
+  //   var userRegistered = this.parseManager.userRegistered();
+  //   if(userRegistered) {
+  //     this.getParseProfile(errorCallback, successCallback);
+  //   } else {
+  //     this.getDeviceFacebookProfile(errorCallback, successCallback);
+  //   }
+  // }
 
-  getParseProfile(errorCallback, successCallback): any{
-    try {
+  getParseProfile() : any {
       var userObj = this.parseManager.getCurrentUser().toJSON();
-      userObj.isRegistered = true;
       console.log(userObj);
-      successCallback(userObj);
-    } catch(e) {
-      errorCallback(e);
-    }
+      userObj.isRegistered = true;
+      return Promise.resolve(userObj);
   }
 
-  getDeviceFacebookProfile(errorCallback, successCallback): any{ 
+  getDeviceFacebookProfile() : any { 
     var respJson : any = {
       'isRegistered' : false,
     }
-    Facebook.getLoginStatus().then((response)=> {
+    return Facebook.getLoginStatus().then((response)=> {
       console.log('Status');
       console.log(JSON.stringify(response));
       if (response.status !== 'connected') {
@@ -313,51 +308,48 @@ export class AuthActions {
         respJson.userID = undefined;
         //TODO: Remove
         console.log(response);
-        Facebook.api('/me?fields=first_name,last_name,birthday,gender,email,picture', [
-        ]).then((apiResponse: any) => {
-          console.log(apiResponse);
-          _.merge(respJson,  _.pick(apiResponse, [
-            'first_name',
-            'last_name',
-            'birthday',
-            'gender',
-            'email',
-          ]));
-          respJson.picture = apiResponse.picture.data.url;
-          respJson.isSilhouette = apiResponse.picture.data.is_silhouette;
-
-          // jsonRequest(
-          //   API_ROOT + '/v1/Authentication/ExternalLogin',
-          //   {
-          //     method: 'POST',
-          //     body:  {
-          //       'accessToken' : respJson['accessToken']
-          //     }
-          //   },
-          successCallback(respJson);// ,
-          // errorCallback(loginResponse),
-          // )
-        });
       }
+      return Promise.resolve();
+    }).then((res)=> {
+      return Facebook.api('/me?fields=first_name,last_name,birthday,gender,email,picture', [])
     })
+    .then((apiResponse: any) => {
+      console.log(apiResponse);
+      _.merge(respJson,  _.pick(apiResponse, [
+        'first_name',
+        'last_name',
+        'birthday',
+        'gender',
+        'email',
+      ]));
+      respJson.picture = apiResponse.picture.data.url;
+      respJson.isSilhouette = apiResponse.picture.data.is_silhouette;
+      return Promise.resolve(respJson);
+    });
 
   }
-  getFacebookProfile(errorCallback, successCallback): any{ 
+  getFacebookProfile(): any{ 
     var respJson : any = {
       'isRegistered' : false,
     }
-    FB.getLoginStatus((response)=> {
+    return FB.getLoginStatus((response) => {
       console.log('Status');
       console.log(JSON.stringify(response));
       if (response.status !== 'connected') {
-        this.setAnonymous()
+        //XXX: NEEDS TO BE FIXED ASAP
+        // return this.setAnonymous();
+        throw new Error(this.setAnonymous());
       } else {
         _.merge(respJson, _.pick(response.authResponse, ['accessToken' , 'userID']));
         respJson.fbId = respJson.userID;
         respJson.userID = undefined;
         //TODO: Remove
         console.log(response);
-        FB.api('/me', 'get', {
+      }
+      return Promise.resolve();
+    })
+    .then((res) =>{
+        return FB.api('/me', 'get', {
           'fields' : [
             'first_name',
             'last_name',
@@ -366,31 +358,20 @@ export class AuthActions {
             'email',
             'picture',
           ]
-        }, (apiResponse: any) => {
-          _.merge(respJson,  _.pick(apiResponse, [
-            'first_name',
-            'last_name',
-            'birthday',
-            'gender',
-            'email',
-          ]));
-          respJson.picture = apiResponse.picture.data.url;
-          respJson.isSilhouette = apiResponse.picture.data.is_silhouette;
-
-          // jsonRequest(
-          //   API_ROOT + '/v1/Authentication/ExternalLogin',
-          //   {
-          //     method: 'POST',
-          //     body:  {
-          //       'accessToken' : respJson['accessToken']
-          //     }
-          //   },
-          successCallback(respJson);// ,
-          // errorCallback(loginResponse),
-          // )
-        });
-      }
+        })
     })
+    .then((apiResponse: any) => {
+      _.merge(respJson,  _.pick(apiResponse, [
+        'first_name',
+        'last_name',
+        'birthday',
+        'gender',
+        'email',
+      ]));
+      respJson.picture = apiResponse.picture.data.url;
+      respJson.isSilhouette = apiResponse.picture.data.is_silhouette;
+      return Promise.resolve(respJson);
+    });
 
   }
   initializeFacebook(){

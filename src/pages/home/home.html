@@ -6,8 +6,8 @@
       </button>
     </ion-buttons>
     <ion-buttons end>
-      <button ion-button primary icon-only class="active">
-        <ion-icon name="home"></ion-icon>
+      <button ion-button primary icon-only>
+        <ion-icon isActive="true" name="home"></ion-icon>
       </button>
       <button ion-button dark icon-only (click)="loadSearch()">
         <ion-icon name="search"></ion-icon>
@@ -26,11 +26,19 @@
       </ion-segment-button>
     </ion-segment>
   </ion-toolbar>
+  <ion-toolbar primary>
+    <ion-item class="no-border" no-lines>
+      <ion-range primary min="2" max="18" step="2" snaps="true" pin="false" (ngModelChange)="sliderChange()" [(ngModel)]="searchDistance">
+        <ion-icon range-left small>Closer</ion-icon>
+        <ion-icon range-right small>Further</ion-icon>
+      </ion-range>
+    </ion-item>
+  </ion-toolbar>
 </ion-header>
 
 <ion-content [ngSwitch]="isEmpty">
-  <div padding>
-  </div>
+  <!-- <div padding> -->
+  <!-- </div> -->
 
 <!-- <ion-grid> -->
 <!--   <ion-row> -->
@@ -102,19 +110,10 @@
   <template ngSwitchDefault>
     <activity-item *ngFor="let activity of activitiesToRate$| async" [activity]="activity" mustRate="true"></activity-item>
     <activity-item *ngFor="let activity of activities$| async" [activity]="activity"></activity-item>
-      <button ion-button (click)="goToCreate()" class="calm-button create-fab"  fab>
+    <ion-fab>
+      <button ion-fab (click)="goToCreate()" class="calm-button create-fab">
         <ion-icon name="add"></ion-icon>
       </button>
+    </ion-fab>
   </template>
 </ion-content>
-<ion-footer>
-
-  <ion-toolbar primary>
-  <ion-item class="no-border" no-lines>
-    <ion-range primary min="2" max="18" step="2" snaps="true" pin="false" (ngModelChange)="sliderChange()" [(ngModel)]="searchDistance">
-      <ion-icon range-left small>Closer</ion-icon>
-      <ion-icon range-right small>Further</ion-icon>
-    </ion-range>
-  </ion-item>
-  </ion-toolbar>
-</ion-footer>

@@ -16,19 +16,29 @@ import {
   ViewController,
   LoadingController
 } from 'ionic-angular';
+import {
+  FormBuilder, 
+  FormGroup, 
+  Validators
+} from '@angular/forms';
 const _ = require('lodash');
 
 /**
  *  Redux
  */
 import {NgRedux} from 'ng2-redux';
-import {Observable, Subscription} from 'rxjs';
+import {
+  Observable,
+  Subscription
+} from 'rxjs';
+import {
+  Map
+} from 'immutable';
 
 /**
  *  Actions
  */
 import {UserActions} from '../../actions/user.actions';
-// import {authActions} from '../../actions/authActions';
 
 /*
  * Pages
@@ -62,9 +72,12 @@ export class RegistrationPage implements OnInit {
 
   currentUserSub$   :   Subscription;
 
+  registrationForm  : FormGroup;
+
   createModal       :   any;
   validForm         :   boolean;
   aniState          :   string  = 'inactive';
+
   profilePicture    :   string;
   firstName         :   string;
   lastName          :   string;
@@ -106,6 +119,7 @@ export class RegistrationPage implements OnInit {
     private ngRedux: NgRedux<any>,
     private zone: NgZone,
     private userActions : UserActions,
+    private formBuilder: FormBuilder,
   ) { }
 
   ngOnInit() {
@@ -113,8 +127,63 @@ export class RegistrationPage implements OnInit {
     if(!!this.isEdit) {
       this.termsAccepted = true;
     }
-    // this.ngRedux.dispatch(authActions.authUser());
-    this.currentUser$ = this.ngRedux.select((state)=> state.get('currentUser').toJS())
+    this.currentUser$ = this.ngRedux.select('currentUser')
+    .map((currentUser: Map<string, any>) => {
+      return currentUser.toJS();
+    });
+    this.registrationForm = this.formBuilder.group({
+      // profilePicture: [
+      //   "",
+      //   Validators.compose([
+      //     Validators.required
+      //   ]),
+      // ],
+      firstName: [
+        "",
+        Validators.compose([
+          Validators.required
+        ]),
+      ],
+      lastName: [
+        "",
+        Validators.compose([
+          Validators.required
+        ]),
+      ],
+      gender: [
+        "",
+        Validators.compose([
+          Validators.required
+        ]),
+      ],
+      mobileNumber: [
+        "",
+        Validators.compose([
+          Validators.required
+        ]),
+      ],
+      dateOfBirth: [
+        "",
+        Validators.compose([
+          Validators.required
+        ]),
+      ],
+      email: [
+        "",
+        Validators.compose([
+          Validators.minLength(40),
+          Validators.maxLength(400),
+          Validators.required
+        ]),
+      ],
+      confirmEmail: [
+        "",
+        Validators.compose([
+          // DistanceValidator.isValid,
+          Validators.required
+        ]),
+      ],
+    });
     this.currentUserSub$ = this.currentUser$.subscribe((userData) => {
       this.zone.run(() => {
         if(!!userData && this.isInit) {
@@ -137,7 +206,7 @@ export class RegistrationPage implements OnInit {
               this.genderHeader = this.genderOptions[genderIndex].name;
               this.gender = _.capitalize(this.gender);
             } else {
-              this.genderOptions[this.genderOptions.length -1 ].selected = true;
+              this.genderOptions[this.genderOptions.length - 1].selected = true;
             }
           }
           this.profilePicture     = userData.profilePicture;
@@ -197,71 +266,71 @@ export class RegistrationPage implements OnInit {
       'mobileNumber'    :   this.mobileNumber,
       'email'           :   this.email,
     }
-    if(!this.profilePicture){
-      this.loadingCtrl.create({
-        content: 'Please add a profile picture on facebook',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-    } else if(!this.firstName) {
-      this.loadingCtrl.create({
-        content: 'Firstname... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-    } else if(!this.lastName) {
-      this.loadingCtrl.create({
-        content: 'Surname... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-    } else if(!this.genderHeader || !(this.genderHeader == 'Male' || this.genderHeader == 'Female' || this.genderHeader == 'Other')) {
-      this.loadingCtrl.create({
-        content: 'Gender... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-    } else if(!this.dateOfBirth || !(new Date(this.dateOfBirth))) {
-      this.loadingCtrl.create({
-        content: 'Date Of Birth... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-    } else if(!this.mobileNumber) {
-      this.loadingCtrl.create({
-        content: 'mobile number... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-    } else if(!this.email) {
-      this.loadingCtrl.create({
-        content: 'email... please!',
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-    } else if(this.confirmEmail !== this.email) {
-      this.loadingCtrl.create({
-        content: "The email fields don't match! O.o",
-        spinner: 'hide',
-        dismissOnPageChange : true,
-        duration: 1000,
-      }).present();
-      return;
-    }
+    // if(!this.profilePicture){
+    //   this.loadingCtrl.create({
+    //     content: 'Please add a profile picture on facebook',
+    //     spinner: 'hide',
+    //     dismissOnPageChange : true,
+    //     duration: 1000,
+    //   }).present();
+    //   return;
+    // } else if(!this.firstName) {
+    //   this.loadingCtrl.create({
+    //     content: 'Firstname... please!',
+    //     spinner: 'hide',
+    //     dismissOnPageChange : true,
+    //     duration: 1000,
+    //   }).present();
+    //   return;
+    // } else if(!this.lastName) {
+    //   this.loadingCtrl.create({
+    //     content: 'Surname... please!',
+    //     spinner: 'hide',
+    //     dismissOnPageChange : true,
+    //     duration: 1000,
+    //   }).present();
+    //   return;
+    // } else if(!this.genderHeader || !(this.genderHeader == 'Male' || this.genderHeader == 'Female' || this.genderHeader == 'Other')) {
+    //   this.loadingCtrl.create({
+    //     content: 'Gender... please!',
+    //     spinner: 'hide',
+    //     dismissOnPageChange : true,
+    //     duration: 1000,
+    //   }).present();
+    //   return;
+    // } else if(!this.dateOfBirth || !(new Date(this.dateOfBirth))) {
+    //   this.loadingCtrl.create({
+    //     content: 'Date Of Birth... please!',
+    //     spinner: 'hide',
+    //     dismissOnPageChange : true,
+    //     duration: 1000,
+    //   }).present();
+    //   return;
+    // } else if(!this.mobileNumber) {
+    //   this.loadingCtrl.create({
+    //     content: 'mobile number... please!',
+    //     spinner: 'hide',
+    //     dismissOnPageChange : true,
+    //     duration: 1000,
+    //   }).present();
+    //   return;
+    // } else if(!this.email) {
+    //   this.loadingCtrl.create({
+    //     content: 'email... please!',
+    //     spinner: 'hide',
+    //     dismissOnPageChange : true,
+    //     duration: 1000,
+    //   }).present();
+    //   return;
+    // } else if(this.confirmEmail !== this.email) {
+    //   this.loadingCtrl.create({
+    //     content: "The email fields don't match! O.o",
+    //     spinner: 'hide',
+    //     dismissOnPageChange : true,
+    //     duration: 1000,
+    //   }).present();
+    //   return;
+    // }
     console.log(userData);
     //TODO: Validation
     this.ngRedux.dispatch(this.userActions.createUser(userData));

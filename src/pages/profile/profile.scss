@@ -57,9 +57,9 @@ page-profile {
       }
     }
   }
-  .event-actions {
-    button {
-      border-left: 1px solid #EEE;
+  .activity-actions {
+    button:not(first-child) {
+      // border-left: 1px solid #EEE;
     }
   }
   .action-bar {

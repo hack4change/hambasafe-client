@@ -1,12 +1,12 @@
 <ion-menu [content]="myNavRoot" id="anonymous-menu">
 
-  <ion-header>
+  <ion-header no-shadow>
   <ion-toolbar>
   </ion-toolbar>
   </ion-header>
 
   <ion-content>
-    <ion-list class="list-borderless">
+    <ion-list no-lines class="list-borderless">
       <ion-item menuClose (click)="goToAbout()">
         <ion-avatar item-left>
           <img src="assets/img/hambasafe_app_icon_logo.png">
@@ -19,7 +19,7 @@
       </ion-item>
       <ion-item menuClose (click)="goToEmergency()">
         <!-- <ion-avatar> -->
-          <ion-icon item-left light large name="ios-call"></ion-icon>
+          <ion-icon item-left large name="ios-call" color="light"></ion-icon>
         <!-- </ion-avatar> -->
         <div class="item-text-center">
           <h2>
@@ -58,16 +58,19 @@
         </div>
       </ion-item>
     </ion-list>
+    <ion-fab bottom center> 
+      <!-- edge -->
+      <button clear ion-fab>
+        <ion-avatar>
+          <img src="assets/img/hambasafe_app_icon_logo.png">
+        </ion-avatar>
+      </button>
+    </ion-fab>
   </ion-content>
 
   <ion-footer>
-    <ion-toolbar>
-      <ion-title>
-        <!-- <button clear fab-bottom> -->
-        <!--   <ion-avatar> -->
-        <!--     <img src="img/hambasafe_app_icon_logo.png"> -->
-        <!--   </ion-avatar> -->
-        <!-- </button> -->
+    <ion-toolbar color="energized">
+      <ion-title color="light">
         <a (click)="goToTerms()">
           Terms of Use
         </a> 
