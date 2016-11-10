@@ -69,7 +69,7 @@ export class MyApp implements OnInit {
       this.authActions.initializeFacebook();
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
-      if(platform.is('cordova')){
+      if(platform.is('cordova') && !platform.is('browser') ){
         StatusBar.styleDefault();
         Splashscreen.hide();
         ScreenOrientation.lockOrientation('portrait');
@@ -119,11 +119,13 @@ export class MyApp implements OnInit {
    *  Sets active menu
    */
 	setMenuAuthenticated() {
+    this.menuCtrl.close();
     this.menuCtrl.enable(false, 'anonymous-menu');
     this.menuCtrl.enable(true, 'authorised-menu');
   }
 
 	setMenuAnonymous() {
+    this.menuCtrl.close();
     this.menuCtrl.enable(false, 'authorised-menu');
     this.menuCtrl.enable(true, 'anonymous-menu');
   }
@@ -132,22 +134,27 @@ export class MyApp implements OnInit {
    *  Menu Navigation functions
    */
   goToHome() {
+    this.menuCtrl.close();
     this.navCtrl.setRoot(HomePage);
   }
 
   goToFriends() {
+    this.menuCtrl.close();
     this.navCtrl.setRoot(FriendsPage);
   }
 
   goToAbout() {
+    this.menuCtrl.close();
     this.navCtrl.push(AboutPage);
   }
   
   goToEmergency() {
+    this.menuCtrl.close();
     this.navCtrl.push(EmergencyPage);
   }
   
   goToProfile() {
+    this.menuCtrl.close();
     this.navCtrl.setRoot(ProfilePage);
   }
   
@@ -171,6 +178,7 @@ export class MyApp implements OnInit {
     this.navCtrl.push(TermsPage);
   }
   logOut() {
+    this.menuCtrl.close();
     this.ngRedux.dispatch(this.authActions.logoutUser());
   }
 }

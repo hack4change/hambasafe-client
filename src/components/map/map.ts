@@ -1,5 +1,6 @@
 import {Component, ViewChild, OnInit, Input} from '@angular/core';
 import {NavController, Platform} from 'ionic-angular';
+import { /*CameraPosition,*/ GoogleMap, GoogleMapsEvent,/* GoogleMapsMarker,*/ GoogleMapsLatLng, /*GoogleMapsMarkerOptions*/} from 'ionic-native';
 // import {Geolocation} from 'ionic-native';
 const _ = require('lodash');
 
@@ -24,11 +25,19 @@ export class Map implements OnInit {
   @ViewChild('mapComponent') mapNode;
 
   @Input() radius;
+  @Input() lat : number = null;
+  @Input() lng : number = null;
 
   location$               : Observable<any>;
   locationSub$            : Subscription;
   coordinates             : any;
   
+  //Holds map reference.
+  private deviceMap            : any;
+  //Holds marker reference.
+  // private deviceMarkerOptions  : GoogleMapsMarkerOptions;
+  //Holds all coordinate data, from navigator.
+  private deviceCoords         : any = {};
   //Holds map reference.
   private gMap            : any;
   //Holds marker reference.
@@ -41,7 +50,7 @@ export class Map implements OnInit {
   private locationCircle  : any;
   private geoCoder        : any;
 
-  constructor(private platform: Platform, private nav: NavController, private ngRedux: NgRedux<any>, private userActions : UserActions, private eventDataActions : EventDataActions) {};
+  constructor(public platform: Platform, private nav: NavController, private ngRedux: NgRedux<any>, private userActions : UserActions, private eventDataActions : EventDataActions) {};
 
   ngOnInit() {
     this.geoCoder = new google.maps.Geocoder;
@@ -89,6 +98,58 @@ export class Map implements OnInit {
 
   createMapAtCoords(pos : any){
     console.log(pos);
+    if(this.platform.is('cordova') && !this.platform.is('browser')){
+      this.createDeviceMap(pos);
+    } else {
+      this.createBrowserMap(pos);
+    }
+  }
+
+  createDeviceMap(pos) {
+    console.log('creating device map');
+    console.log(pos);
+      this.deviceCoords = new GoogleMapsLatLng(43.0741904,-89.3809802);
+    this.deviceMap = new GoogleMap('map-component', {
+      'backgroundColor': 'green',
+      'controls': {
+        'compass': true,
+        'myLocationButton': true,
+        'indoorPicker': true,
+        'zoom': true
+      },
+      'gestures': {
+        'scroll': true,
+        'tilt': true,
+        'rotate': true,
+        'zoom': true
+      },
+      'camera': {
+        'latLng': this.deviceCoords,
+        'tilt': 30,
+        'zoom': 15,
+        'bearing': 50
+      }
+    });
+    this.deviceMap.one(GoogleMapsEvent.MAP_READY).then(() =>{
+      console.log('Map is ready!');
+      // this.deviceMarkerOptions = {
+      //   'title' : 'Start',
+      //   position: this.deviceCoords,
+      // }
+      // let position: CameraPosition = {
+      //   target: this.deviceCoords,
+      //   zoom: 18,
+      //   tilt: 30
+      // };
+      // this.deviceMap.moveCamera(position);
+      // this.deviceMap.addMarker(this.deviceMarkerOptions)
+      // .then((marker: GoogleMapsMarker) => {
+      //   marker.showInfoWindow();
+      // });
+    });
+  }
+
+  createBrowserMap(pos) {
     _.merge(this.gCoords, pos);
     if(!!this.gCoords && !!this.gCoords.latitude && !!this.gCoords.longitude) {
       if(Math.abs(this.gCoords.latitude) <= 90 && Math.abs(this.gCoords.longitude) <= 180 ) {
@@ -131,6 +192,7 @@ export class Map implements OnInit {
     this.gMap.addListener('click', this.mapClick);
     this.locationCircle.addListener('click', this.mapClick);
   }
+
   ngOnChanges(changes) {
     if(!!this.locationCircle) {
       this.locationCircle.setRadius(this.radius * 1000);

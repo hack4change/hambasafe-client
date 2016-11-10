@@ -18,7 +18,7 @@
         <ion-icon name="create"></ion-icon>
       </button>
       <button ion-button icon-only dark class="indent" (click)="goHome()">
-        <ion-icon name="pin"></ion-icon>
+        <ion-icon name="home"></ion-icon>
       </button>
       <button ion-button icon-only dark (click)="goSearch()">
         <ion-icon name="search"></ion-icon>
@@ -29,11 +29,11 @@
 <ion-content [ngSwitch]="ratingRequired()">
   <template ngSwitchCase="false">
     <ion-list>
-      <activity-item detailed="true" [activity]="activity$ | async"></activity-item>
+      <activity-item detailed="true" [activity]="(activity$ | async)"></activity-item>
     </ion-list>
-    <div>
+    <div padding>
       <p>
-      {{ (activity$ | async)?.description }}
+        {{ (activity$ | async)?.description }}
       </p>
     </div>
     <ion-item *ngIf="isAuthor" class="invite-button" no-lines>

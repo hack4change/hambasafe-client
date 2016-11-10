@@ -34,7 +34,7 @@
 
 <ion-content [ngSwitch]="activeType">
   <ion-toolbar *ngIf="activeType !== 'DISTANCE'" color="primary">
-    <ion-searchbar placeholder="Filter by activity">
+    <ion-searchbar placeholder="Filter by activity" (ionInput)="getActivities($event)">
     </ion-searchbar>
   </ion-toolbar>
   <!-- <ion-toolbar> -->

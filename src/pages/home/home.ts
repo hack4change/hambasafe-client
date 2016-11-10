@@ -110,6 +110,32 @@ export class HomePage implements OnInit {
   activityConnector() {
     this.activities$ = this.ngRedux.select(['eventData', 'items'])
     .map((item: any) => {
+      console.log(item.filter((immutableItem: any)=>{
+
+        if((new Date(immutableItem.get('startDate').get('iso'))).getTime() <= Date.now()){
+          return false
+        };
+        console.log(immutableItem);
+        if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+          if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
+            console.log(distanceCalculator(
+              this.coordinates.latitude,
+              this.coordinates.longitude,
+              immutableItem.get('startLocation').get('coordinates').get('latitude'),
+              immutableItem.get('startLocation').get('coordinates').get('longitude')
+            ));
+            console.log(this.searchDistance);
+            return distanceCalculator(
+              this.coordinates.latitude,
+              this.coordinates.longitude,
+              immutableItem.get('startLocation').get('coordinates').get('latitude'),
+              immutableItem.get('startLocation').get('coordinates').get('longitude')
+            ) <= this.searchDistance;
+          }
+        }
+        return false;
+
+      }))
       return item.filter((immutableItem: any)=>{
 
         if((new Date(immutableItem.get('startDate').get('iso'))).getTime() <= Date.now()){

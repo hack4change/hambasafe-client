@@ -89,11 +89,11 @@ export class ActivityDetailPage implements OnInit {
     private eventDataActions : EventDataActions
   ) {
     console.log("ActivityDetailPage");
-    this.activityId = this.params.data['activityId'];
-    this.mustRate = this.params.data['mustRate'];
   };
 
   ngOnInit() {
+    this.activityId = this.params.data['activityId'];
+    this.mustRate = this.params.data['mustRate'];
     if(this.mustRate) {
       this.ngRedux.dispatch(this.userActions.fetchByAttendance(this.activityId))
     }
@@ -107,19 +107,18 @@ export class ActivityDetailPage implements OnInit {
     })
     this.activity$ = this.ngRedux.select(['eventData', 'items'])
     .map((item:Map<string, any>)=>{
+      if(!this.activityId) {
+        return;
+      }
       return item
-      .filter((item:Map<string, any>) => {
-        console.log(item.get('objectId') === this.activityId);
-        return item.get('objectId') === this.activityId;
-      })
-      .toList()
+      .get(this.activityId)
       .toJS();
     });
     this.userIdSub$ = this.userId$.subscribe((userId) => {
       this.currentUserId = userId;
       this.activitySub$ = this.activity$.subscribe(activity => {
         this.zone.run(() => {
-          if(!!activity && activity[0].author.objectId == this.currentUserId) {
+          if(!!activity && activity.author.objectId == this.currentUserId) {
             this.isAuthor = true;  
           }
         })

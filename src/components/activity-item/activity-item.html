@@ -5,11 +5,11 @@
   </ion-avatar>
   <ion-row>
     <ion-col width-75>
-      <div class="activity-location">
+      <div class="activity-location" style="text-overflow: ellipsis; overflow: hidden; ">
         <span *ngIf="!!activity.startLocation.suburb">{{ activity.startLocation.suburb }},</span><span> {{  activity.startLocation.city }}</span>
       </div>
     </ion-col>
-    <ion-col width-25>
+    <ion-col width-25 style="text-align: right">
       <div *ngIf="!mustRate" class="activity-date">
         {{  startFormatted }}
       </div>

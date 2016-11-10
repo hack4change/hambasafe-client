@@ -19,7 +19,9 @@
       </ion-item>
       <ion-item menuClose (click)="goToEmergency()">
         <!-- <ion-avatar> -->
-          <ion-icon item-left large name="ios-call" color="light"></ion-icon>
+        <ion-avatar item-left>
+          <ion-icon large name="ios-call" color="light"></ion-icon>
+        </ion-avatar>
         <!-- </ion-avatar> -->
         <div class="item-text-center">
           <h2>
@@ -70,7 +72,7 @@
 
   <ion-footer>
     <ion-toolbar color="energized">
-      <ion-title color="light">
+      <ion-title class="title-left" color="light">
         <a (click)="goToTerms()">
           Terms of Use
         </a> 
@@ -95,6 +97,14 @@
         <ion-item menuClose (click)="goToTerms()">Terms & Conditions</ion-item>
         <ion-item menuClose (click)="logOut()">Log out</ion-item>
     </ion-list>
+    <ion-fab bottom center> 
+      <!-- edge -->
+      <button clear ion-fab>
+        <ion-avatar>
+          <img src="assets/img/hambasafe_app_icon_logo.png">
+        </ion-avatar>
+      </button>
+    </ion-fab>
   </ion-content>
 
 </ion-menu>

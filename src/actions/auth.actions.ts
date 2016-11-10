@@ -27,47 +27,6 @@ export class AuthActions {
     console.log('Hello AuthActions Provider');
   }
 
-  deviceLogout(errorCallback, successCallback) : any {
-    Facebook.getLoginStatus().then((res:any) => {
-      if (res.status === 'connected') {
-        return Facebook.logout().then((res: any) => {
-          console.log(res);
-          if (res.authres) {
-            this.parseManager.logOut(
-              successCallback,
-              errorCallback
-            )
-          } else {
-            throw new Error(res);
-          }
-        }) 
-      }
-    }).then((res)=>{
-      return successCallback(res);
-    }).catch((err)=>{
-      errorCallback(err);
-    })
-  }
-  fbLogout(errorCallback, successCallback):any{
-    FB.getLoginStatus(function(response) {
-      if (response.status === 'connected') {
-        FB.logout(function(response: any) {
-          console.log(response);
-          if (response.authResponse) {
-            this.parseManager.logOut(
-              successCallback,
-              errorCallback
-            )
-          } else {
-            errorCallback(response);
-          }
-        }) 
-      } else {
-        successCallback(response);
-      }
-    })
-  }
-
 
   /**
    *  Login
@@ -105,7 +64,7 @@ export class AuthActions {
     };
   };
 
-  setAuthTrying(){
+  setAuthTrying() {
     return {
       data: fromJS({
         items: [],
@@ -119,13 +78,12 @@ export class AuthActions {
     return dispatch => {
       dispatch(this.setAuthTrying());
       var promise = null;
-      if(this.platform.is('cordova')) {
+      if(this.platform.is('cordova') && !this.platform.is('browser') ){
         promise = this.authDevice();
       } else {
         promise = this.authBrowser();
       }
-      promise
-      .then((res) => {
+      promise.then((res) => {
         return this.getProfile();
       })
       .then((res) => {
@@ -135,7 +93,7 @@ export class AuthActions {
       })
     }
   }
-  authBrowser():any {
+  authBrowser() : Promise<any> {
     return this.parseManager.facebookLogin('public_profile, email')
       // (response) => 
       //   (response) => {
@@ -147,7 +105,7 @@ export class AuthActions {
       // (error) => this.ngRedux.dispatch(this.setAuthError(error))
   }
 
-  authDevice() : any {
+  authDevice() : Promise<any> {
     // Set loading state.
     console.log('dispatching auth Device');
     return Facebook.getLoginStatus()
@@ -156,7 +114,15 @@ export class AuthActions {
       console.log(res);
       if(res.status !== 'connected') {
         return Facebook.login(['public_profile', 'email']).then((res)=>{
-          return Promise.resolve(res.authResponse);
+          console.log('post Login');
+          console.log(res);
+          var expDate = new Date(new Date().getTime() + res.authResponse.expiresIn * 1000 ).toISOString();
+          var authData = {
+            id: String(res.authResponse.userID),
+            access_token: res.authResponse.accessToken,
+            expiration_date: expDate
+          }
+          return Promise.resolve(authData);
         })
       } else {
         var expDate = new Date(new Date().getTime() + res.authResponse.expiresIn * 1000 ).toISOString();
@@ -169,17 +135,69 @@ export class AuthActions {
       }
     })
     .then((res) => {
-      return this.parseManager.facebookLogin(res);
+      console.log('call parse Login');
+      console.log(res);
+      return this.parseManager.deviceLogin(res);
     })
   }
 
-  // deviceLogin(authData) : any { 
-      // (response) => this.getProfile(
-      //   (response) => this.ngRedux.dispatch(this.setAuthError(response)), 
-      //     (response) => this.ngRedux.dispatch(this.setAuthSuccess(response))
-      // ),
-      // (error) => this.ngRedux.dispatch(this.setAuthError(error))
-  // }
+  logoutUser() : any{
+    return dispatch => {
+      //
+      // Set loading state.
+      //
+      dispatch(this.setAuthTrying());
+      var promise = Promise.resolve();
+      if(this.platform.is('cordova') && !this.platform.is('browser')) {
+        promise = this.deviceLogout();
+      } else {
+        promise = this.fbLogout();
+      }
+      promise.then((res) => {
+        return dispatch(this.setLogoutSuccess());
+      }).catch((err)=>{
+        return dispatch(this.setLogoutError(err));
+      })
+    };
+  };
+
+  deviceLogout() : Promise<any> {
+    return Facebook.getLoginStatus()
+    .then((res:any) => {
+      if (res.status === 'connected') {
+        return Facebook.logout();
+      } else {
+        return Promise.resolve();
+      }
+    })
+    .then((res) => {
+      return this.parseManager.logOut();
+    })
+  }
+
+  fbLogout():Promise<any> {
+    return new Promise((resolve, reject) => {
+      return FB.getLoginStatus((res) => {
+        if (res.status === 'connected') {
+          return FB.logout((res: any) => {
+            console.log(res);
+            if (res.authResponse) {
+              this.parseManager.logOut()
+              .then((res) => {
+                console.log('logged out current user');
+                resolve();
+              })
+            } else {
+              throw new Error(res);
+            }
+          }) 
+        } else {
+          return Promise.resolve(res);
+        }
+      })
+    
+    })
+  }
 
   /**
    *  Logout Success
@@ -218,26 +236,6 @@ export class AuthActions {
     };
   };
 
-  logoutUser():any{
-    return dispatch => {
-      // const url = 'https://www.reddit.com/top/.json?limit=10';
-      //
-      // Set loading state.
-      //
-      dispatch(this.setAuthTrying());
-      if(this.platform.is('cordova')){
-        this.deviceLogout(
-          (error) => dispatch(this.setLogoutError(error)),
-            () => dispatch(this.setLogoutSuccess())
-        );
-      } else {
-        this.fbLogout(
-          (error) => dispatch(this.setLogoutError(error)),
-            () => dispatch(this.setLogoutSuccess())
-        );
-      }
-    };
-  };
 
   setAnonymous():any{
     return {
@@ -266,7 +264,7 @@ export class AuthActions {
     console.log(userRegistered);
     if(userRegistered) {
       return this.getParseProfile();
-    } else if(this.platform.is('cordova')) {
+    } else if(this.platform.is('cordova') && !this.platform.is('browser') ){
       return this.getDeviceFacebookProfile();
     } else {
       return this.getFacebookProfile();

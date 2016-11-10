@@ -954,7 +954,9 @@ export class ParseManager {
     // } else {
     //   var user = this.Parse.User.current();
     // }
-    return this.Parse.FacebookUtils.logIn(authData);
+    console.log('DEVICE LOGIN');
+    console.log(authData);
+    return this.Parse.FacebookUtils.logIn(authData, {});
   }
 
   facebookLogin(perms) {
@@ -974,12 +976,11 @@ export class ParseManager {
 
   }
       //LOGOUT
-  logOut(success: any, error: any) {
+  logOut() {
     if (!!this.Parse.User.current()) {
-      this.Parse.User.logOut();
-      success();
+      return this.Parse.User.logOut();
     } else {
-      error("User not logged in");
+      throw new Error("User not logged in");
     }
   }
 

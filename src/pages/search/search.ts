@@ -44,6 +44,7 @@ export class SearchPage implements OnInit{
   locationSub$              : Subscription;
 
   typeSelected              : any;
+  searchQuery               : string;
   selectedSearch            : any;
   shownGroup                : any;
   searchDistance            : number  = 2;
@@ -66,7 +67,8 @@ export class SearchPage implements OnInit{
     this.activityConnector();
     this.filterConnector();
   }
-  ngOnDestroy(){
+
+  ngOnDestroy() {
     if(!!this.locationSub$){
       this.locationSub$.unsubscribe();
     }
@@ -160,6 +162,10 @@ export class SearchPage implements OnInit{
     this.filterSub$ = this.filter$.subscribe((filterString)=>{
       this.activityType = filterString;
     })
+  }
+
+  getActivities(ev){
+    console.log(ev); 
   }
 
   isActive(callingType) {
