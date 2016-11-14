@@ -100,6 +100,7 @@ export class ProfilePage implements OnInit {
     });
     this.currentUserSub$ = this.currentUser$.subscribe((currentUser) => {
       this.currentUserId = currentUser['objectId'];
+      this.userRating = currentUser['rating'];
     })
   }
 

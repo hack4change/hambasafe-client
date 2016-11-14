@@ -10,6 +10,10 @@ const actionTypes = keyMirror({
   USER_AUTH_SUCCESS             : undefined,
   USER_AUTH_FAIL                : undefined,
 
+  USER_UPDATE_INIT              : undefined,
+  USER_UPDATE_SUCCESS           : undefined,
+  USER_UPDATE_FAIL              : undefined,
+
   USER_CREATE_INIT              : undefined,
   USER_CREATE_SUCCESS           : undefined,
   USER_CREATE_FAIL              : undefined,

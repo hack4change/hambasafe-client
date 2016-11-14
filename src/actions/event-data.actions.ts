@@ -83,6 +83,27 @@ export class EventDataActions {
     };
   }
 
+  fetchEventsByQuery(query: string, latitude: number, longitude: number) : any {
+    return dispatch => {
+      console.log('dispatch');
+      if(!query){
+        return;
+      }
+      query = query.toLowerCase().trim();
+
+      // Set loading state.
+      dispatch(this.setFetchLoadingState());
+      // Do request.
+      this.parseManager.getActivitiesByQuery(query, latitude, longitude)
+      .then((res) => {
+          console.log(res);
+          return dispatch(this.setFetchSuccessState(res));
+      })
+      .catch((err)=> {
+        return dispatch(this.setFetchErrorState(err));
+      });
+    };
+  }
   fetchEventsByCoordinates(distance: number, latitude: number, longitude: number) : any {
     return dispatch => {
       console.log('dispatch');

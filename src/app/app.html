@@ -1,9 +1,9 @@
 <ion-menu [content]="myNavRoot" id="anonymous-menu">
 
-  <ion-header no-shadow>
-  <ion-toolbar>
-  </ion-toolbar>
-  </ion-header>
+  <!-- <ion-header no-shadow> -->
+  <!-- <ion-toolbar> -->
+  <!-- </ion-toolbar> -->
+  <!-- </ion-header> -->
 
   <ion-content>
     <ion-list no-lines class="list-borderless">
@@ -19,9 +19,7 @@
       </ion-item>
       <ion-item menuClose (click)="goToEmergency()">
         <!-- <ion-avatar> -->
-        <ion-avatar item-left>
-          <ion-icon large name="ios-call" color="light"></ion-icon>
-        </ion-avatar>
+        <ion-icon large name="ios-call" color="light" item-left></ion-icon>
         <!-- </ion-avatar> -->
         <div class="item-text-center">
           <h2>
@@ -60,14 +58,13 @@
         </div>
       </ion-item>
     </ion-list>
-    <ion-fab bottom center> 
-      <!-- edge -->
-      <button clear ion-fab>
-        <ion-avatar>
-          <img src="assets/img/hambasafe_app_icon_logo.png">
-        </ion-avatar>
-      </button>
-    </ion-fab>
+    <!-- <ion-fab bottom center> --> 
+    <!--   <button  class="menu-logo" clear ion-fab> -->
+    <!--     <ion-avatar> -->
+    <!--       <img src="assets/img/hambasafe_app_icon_logo.png"> -->
+    <!--     </ion-avatar> -->
+    <!--   </button> -->
+    <!-- </ion-fab> -->
   </ion-content>
 
   <ion-footer>
@@ -83,21 +80,47 @@
 
 <ion-menu [content]="myNavRoot" id="authorised-menu">
 
-  <ion-toolbar>
-  </ion-toolbar>
+  <ion-header>
+    <ion-toolbar color="primary">
+      <ion-title>
+        HambaSafe
+      </ion-title> 
+    </ion-toolbar>
+  </ion-header>
 
   <ion-content>
     <ion-list>
-        <ion-item menuClose (click)="goToHome()">Home</ion-item>
-        <ion-item menuClose (click)="goToProfile()">My Profile</ion-item>
-        <ion-item menuClose (click)="goToFriends()">Friends</ion-item>
-        <!--FIXME:REMOVED FOR TESTING <ion-item menuClose (click)="goToShare()">Tell a Friend</ion-item> -->
-        <ion-item menuClose (click)="goToEmergency()">Emergency</ion-item>
-        <ion-item menuClose (click)="goToAbout()">Who is HambaSafe?</ion-item>
-        <ion-item menuClose (click)="goToTerms()">Terms & Conditions</ion-item>
-        <ion-item menuClose (click)="logOut()">Log out</ion-item>
+      <ion-item menuClose (click)="goToHome()">
+        <ion-icon item-left name="home" color="primary"></ion-icon>
+        Home
+      </ion-item>
+      <ion-item menuClose (click)="goToProfile()">
+        <ion-icon item-left name="person" color="primary"></ion-icon>
+        My Profile
+      </ion-item>
+      <ion-item menuClose (click)="goToFriends()">
+        <ion-icon item-left name="people" color="primary"></ion-icon>
+        Friends
+      </ion-item>
+      <!--FIXME:REMOVED FOR TESTING <ion-item menuClose (click)="goToShare()">Tell a Friend</ion-item> -->
+      <ion-item menuClose (click)="goToEmergency()">
+        <ion-icon item-left name="call" color="primary"></ion-icon>
+        Emergency
+      </ion-item>
+      <ion-item menuClose (click)="goToAbout()">
+        <ion-icon item-left name="information" color="primary"></ion-icon>
+        Who is HambaSafe?
+      </ion-item>
+      <ion-item menuClose (click)="goToTerms()">
+        <ion-icon item-left name="paper" color="primary"></ion-icon>
+        Terms & Conditions
+      </ion-item>
+      <ion-item menuClose (click)="logOut()">
+        <ion-icon item-left name="log-out" color="danger"></ion-icon>
+        Log Out
+      </ion-item>
     </ion-list>
-    <ion-fab bottom center> 
+    <ion-fab bottom center class="menu-logo"> 
       <!-- edge -->
       <button clear ion-fab>
         <ion-avatar>

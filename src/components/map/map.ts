@@ -1,6 +1,6 @@
 import {Component, ViewChild, OnInit, Input} from '@angular/core';
 import {NavController, Platform} from 'ionic-angular';
-import { /*CameraPosition,*/ GoogleMap, GoogleMapsEvent,/* GoogleMapsMarker,*/ GoogleMapsLatLng, /*GoogleMapsMarkerOptions*/} from 'ionic-native';
+import { /*CameraPosition,*/ GoogleMap, GoogleMapsEvent, GoogleMapsLatLng, GoogleMapsMarker, GoogleMapsMarkerOptions} from 'ionic-native';
 // import {Geolocation} from 'ionic-native';
 const _ = require('lodash');
 
@@ -32,12 +32,15 @@ export class Map implements OnInit {
   locationSub$            : Subscription;
   coordinates             : any;
   
+  private isDevice        : boolean =  false;
   //Holds map reference.
   private deviceMap            : any;
   //Holds marker reference.
-  // private deviceMarkerOptions  : GoogleMapsMarkerOptions;
+  private deviceMarker  : GoogleMapsMarker;
+  private deviceMarkerOptions  : GoogleMapsMarkerOptions;
   //Holds all coordinate data, from navigator.
   private deviceCoords         : any = {};
+  private deviceCircle         : any ;
   //Holds map reference.
   private gMap            : any;
   //Holds marker reference.
@@ -70,6 +73,13 @@ export class Map implements OnInit {
     this.locationConnector();
     // }
   }
+
+  ngOnDestroy(){
+    if(!!this.deviceMap) {
+      this.deviceMap.remove();
+    }
+  }
+
   locationConnector() {
     this.location$ = this.ngRedux.select(['currentUser', 'location'])
     .map((pos:any)=>{
@@ -88,7 +98,9 @@ export class Map implements OnInit {
           if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
             if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
               console.log('create Map')
-              this.createMapAtCoords(this.coordinates);
+              setTimeout(()=>{
+                this.createMapAtCoords(this.coordinates);
+              }, 1000);
             }
           }
         }
@@ -99,6 +111,7 @@ export class Map implements OnInit {
   createMapAtCoords(pos : any){
     console.log(pos);
     if(this.platform.is('cordova') && !this.platform.is('browser')){
+      this.isDevice = true;
       this.createDeviceMap(pos);
     } else {
       this.createBrowserMap(pos);
@@ -108,14 +121,14 @@ export class Map implements OnInit {
   createDeviceMap(pos) {
     console.log('creating device map');
     console.log(pos);
-      this.deviceCoords = new GoogleMapsLatLng(43.0741904,-89.3809802);
+    this.deviceCoords = new GoogleMapsLatLng(pos.latitude,pos.longitude);
     this.deviceMap = new GoogleMap('map-component', {
-      'backgroundColor': 'green',
+      // 'backgroundColor': '#ffffffff',
       'controls': {
         'compass': true,
         'myLocationButton': true,
         'indoorPicker': true,
-        'zoom': true
+        // 'zoom': true
       },
       'gestures': {
         'scroll': true,
@@ -130,22 +143,41 @@ export class Map implements OnInit {
         'bearing': 50
       }
     });
-    this.deviceMap.one(GoogleMapsEvent.MAP_READY).then(() =>{
+    this.deviceMap.setDebuggable(true);
+    // this.deviceMap.setClickable(true);
+    this.deviceMap.one(GoogleMapsEvent.MAP_READY).then(() => {
       console.log('Map is ready!');
-      // this.deviceMarkerOptions = {
-      //   'title' : 'Start',
-      //   position: this.deviceCoords,
-      // }
-      // let position: CameraPosition = {
-      //   target: this.deviceCoords,
-      //   zoom: 18,
-      //   tilt: 30
-      // };
-      // this.deviceMap.moveCamera(position);
-      // this.deviceMap.addMarker(this.deviceMarkerOptions)
-      // .then((marker: GoogleMapsMarker) => {
-      //   marker.showInfoWindow();
-      // });
+      this.deviceMarkerOptions = {
+        'title'       : 'Start',
+        'draggable'   : true,
+        'position'    : this.deviceCoords,
+      }
+      this.deviceMap.addCircle({
+        center        : this.deviceCoords,
+        radius        : this.radius * 1000,
+        strokeColor   : '#FF0000AA',
+        strokeWeight  : 1,
+        fillColor     : '#FF000060',
+      }, (circle) => {
+        console.log(circle);
+        this.deviceCircle= circle;
+        this.deviceCircle.on(GoogleMapsEvent.OVERLAY_CLICK, (ev) => {
+          console.log(ev);
+        })
+      });
+      this.deviceMap.addMarker(this.deviceMarkerOptions)
+      .then((marker: GoogleMapsMarker) => {
+        this.deviceMarker = marker;
+        console.log(this.deviceMarker);
+        marker.showInfoWindow();
+      });
+      this.deviceMap.on(GoogleMapsEvent.MAP_CLICK, (ev) => {
+        console.log(ev);
+      })
+      this.deviceMap.getMyLocation().then((res)=>{
+        console.log('LOCATION ON MAP')
+        console.log(res) 
+      })
     });
   }
 
@@ -180,14 +212,14 @@ export class Map implements OnInit {
     });
 
     this.locationCircle = new google.maps.Circle({
-      strokeColor: '#FF0000',
-      strokeOpacity: 0.8,
-      strokeWeight: 2,
-      fillColor: '#FF0000',
-      fillOpacity: 0.35,
-      map: this.gMap,
-      center: this.latLng,
-      radius: this.radius * 1000
+      strokeColor   : '#FF0000',
+      strokeOpacity : 0.8,
+      strokeWeight  : 2,
+      fillColor     : '#FF0000',
+      fillOpacity   : 0.35,
+      map           : this.gMap,
+      center        : this.latLng,
+      radius        : this.radius * 1000
     });
     this.gMap.addListener('click', this.mapClick);
     this.locationCircle.addListener('click', this.mapClick);
@@ -197,6 +229,11 @@ export class Map implements OnInit {
     if(!!this.locationCircle) {
       this.locationCircle.setRadius(this.radius * 1000);
     }
+    if(!!this.deviceCircle){
+      console.log('updating device circle');
+      this.deviceCircle.setRadius(this.radius * 1000);
+      console.log(this.radius);
+    }
   }
 
 	mapClick = (event, a) => {
@@ -205,4 +242,32 @@ export class Map implements OnInit {
 		this.gMarker.setPosition(this.latLng);
 		this.locationCircle.setCenter(this.latLng);
 	}
+  getLatitude() : Promise<number> {
+    return new Promise((resolve, reject)=>{
+      if(this.isDevice) {
+        console.log('Position of Marker');
+        console.log(this.deviceMarker);
+        return this.deviceMarker.getPosition().then((pos) => {
+          console.log('HEEEEEEEEEERE')
+          return resolve(pos.lat);
+        })
+      } else {
+        return resolve(this.latLng.lat());
+      }
+    })
+  }
+  getLongitude() : Promise<number> {
+    return new Promise((resolve, reject) => {
+      if(this.isDevice) {
+        console.log(this.deviceMarker);
+        return this.deviceMarker.getPosition().then((pos) => {
+          console.log('Position of Marker');
+          console.log(pos);
+          return resolve(pos.lng);
+        })
+      } else {
+        return resolve(this.latLng.lng());
+      }
+    })
+  }
 }

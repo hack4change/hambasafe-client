@@ -1,5 +1,6 @@
 import { 
   NgModule,
+  // enableProdMode
 } from '@angular/core';
 import { 
   CommonModule
@@ -82,6 +83,7 @@ import { Capitalize } from '../utils/capitalize';
  */
 // import {DistanceValidator} from  '../validators/distance';
 // import {WaitTimeValidator} from  '../validators/waitTime';
+// enableProdMode()
 
 @NgModule({
   declarations: [

@@ -25,6 +25,7 @@ export class ParseManager {
   private attendingSubscription;
   private friendSubscription;
   private inviteSubscription;
+  private userSubscription;
 
   constructor(public http: Http) {
     console.log('Hello ParseManager Provider');
@@ -58,6 +59,14 @@ export class ParseManager {
    *  SUBSCRIPTIONS
    *
    */
+  subscribeToUser(changeCb: any) {
+    var query = new Parse.Query(this.Parse.User.current()['id']);
+    query.equalTo('objectId')
+    this.userSubscription = query.subscribe();
+    this.attendingSubscription.on('update', (user) => {
+      changeCb(user);
+    })
+  }
   subscribeToAttending(error: any, createCb: any, deleteCb: any) {
     var query = new Parse.Query(this.AttendanceClass);
     query.equalTo('userReference', this.Parse.User.current());
@@ -615,6 +624,27 @@ export class ParseManager {
         error(err);
       }
     });
+  }
+
+  getActivitiesByQuery(query: string, latitude: number, longitude: number) : Promise<any> {
+    console.log('QUERY');
+    console.log(query);
+    var activityQuery = new this.Parse.Query(this.ActivityClass);
+    var point = new this.Parse.GeoPoint({
+      'latitude': latitude,
+      'longitude': longitude,
+    });
+    var d = new Date();
+    activityQuery.contains('eventType', query);
+    activityQuery.withinKilometers('coordinates', point, '35');
+    activityQuery.greaterThanOrEqualTo(
+      'startDate', {
+        "__type": "Date",
+        "iso": d.toISOString()
+      }
+    );
+    activityQuery.include('author');
+    return activityQuery.find().map((res)=>res.toJSON());
   }
 
   getActivitiesByLocation(distance: number, latitude: number, longitude: number, error: (res) => void, success: (res) => void) {

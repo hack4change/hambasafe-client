@@ -94,7 +94,8 @@ export class SearchPage implements OnInit{
         this.coordinates = pos;
         if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
           if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
-            this.ngRedux.dispatch(this.eventDataActions.fetchEventsByCoordinates(150, this.coordinates.latitude, this.coordinates.longitude));
+            //SET 35KM to be default max radius around to search
+            this.ngRedux.dispatch(this.eventDataActions.fetchEventsByCoordinates(35, this.coordinates.latitude, this.coordinates.longitude));
           }
         }
       }
@@ -166,6 +167,11 @@ export class SearchPage implements OnInit{
 
   getActivities(ev){
     console.log(ev); 
+    if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+      if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
+        this.ngRedux.dispatch(this.eventDataActions.fetchEventsByQuery(ev.target.value, this.coordinates.latitude, this.coordinates.longitude));
+      }
+    }
   }
 
   isActive(callingType) {
@@ -177,24 +183,37 @@ export class SearchPage implements OnInit{
   }
 
   searchRadius() {
-    this.activeType = 'SEARCH';
-    var lat = this.mapChild.latLng.lat();
-    var lng = this.mapChild.latLng.lng();
-    // var geoCoder = this.mapChild.geoCoder;
+    console.log('searching with in radius');
+    let lat = null;
+    let lng = null;
+    this.mapChild.getLatitude().then((res) => {
+      lat = res; 
+      return this.mapChild.getLongitude();
+    }).then((res)=>{
+      console.log(res);
+      console.log(lng);
+      console.log(lat);
+      lng = res;
+      // var geoCoder = this.mapChild.geoCoder;
 
-    this.coordinates = {
-      latitude: lat,
-      longitude: lng,
-    }
-    // if(!!lat && !!lng){
-    if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-      if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
-        // geoCoder.geocode({'location' : this.mapChild.latLng}, (results, status) => {
-        this.ngRedux.dispatch(this.userActions.setLocation(this.coordinates.longitude, this.coordinates.latitude));
-        // })
+      this.coordinates = {
+        latitude: lat,
+        longitude: lng,
       }
-    }
-    // }
+      // if(!!lat && !!lng){
+      if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+        if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
+          // geoCoder.geocode({'location' : this.mapChild.latLng}, (results, status) => {
+          this.activeType = 'SEARCH';
+          this.ngRedux.dispatch(this.userActions.setLocation(this.coordinates.longitude, this.coordinates.latitude));
+          // })
+        }
+      }
+      // }
+    }).catch((err)=>{
+      console.log('caught err');
+      console.log(err);
+    });
   }
 
   toggleFilter(filterString) {

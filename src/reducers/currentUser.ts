@@ -52,6 +52,8 @@ export default function currentUser(state:any = INIT_STATE, action: any= {}) {
       return state.set('location', action.data);
     case actionTypes.USER_SET_STATUS:
       return state.set('status', action.data.get('status'));
+    case actionTypes.USER_UPDATE_SUCCESS:
+      return state.merge(action.data);
     default:
       return state;
   }

@@ -4,12 +4,12 @@
     <img src="{{ activity?.author?.profilePicture}}">
   </ion-avatar>
   <ion-row>
-    <ion-col width-75>
-      <div class="activity-location" style="text-overflow: ellipsis; overflow: hidden; ">
+    <ion-col width-67>
+      <div class="activity-location" style="text-overflow: ellipsis; overflow: hidden;">
         <span *ngIf="!!activity.startLocation.suburb">{{ activity.startLocation.suburb }},</span><span> {{  activity.startLocation.city }}</span>
       </div>
     </ion-col>
-    <ion-col width-25 style="text-align: right">
+    <ion-col width-33 style="text-align: right">
       <div *ngIf="!mustRate" class="activity-date">
         {{  startFormatted }}
       </div>
@@ -29,7 +29,7 @@
     &bull;
     {{ activity.intensity }}
   </ion-row>
-  <ion-icon *ngIf="mustRate" class="must-rate" name="md-star" light item-right></ion-icon>
+  <ion-icon *ngIf="mustRate" class="must-rate" name="md-star" color="energized" item-right></ion-icon>
   <!-- <ion-icon *ngIf="actionType == 'VIEW'" class="been-invited" name="ios-arrow-forward" light item-right></ion-icon> -->
 </ion-item>
 <!-- <ion-card  (click)="viewActivity()"> -->

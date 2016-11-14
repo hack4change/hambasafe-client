@@ -35,6 +35,7 @@ export class MyApp implements OnInit {
   @ViewChild('myNavRoot') navCtrl : NavController
 
   public authStatus$: Observable<any>;
+  public currentUserPic: Observable<any>;
 
   public authStatusSub$  : Subscription;
 
@@ -65,7 +66,7 @@ export class MyApp implements OnInit {
     //     applyMiddleware(thunk),
     //     devTools.enhancer() 
     //   ]);
-    platform.ready().then(() => {
+    platform.ready().then((res) => {
       this.authActions.initializeFacebook();
       // Okay, so the platform is ready and our plugins are available.
       // Here you can do any higher level native things you might need.
@@ -73,6 +74,7 @@ export class MyApp implements OnInit {
         StatusBar.styleDefault();
         Splashscreen.hide();
         ScreenOrientation.lockOrientation('portrait');
+        this.userActions.subscribeToLocation();
       }
     });
   }
