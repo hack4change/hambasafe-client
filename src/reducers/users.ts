@@ -28,10 +28,7 @@ export default function users(state:any = INIT_STATE, action:any = {}) {
       return state
     .set('status', action.data.get('status'))
     case actionTypes.FRIEND_DELETE_SUCCESS:
-      return state
-    .set({
-      'items': state.get('items').delete(action.data.get('objectId'))
-    });
+      return state.set('items', state.get('items').delete(action.data.get('objectId')));
     case actionTypes.FRIEND_DELETE_FAIL:
       return state
     .set('status', action.data.get('status'))

@@ -49,6 +49,12 @@
   <!--   </ion-item> -->
   <!-- </ion-toolbar> -->
   <template ngSwitchCase="TIME">
+     <ion-fab right bottom>
+ <!-- class="square-corner" -->
+       <button ion-fab (click)="toggleView('DISTANCE')">
+         <ion-icon name="pin"></ion-icon>
+       </button>
+     </ion-fab>
     <!-- <ion-toolbar class="buttonbar"> -->
     <!--   <button ion-button icon-only (click)="toggleView('TIME')" class="square-corner" [ngClass]="{active: isActive('TIME'), 'not-active': !isActive('TIME')}" clear block ion-row center> -->
     <!--     <ion-icon name="ios-time-outline" item-left></ion-icon> -->
@@ -57,14 +63,8 @@
     <!--     <ion-icon name="md-pin" item-left></ion-icon> -->
     <!--   </button> -->
     <!-- </ion-toolbar> -->
-     <ion-fab right bottom>
- <!-- class="square-corner" -->
-       <button ion-fab icon-only (click)="toggleView('DISTANCE')">
-         <ion-icon name="pin"></ion-icon>
-       </button>
-     </ion-fab>
     <ion-list>
-      <activity-item *ngFor="let activity of activities$ | async" [activity]="activity"></activity-item>
+      <activity-item *ngFor="let activity of ( (activities$ | async) | SearchFilter:searchQuery:'eventType')" [activity]="activity"></activity-item>
     </ion-list>
 
   </template>
@@ -83,20 +83,26 @@
         <!--   </button> -->
         <!-- </ion-toolbar> -->
         <map #myMap [radius]="searchDistance">
-          <ion-fab right bottom>
+          <ion-fab *ngIf="isDevice" right bottom>
             <!-- class="square-corner" -->
             <button ion-fab (click)="searchRadius()">
               Go!
             </button>
           </ion-fab>
         </map>
+				<ion-fab *ngIf="!isDevice" right bottom>
+					<!-- class="square-corner" -->
+					<button ion-fab (click)="searchRadius()">
+						Go!
+					</button>
+				</ion-fab>
       <!-- </div> -->
       <!-- <div style=""> -->
       <!-- </div> -->
     <!-- </div> -->
   </template>
   <template ngSwitchCase="SEARCH">
-    <activity-item *ngFor="let activity of activities$ | async" [activity]="activity"></activity-item>
+      <activity-item *ngFor="let activity of ( (activities$ | async) | SearchFilter:searchQuery:'eventType')" [activity]="activity"></activity-item>
   </template>
 </ion-content>
 

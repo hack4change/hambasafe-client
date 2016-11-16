@@ -14,7 +14,7 @@
       </button>
     </ion-buttons>
     <ion-buttons  *ngIf="isAuthor" end>
-      <button ion-button icon-only (click)="editActivity()">
+      <button ion-button icon-only (click)="editActivity()" [disabled]="cannotEdit()">
         <ion-icon name="create"></ion-icon>
       </button>
       <!-- <button ion-button icon-only dark class="indent" (click)="goHome()"> -->

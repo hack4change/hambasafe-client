@@ -199,17 +199,29 @@ export class CreatePage implements OnInit {
       });
       this.activitySub$ = this.activity$.subscribe((activity) => {
         if(!!activity) {
+          var d = new Date(activity.startDate.iso);
           this.isPublic = activity.isPublic;
           this.eventType = activity.eventType;
           this.name = activity.name;
           this.description = activity.description;
           this.distance = activity.distance;
-          var d = new Date(activity.startDate.iso);
           this.startTime = d.toLocaleTimeString();
           this.startDate = d.toISOString().split("T")[0];//d.getFullYear() + "-" + d.getMonth() + "-"+ d.getDate();
           this.startLocation = activity.startLocation.coordinates;
           this.intensity = activity.intensity;
           this.waitTime = activity.waitTime;
+
+          this.createForm.value.isPublic = activity.isPublic;
+          this.createForm.value.eventType = activity.eventType;
+          this.createForm.value.name = activity.name;
+          this.createForm.value.description = activity.description;
+          this.createForm.value.distance = activity.distance;
+          this.createForm.value.startTime = d.toLocaleTimeString();
+          this.createForm.value.startDate = d.toISOString().split("T")[0];//d.getFullYear() + "-" + d.getMonth() + "-"+ d.getDate();
+          this.createForm.value.startLocation = activity.startLocation.coordinates;
+          this.createForm.value.intensity = activity.intensity;
+          this.createForm.value.waitTime = activity.waitTime;
+
           console.log(this.waitTime);
         }
       });

@@ -15,7 +15,8 @@ import {
 } from 'ng2-redux';
 import { 
   IonicApp,
-  IonicModule 
+  IonicModule,
+  Platform,
 } from 'ionic-angular';
 import {
   MyApp 
@@ -76,6 +77,7 @@ import { UserItem } from '../components/user-item/user-item';
 /*
  *  Pipes
  */
+import { SearchFilter } from '../utils/searchFilter';
 import { Capitalize } from '../utils/capitalize';
 
 /*
@@ -116,6 +118,7 @@ import { Capitalize } from '../utils/capitalize';
     UserItem,
 
     Capitalize,
+		SearchFilter,
 
     //DistanceValidator,
     //WaitTimeValidator,
@@ -168,18 +171,24 @@ import { Capitalize } from '../utils/capitalize';
 export class AppModule {
   constructor(
     // public navCtrl : NavController,
+    public platform : Platform,
     public ngRedux : NgRedux<any>,
     public devTools : DevToolsExtension
   ) {
     // config as before 
+    var enhancers = [
+      applyMiddleware(thunk),
+    ]
+    if(!platform.is('cordova') || platform.is('browser')) {
+      enhancers.push(devTools.enhancer());
+    }
     this.ngRedux.configureStore(
       rootReducer,
       {},
       [
         createLogger()
-      ],[
-        applyMiddleware(thunk),
-        // devTools.enhancer() 
-      ]);
+      ],
+      enhancers
+    );
   }
 }

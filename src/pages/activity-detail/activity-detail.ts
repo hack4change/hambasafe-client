@@ -72,6 +72,7 @@ export class ActivityDetailPage implements OnInit {
   usersSub$         : Subscription;
   userIdSub$        : Subscription;
 
+  activity      : any;
   currentUserId: number;
   mustRate:  boolean = false;
   description: string;
@@ -116,8 +117,9 @@ export class ActivityDetailPage implements OnInit {
     });
     this.userIdSub$ = this.userId$.subscribe((userId) => {
       this.currentUserId = userId;
-      this.activitySub$ = this.activity$.subscribe(activity => {
+      this.activitySub$ = this.activity$.subscribe((activity) => {
         this.zone.run(() => {
+          this.activity = activity;
           if(!!activity && activity.author.objectId == this.currentUserId) {
             this.isAuthor = true;  
           }
@@ -207,6 +209,9 @@ export class ActivityDetailPage implements OnInit {
       isChange: true,
       activityId: this.activityId
     });
+  }
+  cannotEdit() {
+    return (new Date(this.activity.startDate.iso)).getTime() < Date.now();
   }
   inviteUsers() {
     this.navCtrl.push(ActivityInvitePage, {

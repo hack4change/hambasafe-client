@@ -67,7 +67,7 @@ export class LandingPage implements OnInit {
           if(!!this.loadingPopup){
           this.loadingPopup.dismiss();
         }
-          break;
+        break;
         default:
           console.log('Unhandled authentication status');
       }

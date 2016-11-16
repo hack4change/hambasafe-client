@@ -228,6 +228,7 @@ export class ParseManager {
     })
     this.friendSubscription.on('delete', (friend) => {
       console.log('delete from friends');
+      console.log(friend);
       if(friend.get('userPtr')['id'] !== this.Parse.User.current()['id']){
         deleteCb(friend.get('userPtr').toJSON()['objectId']);
       } else {
@@ -604,6 +605,7 @@ export class ParseManager {
       }
     })
   }
+
   /*
    * Activity Fetching
    */
@@ -644,7 +646,7 @@ export class ParseManager {
       }
     );
     activityQuery.include('author');
-    return activityQuery.find().map((res)=>res.toJSON());
+    return activityQuery.find();
   }
 
   getActivitiesByLocation(distance: number, latitude: number, longitude: number, error: (res) => void, success: (res) => void) {
@@ -692,7 +694,9 @@ export class ParseManager {
       }
     })
   }
+
   getActivitiesByTime(error: (res) => void, success: (res) => void) {}
+
   getUserActivities(error: (res) => void, success: (res) => void) {
     var userQuery = this.Parse.User.current().relation('activities');
 

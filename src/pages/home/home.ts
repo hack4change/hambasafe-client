@@ -47,10 +47,12 @@ import { SearchPage } from '../search/search';
 })
 export class HomePage implements OnInit {
   activities$                  : Observable<any>;
+  friends$                  : Observable<any>;
   activitiesToRate$            : Observable<any>;
   location$                    : Observable<any>;
 
   activitiesSub$               : Subscription;
+  friendsSub$               : Subscription;
   activitiesToRateSub$         : Subscription;
   locationSub$                 : Subscription;
 
@@ -59,6 +61,7 @@ export class HomePage implements OnInit {
   searchDistance: number = 2;
   greatestDistance: number = 2;
   coordinates: any;
+  friendsList = [];
 
   constructor(private navCtrl: NavController, private ngRedux: NgRedux<any>, private zone: NgZone, private userActions: UserActions, private eventDataActions: EventDataActions) {}
    
@@ -66,6 +69,7 @@ export class HomePage implements OnInit {
     this.ngRedux.dispatch(this.userActions.getLocation());
     this.locationConnector();
     this.activityConnector();
+    this.friendConnector();
   }
 
   ngOnDestroy() {
@@ -81,6 +85,21 @@ export class HomePage implements OnInit {
     }
   }
 
+  friendConnector() {
+    this.friends$ = this.ngRedux.select(['users', 'items'])
+    .map((users: any)=>{
+      return users.reduce(function (memo, user) {
+        if(!!user.get('isFriend')){
+          memo.push(user.get('objectId'));
+        }
+        return memo;
+      }, [])
+    })
+    this.friendsSub$ = this.friends$.subscribe((friendsArray) => {
+
+      this.friendsList = friendsArray;
+    })
+  }
   locationConnector() {
     this.location$ = this.ngRedux.select(['currentUser', 'location'])
     .map((pos: Map<string, any>)=> {
@@ -110,47 +129,13 @@ export class HomePage implements OnInit {
   activityConnector() {
     this.activities$ = this.ngRedux.select(['eventData', 'items'])
     .map((item: any) => {
-      console.log(item.filter((immutableItem: any)=>{
-
+      return item.filter((immutableItem: any) => {
         if((new Date(immutableItem.get('startDate').get('iso'))).getTime() <= Date.now()){
           return false
         };
         console.log(immutableItem);
         if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
           if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
-            console.log(distanceCalculator(
-              this.coordinates.latitude,
-              this.coordinates.longitude,
-              immutableItem.get('startLocation').get('coordinates').get('latitude'),
-              immutableItem.get('startLocation').get('coordinates').get('longitude')
-            ));
-            console.log(this.searchDistance);
-            return distanceCalculator(
-              this.coordinates.latitude,
-              this.coordinates.longitude,
-              immutableItem.get('startLocation').get('coordinates').get('latitude'),
-              immutableItem.get('startLocation').get('coordinates').get('longitude')
-            ) <= this.searchDistance;
-          }
-        }
-        return false;
-
-      }))
-      return item.filter((immutableItem: any)=>{
-
-        if((new Date(immutableItem.get('startDate').get('iso'))).getTime() <= Date.now()){
-          return false
-        };
-        console.log(immutableItem);
-        if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-          if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
-            console.log(distanceCalculator(
-              this.coordinates.latitude,
-              this.coordinates.longitude,
-              immutableItem.get('startLocation').get('coordinates').get('latitude'),
-              immutableItem.get('startLocation').get('coordinates').get('longitude')
-            ));
-            console.log(this.searchDistance);
             return distanceCalculator(
               this.coordinates.latitude,
               this.coordinates.longitude,

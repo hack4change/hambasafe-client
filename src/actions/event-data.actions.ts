@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import actionTypes from '../actionTypes';
+import { NgRedux } from 'ng2-redux';
 import {fromJS} from 'immutable';
 import { ParseManager } from '../providers/parse-manager';
 const _ = require('lodash');
@@ -14,7 +15,7 @@ const _ = require('lodash');
 @Injectable()
 export class EventDataActions {
 
-  constructor(public http: Http, public parseManager : ParseManager) {
+  constructor(public http: Http, public parseManager: ParseManager, public ngRedux: NgRedux<any>) {
     console.log('Hello EventDataActions Provider');
   }
 
@@ -29,7 +30,7 @@ export class EventDataActions {
   };
 
   // Error.
-  setFetchErrorState(error) {
+  setFetchErrorState(error) : any {
     return {
       data: fromJS({
         items: {},
@@ -96,8 +97,10 @@ export class EventDataActions {
       // Do request.
       this.parseManager.getActivitiesByQuery(query, latitude, longitude)
       .then((res) => {
-          console.log(res);
-          return dispatch(this.setFetchSuccessState(res));
+        _.each(res, (activityItem)=>{
+          return this.ngRedux.dispatch(this.setFetchSuccessState([activityItem.toJSON()]));
+        });
+        return Promise.resolve();
       })
       .catch((err)=> {
         return dispatch(this.setFetchErrorState(err));

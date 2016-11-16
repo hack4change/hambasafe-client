@@ -84,10 +84,14 @@ const actionTypes = keyMirror({
   INVITE_DECLINE_FAIL           : undefined,
   INVITE_SET_STATUS             : undefined,
 
+  //PAGES
+  PAGE_HOME_UPDATE              : undefined,
+  
   //OTHER
   RATING_INIT                   : undefined,
   RATING_FAIL                   : undefined,
   RATING_SUCCESS                : undefined,
+
 })
 
 export default actionTypes;

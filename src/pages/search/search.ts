@@ -6,7 +6,8 @@ import {
 } from '@angular/core';
 import {
   NavController,
-  NavParams
+  NavParams,
+	Platform,
 } from 'ionic-angular';
 const _ = require('lodash');
 import distanceCalculator from '../../utils/distanceCalculator';
@@ -52,10 +53,12 @@ export class SearchPage implements OnInit{
   activeType                : string  = 'TIME';
   mapSearched               : boolean = false;
   coordinates               : any     = {};
+	public isDevice						: boolean = false;
 
   constructor(
     private navCtrl: NavController,
     private params: NavParams,
+    private platform: Platform,
     private ngRedux: NgRedux<any>,
     private zone: NgZone,
     private userActions : UserActions,
@@ -63,6 +66,7 @@ export class SearchPage implements OnInit{
   ) {}
 
   ngOnInit() {
+		this.isDevice = this.platform.is('cordova') && !this.platform.is('browser');
     this.locationConnector();
     this.activityConnector();
     this.filterConnector();
@@ -81,9 +85,10 @@ export class SearchPage implements OnInit{
   }
 
   locationConnector() {
-    this.ngRedux.dispatch(this.userActions.getLocation());
-    this.location$ = this.ngRedux.select('location')
+    this.location$ = this.ngRedux.select(['currentUser', 'location'])
     .map((pos : any) => {
+      console.log('location');
+      console.log(pos.toJS());
       return {
         longitude : !!pos ? pos.get('longitude') : 0,
         latitude : !!pos ? pos.get('latitude') : 0
@@ -100,8 +105,8 @@ export class SearchPage implements OnInit{
         }
       }
     });
-
   }
+
   activityConnector() {
     this.activities$ = this.ngRedux
     .select(['eventData', 'items'])
@@ -132,12 +137,19 @@ export class SearchPage implements OnInit{
           }
           return false;
         }
+        // else if(this.activeType == 'TIME') {
+        //   if(!!this.searchQuery) {
+        //     if(!item.get('eventType').contains(this.searchQuery.toUpperCase())){
+        //       return false;
+        //     }
+        //   }
+        // }
         return distanceCalculator(
           this.coordinates.latitude,
           this.coordinates.longitude,
           item.get('startLocation').get('coordinates').get('latitude'),
           item.get('startLocation').get('coordinates').get('longitude')
-        ) <= 150;
+        ) <= 35;
       })
       .toList()
       .toJS()
@@ -165,8 +177,9 @@ export class SearchPage implements OnInit{
     })
   }
 
-  getActivities(ev){
+  getActivities(ev) {
     console.log(ev); 
+		this.searchQuery = ev.target.value;
     if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
       if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
         this.ngRedux.dispatch(this.eventDataActions.fetchEventsByQuery(ev.target.value, this.coordinates.latitude, this.coordinates.longitude));

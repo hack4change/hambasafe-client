@@ -75,6 +75,8 @@ export class MyApp implements OnInit {
         Splashscreen.hide();
         ScreenOrientation.lockOrientation('portrait');
         this.userActions.subscribeToLocation();
+      } else {
+        this.ngRedux.dispatch(this.userActions.getLocation());
       }
     });
   }
@@ -179,6 +181,7 @@ export class MyApp implements OnInit {
     this.menuCtrl.close();
     this.navCtrl.push(TermsPage);
   }
+
   logOut() {
     this.menuCtrl.close();
     this.ngRedux.dispatch(this.authActions.logoutUser());
