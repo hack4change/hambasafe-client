@@ -54,8 +54,8 @@ export class UserActions {
     let currentLocation$ = this.ngRedux.select(['currentUser', 'location'])
     currentLocation$.subscribe((location : any)=> {
       this.coords = location;
-      this.coords.longitude = location.longitude.toFixed(9);
-      this.coords.latitude = location.latitude.toFixed(9);
+      this.coords.longitude = !!location.longitude ? location.longitude.toFixed(9) : null;
+      this.coords.latitude = !!location.latitude ? location.latitude.toFixed(9) : null;
     })
 		let config = {
 			desiredAccuracy: 0,

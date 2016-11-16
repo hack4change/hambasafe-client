@@ -93,6 +93,10 @@ ion-toolbar[position='bottom'] {
   ion-title a{
     color: $light; 
   }
+// , .item-md ion-icon[item-left]+.item-input 
+  .item-md ion-icon[item-left]+.item-inner{
+    margin-left: 0;     
+  }
   // ion-toolbar[position='bottom'] {
   //   .toolbar-background {
   //     background-color: $energized;

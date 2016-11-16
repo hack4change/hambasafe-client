@@ -18,18 +18,23 @@ import _ from 'lodash';
  */
 @Pipe({ name: 'SearchFilter' })
 export class SearchFilter {
-  transform(value, query, property) {
+  transform(value, query, property = null) {
     console.log('searchFilter');
     console.log(value);
+
     if(!query) return value;
+    console.log(query.constructor.name);
+    if(query.constructor.name === 'Function') { 
+      return value.filter(query);
+    }
+
     if(!property) return value;
-    if(query.constructor.name === 'String'){
+    if(query.constructor.name === 'String') {
       query = query.toLowerCase();
       return value.filter(function(item) {
         return item[property].toLowerCase().indexOf(query) !== -1;
       })
-    }
-    else if(query.constructor.name === 'Array'){
+    } else if(query.constructor.name === 'Array') {
       console.log(query);
       console.log(value);
       var splitString = property.split(".");
@@ -40,6 +45,6 @@ export class SearchFilter {
         })
         return query.indexOf(comparable) !== -1;
       })
-    }
+    } 
   }
 }

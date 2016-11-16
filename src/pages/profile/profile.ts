@@ -31,7 +31,7 @@ import { HomePage}  from '../home/home';
 import { SearchPage } from '../search/search';
 import { RegistrationPage } from '../registration/registration';
 import { InvitesPage } from '../invites/invites';
-import { ActivityListPage } from '../activity-list/activity-list';
+// import { ActivityListPage } from '../activity-list/activity-list';
 import { AddFriendPage } from '../add-friend/add-friend';
 
 @Component({
@@ -40,29 +40,27 @@ import { AddFriendPage } from '../add-friend/add-friend';
 })
 export class ProfilePage implements OnInit {
   currentUser$: Observable<any>;
-  userActivities$ : Observable<any>;
+  activities$ : Observable<any>;
 
   currentUserSub$     : Subscription;
-  userActivitiesSub$  : Subscription;
+  activitiesSub$  : Subscription;
 
   currentUserId : string;
 
   maxStars : Object = [1, 2, 3, 4, 5];
   userRating : number = 3;
-  createdCount: number = 0;
-  joinedCount: number = 0;
-  upcomingCount: number = 0;
+  queryFunc : Function;
+  querySelected : number = 0;
   listTypes : any =  [
     {
       'header' : '{ Upcoming }',
-      'fetchExpression' : () => {
-      },
       'filterExpression' : (activity) => {
-        console.log(activity.get('dateTimeStart'));
-        return (new Date(activity.get('startDate').get('iso'))).getTime() >= Date.now() && !!activity.get('isAttending');
+        console.log(activity);
+        console.log(activity['startDate']);
+        return (new Date(activity['startDate']['iso'])).getTime() >= Date.now() && !!activity['isAttending'];
       },
       'sortExpression' : (activityOne, activityTwo) => {
-        return activityOne.get('dateTimeStart') <= activityTwo.get('dateTimeStart');
+        return activityOne['dateTimeStart'] <= activityTwo['dateTimeStart'];
       }
     },
     {
@@ -70,10 +68,11 @@ export class ProfilePage implements OnInit {
       'fetchExpression' : (activity) => {
       },
       'filterExpression' : (activity) => {
-        return !!activity.get('isAttending');
+        console.log(activity);
+        return !!activity['isAttending'];
       },
       'sortExpression' : (activityOne, activityTwo) => {
-        return activityOne.get('dateTimeStart') >= activityTwo.get('dateTimeStart');
+        return activityOne['dateTimeStart'] >= activityTwo['dateTimeStart'];
       }
     },
     {
@@ -82,10 +81,10 @@ export class ProfilePage implements OnInit {
       },
       'filterExpression' : (activity) => {
         console.log(this);
-        return activity.get('author').get('objectId') === this.currentUserId;
+        return activity['author']['objectId'] === this.currentUserId;
       },
       'sortExpression' : (activityOne, activityTwo) => {
-        return activityOne.get('dateTimeStart') >= activityTwo.get('dateTimeStart');
+        return activityOne['dateTimeStart'] >= activityTwo['dateTimeStart'];
       }
     },
   ];
@@ -96,7 +95,12 @@ export class ProfilePage implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.queryFunc = this.listTypes[this.querySelected]['filterExpression'];
     this.currentUser$ = this.ngRedux.select('currentUser').map((currentUser: Map<string, any>) => currentUser.toJS());
+    this.activities$ = this.ngRedux.select(['eventData', 'items'])
+    .map((items: Map<string, any>) => {
+      return items.toList().toJS();
+    });
     this.currentUserSub$ = this.currentUser$.subscribe((currentUser) => {
       this.currentUserId = currentUser['objectId'];
       this.userRating = currentUser['rating'];
@@ -107,6 +111,9 @@ export class ProfilePage implements OnInit {
     console.log('Destroying Subscriptions')
     if(!!this.currentUserSub$) {
       this.currentUserSub$.unsubscribe();
+    }
+    if(!!this.activitiesSub$) {
+      this.activitiesSub$.unsubscribe();
     }
   }
 	
@@ -127,10 +134,13 @@ export class ProfilePage implements OnInit {
 	}
 
 	goActivityList(index: number) {
-    this.navCtrl.push(ActivityListPage, {
-      'header' : this.listTypes[index]['header'],
-      'filter' : this.listTypes[index]['filterExpression'],
-    });
+    // this.navCtrl.push(ActivityListPage, {
+    //   'header' : this.listTypes[index]['header'],
+    //   'filter' : this.listTypes[index]['filterExpression'],
+    // });
+    this.querySelected = index;
+    this.queryFunc = this.listTypes[this.querySelected]['filterExpression'];
+    console.log(this.queryFunc.toString());
 	}
 
   goBack() {
@@ -157,5 +167,19 @@ export class ProfilePage implements OnInit {
   }
   addFriend(){
     this.navCtrl.push(AddFriendPage, {});
+  }
+  getFilterButtonClasses(index:number) : any{
+    if(this.querySelected == index) {
+      return {
+        'active-filter' : true,
+        'square-corner' : true,
+        'borderless'    : true,
+      }
+    }
+    return {
+      'inactive-filter' : true,
+      'square-corner'   : true,
+      'borderless'      : true,
+    }
   }
 }

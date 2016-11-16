@@ -80,7 +80,7 @@ export class ActivityListPage implements OnInit {
       .toJS()
     })
 
-    this.activitiesSub$ = this.activities$.subscribe(x => {
+    this.activitiesSub$ = this.activities$.subscribe((x) => {
       this.zone.run(() => {
         console.log('Search Update');
       })

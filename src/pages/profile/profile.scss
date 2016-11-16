@@ -100,4 +100,10 @@ page-profile {
     font-size: 1.3rem;
   }
 
+  .active-filter {
+    color : $positive;
+  }
+  .inactive-filter {
+    color : $dark;
+  }
 }
