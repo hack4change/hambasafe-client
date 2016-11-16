@@ -61,33 +61,33 @@
   <!-- </ion-toolbar> -->
   <ion-toolbar class="action-bar">
     <ion-buttons class="split-three">
-      <button ion-button icon-only class="square-corner borderless" (click)="goActivityList(0)" block>
-        <div class="button-number">
-          24
-        </div>
-        <div class="button-title">
+      <button ion-button class="square-corner borderless" (click)="goActivityList(0)" block>
+        <!-- <div class="button-number"> -->
+        <!--   24 -->
+        <!-- </div> -->
+        <!-- <div class="button-title"> -->
           Upcoming
-        </div>
+        <!-- </div> -->
       </button>
-      <button ion-button icon-only class="square-corner" (click)="goActivityList(1)" block>
-        <div class="button-number">
-          102
-        </div>
-        <div class="button-title">
+      <button ion-button class="square-corner" (click)="goActivityList(1)" block>
+        <!-- <div class="button-number"> -->
+        <!--   102 -->
+        <!-- </div> -->
+        <!-- <div class="button-title"> -->
           Joined
-        </div>
+        <!-- </div> -->
       </button>
-      <button ion-button icon-only class="square-corner" (click)="goActivityList(2)" block>
-        <div class="button-number">
-          2
-        </div>
-        <div class="button-title">
+      <button ion-button class="square-corner" (click)="goActivityList(2)" block>
+        <!-- <div class="button-number"> -->
+        <!--   2 -->
+        <!-- </div> -->
+        <!-- <div class="button-title"> -->
           Created
-        </div>
+        <!-- </div> -->
       </button>
     </ion-buttons>
   </ion-toolbar>
 </ion-header>
 <ion-content>
-
+  <!-- <activity-item *ngFor="let activity of ( (activities$ | async) | SearchFilter:searchQuery:'eventType')" [activity]="activity"></activity-item> -->
 </ion-content>

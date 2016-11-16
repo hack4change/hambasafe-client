@@ -665,6 +665,7 @@ export class ParseManager {
           activityQuery.equalTo('startLocation', res[i]);
           var d = new Date();
           activityQuery.include('author');
+          activityQuery.include('startLocation');
           activityQuery.greaterThanOrEqualTo(
             'startDate', {
               "__type": "Date",
@@ -710,6 +711,7 @@ export class ParseManager {
       }
     });
   }
+
   getActivities() {
     console.log('fetching queries');
     var query = new Parse.Query(this.ActivityClass);

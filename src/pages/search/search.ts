@@ -110,23 +110,30 @@ export class SearchPage implements OnInit{
   activityConnector() {
     this.activities$ = this.ngRedux
     .select(['eventData', 'items'])
-    .map((items:any)=>{
+    .map((items:any) => {
+      console.log(items.toJS());
       return items
       .filter((item) => {
+        console.log(item.toJS());
         return (new Date(item.get('startDate').get('iso'))).getTime() > Date.now();
       })
+      // .filter((item:any) => {
+      //   console.log(this.activityType);
+      //   // if(this.activityType !== '' && this.activeType === 'TIME') {
+      //   //   console.log(this.activeType);
+      //   //   return item && item.get('eventType') ? this.activeType === item.get('eventType'): false;
+      //   // }
+      //   return true;
+      // })
       .filter((item:any) => {
-        console.log(this.activityType);
-        // if(this.activityType !== '' && this.activeType === 'TIME') {
-        //   console.log(this.activeType);
-        //   return item && item.get('eventType') ? this.activeType === item.get('eventType'): false;
-        // }
-        return true;
-      })
-      .filter((item:any) => {
+        console.log('here');
+        console.log(item);
         if(this.activeType == 'SEARCH') {
           if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
             if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
+              console.log(item.toJS());
+              console.log(item.get('startLocation').get('coordinates').get('latitude'));
+              console.log(item.get('startLocation').get('coordinates').get('longitude'));
               return distanceCalculator(
                 this.coordinates.latitude,
                 this.coordinates.longitude,
@@ -144,12 +151,23 @@ export class SearchPage implements OnInit{
         //     }
         //   }
         // }
+        console.log(item.toJS());
+        console.log(item.get('startLocation').get('coordinates').get('latitude'));
+        console.log(item.get('startLocation').get('coordinates').get('longitude'));
+        console.log(this.coordinates.latitude);
+        console.log(this.coordinates.longitude);
+        console.log(distanceCalculator(
+          this.coordinates.latitude,
+          this.coordinates.longitude,
+          item.get('startLocation').get('coordinates').get('latitude'),
+          item.get('startLocation').get('coordinates').get('longitude')
+        ) <= 150);
         return distanceCalculator(
           this.coordinates.latitude,
           this.coordinates.longitude,
           item.get('startLocation').get('coordinates').get('latitude'),
           item.get('startLocation').get('coordinates').get('longitude')
-        ) <= 35;
+        ) <= 150;
       })
       .toList()
       .toJS()
@@ -192,6 +210,7 @@ export class SearchPage implements OnInit{
   }
 
   toggleView(clickedType) {
+    console.log('toggleView');
     this.activeType = clickedType;
   }
 

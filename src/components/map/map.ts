@@ -1,6 +1,6 @@
 import {Component, ViewChild, OnInit, Input} from '@angular/core';
 import {NavController, Platform} from 'ionic-angular';
-import { /*CameraPosition,*/ GoogleMap, GoogleMapsEvent, GoogleMapsLatLng, GoogleMapsMarker, GoogleMapsMarkerOptions} from 'ionic-native';
+import { /*CameraPosition,*/ GoogleMap, GoogleMapsEvent, GoogleMapsLatLng, GoogleMapsMarker, GoogleMapsMarkerOptions, GoogleMapsAnimation} from 'ionic-native';
 // import {Geolocation} from 'ionic-native';
 const _ = require('lodash');
 
@@ -143,41 +143,81 @@ export class Map implements OnInit {
         'bearing': 50
       }
     });
-    this.deviceMap.setDebuggable(true);
+    // this.deviceMap.setDebuggable(true);
     // this.deviceMap.setClickable(true);
     this.deviceMap.one(GoogleMapsEvent.MAP_READY).then(() => {
       console.log('Map is ready!');
-      this.deviceMarkerOptions = {
-        'title'       : 'Start',
-        'draggable'   : true,
-        'position'    : this.deviceCoords,
-      }
-      this.deviceMap.addCircle({
-        center        : this.deviceCoords,
-        radius        : this.radius * 1000,
-        strokeColor   : '#FF0000AA',
-        strokeWeight  : 1,
-        fillColor     : '#FF000060',
-      }, (circle) => {
-        console.log(circle);
-        this.deviceCircle= circle;
-        this.deviceCircle.on(GoogleMapsEvent.OVERLAY_CLICK, (ev) => {
+      if(!this.deviceMarker){
+        this.deviceMarkerOptions = {
+          'title'       : 'Start',
+          'draggable'   : true,
+          'position'    : this.deviceCoords,
+          'animation'   : GoogleMapsAnimation.DROP,
+        }
+        this.deviceMap.addCircle({
+          center        : this.deviceCoords,
+          radius        : this.radius * 1000,
+          strokeColor   : '#FF0000AA',
+          strokeWeight  : 1,
+          fillColor     : '#FF000060',
+        }).then((circle) => {
+          console.log(circle);
+          this.deviceCircle = circle;
+          this.deviceCircle.addEventListener(GoogleMapsEvent.OVERLAY_CLICK).subscribe((ev) => {
+            console.log('OVERLAY_CLICK');
+            console.log(ev);
+          })
+          console.log(this.deviceCircle);
+          return this.deviceMap.addMarker(this.deviceMarkerOptions)
+        })
+        .then((marker: GoogleMapsMarker) => {
+          this.deviceMarker = marker;
+          console.log(this.deviceMarker);
+          marker.showInfoWindow();
+          console.log(this.deviceCircle);
+          this.deviceMarker.addEventListener(GoogleMapsEvent.MARKER_DRAG).subscribe((ev)=>{
+            console.log('DRAG_END')
+            console.log(ev);
+            this.deviceMarker.getPosition().then((pos) => {
+              console.log('HEEEEEEEEEERE')
+              console.log(pos);
+              console.log(this.deviceCircle);
+              // console.log('DEViceu')
+              if(!!this.deviceCircle){
+                console.log(this.deviceCircle.getCenter())
+                this.deviceCircle.setCenter(pos);
+                console.log(this.deviceCircle.getCenter())
+              }
+              return Promise.resolve();
+            })
+          })
+          this.deviceMarker.addEventListener(GoogleMapsEvent.MARKER_DRAG_END).subscribe((ev)=>{
+            console.log('DRAG_END')
+            console.log(ev);
+            this.deviceMarker.getPosition().then((pos) => {
+              console.log('HEEEEEEEEEERE')
+              console.log(pos);
+              console.log(this.deviceCircle);
+              // console.log('DEViceu')
+              if(!!this.deviceCircle){
+                console.log(this.deviceCircle.getCenter())
+                this.deviceCircle.setCenter(pos);
+                console.log(this.deviceCircle.getCenter())
+              }
+              return Promise.resolve();
+            })
+          })
+        });
+        this.deviceMap.on(GoogleMapsEvent.MAP_CLICK, (ev) => {
+          console.log('MAP_CLICK');
           console.log(ev);
         })
-      });
-      this.deviceMap.addMarker(this.deviceMarkerOptions)
-      .then((marker: GoogleMapsMarker) => {
-        this.deviceMarker = marker;
-        console.log(this.deviceMarker);
-        marker.showInfoWindow();
-      });
-      this.deviceMap.on(GoogleMapsEvent.MAP_CLICK, (ev) => {
-        console.log(ev);
-      })
-      this.deviceMap.getMyLocation().then((res)=>{
-        console.log('LOCATION ON MAP')
-        console.log(res) 
-      })
+        this.deviceMap.getMyLocation().then((res)=>{
+          console.log('LOCATION ON MAP')
+          console.log(res) 
+        })
+
+      }
     });
   }
 

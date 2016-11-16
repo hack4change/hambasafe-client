@@ -22,6 +22,8 @@ import {ParseManager} from '../providers/parse-manager';
 export class UserActions {
 
 	public watch : any = null;
+  public coords : any = {
+  };
   constructor(public http: Http, public parseManager : ParseManager, public platform: Platform, public ngRedux: NgRedux<any>) {
     console.log('Hello UserActions Provider');
   }
@@ -47,14 +49,21 @@ export class UserActions {
       )
     };
 	};
+
 	subscribeToLocation() : any { 
+    let currentLocation$ = this.ngRedux.select(['currentUser', 'location'])
+    currentLocation$.subscribe((location : any)=> {
+      this.coords = location;
+      this.coords.longitude = location.longitude.toFixed(9);
+      this.coords.latitude = location.latitude.toFixed(9);
+    })
 		let config = {
 			desiredAccuracy: 0,
 			stationaryRadius: 20,
 			distanceFilter: 10,
 			debug: true, //  enable this hear sounds for background-geolocation life-cycle.
 			// stopOnTerminate: false, // enable this to clear background location settings when the app terminates
-			interval: 1000,
+			interval: 30000,
 		};
 
 		BackgroundGeolocation.configure((pos) => {
@@ -72,93 +81,55 @@ export class UserActions {
 			console.log('BackgroundGeolocation error');
 		}, config);
 
-		console.log(BackgroundGeolocation.start());
-		// BackgroundGeolocation.watchLocationMode()
-		// .then(
-		// 	(enabled) => {
-		// 		if (enabled) {
-		// 			// location service are now enabled
-		// 			// call backgroundGeolocation.start
-		// 			// only if user already has expressed intent to start service
-		// 			console.log(BackgroundGeolocation.start()); // FOR IOS ONLY
-		// 		} else {
-		// 			// location service are now disabled or we don't have permission
-		// 			// time to change UI to reflect that
-		// 			BackgroundGeolocation.stop(); // FOR IOS ONLY
-		// 			Diagnostic.switchToLocationSettings();
-		// 		}
-		// 	},
-		// 	(error) => {
-		// 		console.log('Error watching location mode. Error:' + error);
-		// 	});
-		// 		 // Turn ON the background-geolocation system.  The user will be tracked whenever they suspend the app.
-		// 		 BackgroundGeolocation.isLocationEnabled().then((enabled) => {
-		// 			 if (enabled) {
-		// 				 console.log(BackgroundGeolocation.start());
-		// 				 // .then((pos)=>{
-		// 				 //   console.log('Start callback' + pos);
-		// 				 // },
-		// 				 // (err)=>{
-		// 				 //   console.log('Start error' + err);
-		// 				 // }); 
-		// 			 } else {
-		// 				 Diagnostic.switchToLocationSettings();
-		// 			 }
-		// 		 })
-				 let options = {
-					 frequency: 6000, 
-					 enableHighAccuracy: true
-				 };
+		// console.log(BackgroundGeolocation.start());
+		BackgroundGeolocation.watchLocationMode()
+    .then((enabled) => {
+      if (enabled) {
+        // location service are now enabled
+        // call backgroundGeolocation.start
+        // only if user already has expressed intent to start service
+        console.log(BackgroundGeolocation.start()); // FOR IOS ONLY
+      } else {
+        // location service are now disabled or we don't have permission
+        // time to change UI to reflect that
+        BackgroundGeolocation.stop(); // FOR IOS ONLY
+        Diagnostic.switchToLocationSettings();
+      }
+    },
+    (error) => {
+      console.log('Error watching location mode. Error:' + error);
+    });
+    // Turn ON the background-geolocation system.  The user will be tracked whenever they suspend the app.
+    BackgroundGeolocation.isLocationEnabled().then((enabled) => {
+      if (enabled) {
+        console.log(BackgroundGeolocation.start());
+        // .then((pos)=>{
+        //   console.log('Start callback' + pos);
+        // },
+        // (err)=>{
+        //   console.log('Start error' + err);
+        // }); 
+      } else {
+        Diagnostic.switchToLocationSettings();
+      }
+    })
+    let options = {
+      frequency: 60000, 
+      enableHighAccuracy: true
+    };
 
-				 this.watch = Geolocation.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
-					 console.log('Foreground');
-					 console.log(position);
-					 BackgroundGeolocation.getLogEntries(100).then((logEntries) => {
-						 // var COLORS = Object();
-						 // COLORS['ERROR'] = 'background:white;color:red';
-						 // COLORS['WARN'] = 'background:black;color:yellow';
-						 // COLORS['INFO'] = 'background:white;color:blue';
-						 // COLORS['TRACE'] = 'background:white;color:black';
-						 // COLORS['DEBUG'] = 'background:white;color:black';
-
-						 // var logFormatter = function(logEntry) {
-							 // var d = new Date(logEntry.timestamp);
-							 // var dateStr = [d.getFullYear(), this.padLeft(d.getMonth()+1,2), this.padLeft(d.getDate(),2)].join('/');
-							 // var timeStr = [this.padLeft(d.getHours(),2), this.padLeft(d.getMinutes(),2), this.padLeft(d.getSeconds(),2)].join(':');
-							 // return ['%c[', dateStr, ' ', timeStr, '] %c', logEntry.logger, ':', logEntry.message].join('');
-						 // }
-
-						 // return ((logEntries, logFormatter, COLORS, MAX_LINES) => {
-							 // MAX_LINES = MAX_LINES || 100; // maximum lines to print per batch
-							 // var batch = Math.ceil(logEntries.length / MAX_LINES);
-							 // var logLines = Array(MAX_LINES); //preallocate memory prevents GC
-							 // var logLinesColor = Array(MAX_LINES * 2);
-							 // for (var i = 0; i < batch; i++) {
-								 // var it = 0;
-								 // var logEntriesPart = logEntries.slice((i * MAX_LINES), (i + 1) * MAX_LINES);
-								 // for (var j = 0; j < logEntriesPart.length; j++) {
-									 // var logEntry = logEntriesPart[j];
-									 // logLines[j] = logFormatter(logEntry);
-									 // logLinesColor[it++] = ('background:white;color:black');
-									 // logLinesColor[it++] = (COLORS[logEntry.level]);      
-								 // }
-								 // if (logEntriesPart.length < MAX_LINES) {
-									 // console.log.apply(console, [logLines.slice(0,logEntriesPart.length).join('\n')]
-																		 // .concat(logLinesColor.slice(0,logEntriesPart.length*2)));
-								 // } else {
-									 // console.log.apply(console, [logLines.join('\n')].concat(logLinesColor));
-								 // }
-							 // }
-						 // })(logEntries, logFormatter, COLORS);
-							console.log(JSON.stringify(logEntries));
-							console.log(logEntries);
-					 });
-					 this.ngRedux.dispatch(this.setLocation(position.coords.longitude, position.coords.latitude));
-				 });
+    this.watch = Geolocation.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
+      console.log('Foreground');
+      console.log(position);
+      // BackgroundGeolocation.getLogEntries(100).then((logEntries) => {
+      //   console.log(JSON.stringify(logEntries));
+      //   console.log(logEntries);
+      // });
+      if(position.coords.longitude !== this.coords.longitude || position.coords.latitude !== this.coords.latitude){
+        this.ngRedux.dispatch(this.setLocation(position.coords.longitude, position.coords.latitude));
+      }
+    });
 	}
-	// padLeft(nr, n, str) {
-	// 	return Array(n - String(nr).length + 1).join(str || '0') + nr;
-	// }
 
   confirmFriend(friendId: string) : any {
     return dispatch => {

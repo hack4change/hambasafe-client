@@ -28,7 +28,7 @@
           <activity-item [activity]="activity"></activity-item>
         </ion-item>
         <ion-item-options side="right" (ionSwipe)="deleteInvite(activity.objectId)">
-          <button ion-button icon-only expandable danger>
+          <button ion-button icon-only expandable color="danger">
             <ion-icon name="trash" (click)="deleteInvite(activity.objectId)"></ion-icon>
             Remove
           </button>

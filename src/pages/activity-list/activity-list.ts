@@ -48,7 +48,7 @@ export class ActivityListPage implements OnInit {
   activitiesSub$  : Subscription;
 
   listHeader      : string;
-  coordinates     : Object = {};
+  // coordinates     : Object = {};
   shouldInclude   : any;
 
   constructor(
@@ -62,12 +62,12 @@ export class ActivityListPage implements OnInit {
     this.listHeader     = this.params.data['header'];
     this.shouldInclude  = this.params.data['filter'];
 
-    navigator.geolocation.getCurrentPosition((pos) => {
-      this.coordinates = pos.coords;
-      this.zone.run(() => {
-        this.activityConnector();
-      })
-    })
+    // navigator.geolocation.getCurrentPosition((pos) => {
+    //   // this.coordinates = pos.coords;
+    //   this.zone.run(() => {
+    this.activityConnector();
+      // })
+    // })
   }
 
   activityConnector() {
@@ -89,7 +89,7 @@ export class ActivityListPage implements OnInit {
   }
 	
   ngOnDestroy(){
-    if(!!this.activitiesSub$){
+    if(!!this.activitiesSub$) {
       this.activitiesSub$.unsubscribe();
     }
   }

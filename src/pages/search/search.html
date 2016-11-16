@@ -33,6 +33,18 @@
 </ion-header>
 
 <ion-content [ngSwitch]="activeType">
+  <ion-fab *ngIf="activeType === 'TIME'" right bottom>
+    <!-- class="square-corner" -->
+    <button ion-fab (click)="toggleView('DISTANCE')">
+      <ion-icon name="pin"></ion-icon>
+    </button>
+  </ion-fab>
+  <ion-fab *ngIf="!isDevice && activeType === 'TIME'" right bottom>
+    <!-- class="square-corner" -->
+    <button ion-fab (click)="searchRadius()">
+      Go!
+    </button>
+  </ion-fab>
   <ion-toolbar *ngIf="activeType !== 'DISTANCE'" color="primary">
     <ion-searchbar placeholder="Filter by Activity Type" (ionInput)="getActivities($event)">
     </ion-searchbar>
@@ -49,12 +61,6 @@
   <!--   </ion-item> -->
   <!-- </ion-toolbar> -->
   <template ngSwitchCase="TIME">
-     <ion-fab right bottom>
- <!-- class="square-corner" -->
-       <button ion-fab (click)="toggleView('DISTANCE')">
-         <ion-icon name="pin"></ion-icon>
-       </button>
-     </ion-fab>
     <!-- <ion-toolbar class="buttonbar"> -->
     <!--   <button ion-button icon-only (click)="toggleView('TIME')" class="square-corner" [ngClass]="{active: isActive('TIME'), 'not-active': !isActive('TIME')}" clear block ion-row center> -->
     <!--     <ion-icon name="ios-time-outline" item-left></ion-icon> -->
@@ -90,12 +96,6 @@
             </button>
           </ion-fab>
         </map>
-				<ion-fab *ngIf="!isDevice" right bottom>
-					<!-- class="square-corner" -->
-					<button ion-fab (click)="searchRadius()">
-						Go!
-					</button>
-				</ion-fab>
       <!-- </div> -->
       <!-- <div style=""> -->
       <!-- </div> -->

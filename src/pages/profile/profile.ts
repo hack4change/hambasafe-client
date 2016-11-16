@@ -58,7 +58,8 @@ export class ProfilePage implements OnInit {
       'fetchExpression' : () => {
       },
       'filterExpression' : (activity) => {
-        return activity.get('dateTimeStart') >= Date.now();
+        console.log(activity.get('dateTimeStart'));
+        return (new Date(activity.get('startDate').get('iso'))).getTime() >= Date.now() && !!activity.get('isAttending');
       },
       'sortExpression' : (activityOne, activityTwo) => {
         return activityOne.get('dateTimeStart') <= activityTwo.get('dateTimeStart');
@@ -69,7 +70,7 @@ export class ProfilePage implements OnInit {
       'fetchExpression' : (activity) => {
       },
       'filterExpression' : (activity) => {
-        return !!activity.get('isAttending') ? true : false;
+        return !!activity.get('isAttending');
       },
       'sortExpression' : (activityOne, activityTwo) => {
         return activityOne.get('dateTimeStart') >= activityTwo.get('dateTimeStart');
@@ -95,9 +96,7 @@ export class ProfilePage implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.currentUser$ = this.ngRedux.select('currentUser').map((currentUser: Map<string, any>)=> {
-      return currentUser.toJS();
-    });
+    this.currentUser$ = this.ngRedux.select('currentUser').map((currentUser: Map<string, any>) => currentUser.toJS());
     this.currentUserSub$ = this.currentUser$.subscribe((currentUser) => {
       this.currentUserId = currentUser['objectId'];
       this.userRating = currentUser['rating'];
@@ -106,7 +105,7 @@ export class ProfilePage implements OnInit {
 
   ngOnDestroy() {
     console.log('Destroying Subscriptions')
-    if(!!this.currentUserSub$){
+    if(!!this.currentUserSub$) {
       this.currentUserSub$.unsubscribe();
     }
   }
@@ -124,7 +123,7 @@ export class ProfilePage implements OnInit {
 	}
 
 	goInvites() {
-    this.navCtrl.push(InvitesPage, {});
+    this.navCtrl.push(InvitesPage);
 	}
 
 	goActivityList(index: number) {

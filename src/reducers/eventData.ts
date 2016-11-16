@@ -7,6 +7,9 @@ import {fromJS, Map} from 'immutable';
 const INIT_STATE =  Map<string, any>(fromJS({
   status: "idle",
   visibleType: '',
+  upcoming: 0,
+  joined: 0,
+  created: 0,
   items: {},
 }))
 
@@ -20,6 +23,13 @@ export default function eventData(state:any = INIT_STATE, action:any = {}) {
       return state
     .set('status', action.data.get('status'))
     .set('message', action.data.get('message'));
+
+    //UPDATE CATEGORIES
+    case actionTypes.EVENTS_UPDATE_CATEGORIES:
+      return state
+    .set('upcoming', action.data.get('upcoming'))
+    .set('joined', action.data.get('joined'))
+    .set('created', action.data.get('created'));
 
 //CREATE EVENTS
     case actionTypes.EVENT_CREATE_INIT:
