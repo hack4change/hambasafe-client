@@ -106,7 +106,7 @@ export class ParseManager {
           attendedActivity.isAttending = true;
           console.log(activitiesAttending[i].get('ratingPtr'));
           console.log(activitiesAttending[i].toJSON());
-          if (!activitiesAttending[i].get('ratingPtr')) {
+          if(!activitiesAttending[i].get('ratingPtr')) {
             attendedActivity.mustRate = true;
           } else {
             attendedActivity.mustRate = false;
@@ -372,9 +372,9 @@ export class ParseManager {
    * ACTIVITIES
    ***/
 
-  createActivity(data: any, error: (res) => void, success: (res) => void) {
-    var activity = new this.ActivityClass();
-    var locationObj = new this.LocationClass();
+  createActivity(data: any) {
+    let activity = new this.ActivityClass();
+    let locationObj = new this.LocationClass();
     _.forEach(data, (value, key) => {
       if (key == 'startLocation' || key == 'endLocation') {
         // activity.set(key, new this.Parse.GeoPoint(value));
@@ -386,38 +386,30 @@ export class ParseManager {
       }
     })
 
-    Parse.Cloud.run('checkLocationExists', {
+   return  Parse.Cloud.run('checkLocationExists', {
       'latitude': data.startLocation.latitude,
       'longitude': data.startLocation.longitude,
-    }).then(
-    (res) => {
+    })
+    .then((res) => {
       locationObj.set('coordinates', new this.Parse.GeoPoint(data.startLocation));
       if (!res.exists) {
-        locationObj.save(null, {
-          success: (res) => {
-            activity.set('startLocation', res);
-            this.saveActivity(activity, error, success);
-          },
-          error: (err, response) => {
-            console.log('ERROR: LOCATION SAVE');
-            console.log(err);
-            console.log(response);
-          }
-
-        })
+        return locationObj.save(null).then((res) => {
+          activity.set('startLocation', res);
+          return this.saveActivity(activity);
+        });
       } else {
         activity.set('startLocation', res.obj);
-        this.saveActivity(activity, error, success);
+        return this.saveActivity(activity);
       }
-    }, (err) => {})
+    })
   }
 
-  updateActivity(activityId: string, data: any, error: (res) => void, success: (res) => void) {
-    var activityObj;
-    var locationObj = new this.LocationClass();
+  updateActivity(activityId: string, data: any) : Promise<any> {
+    let activityObj;
+    let locationObj = new this.LocationClass();
     
     var activityQuery = new this.Parse.Query(this.ActivityClass);
-    activityQuery.get(activityId)
+    return activityQuery.get(activityId)
     .then((activity) => {
       if(!!activity) {
         _.forEach(data, (value, key) => {
@@ -438,68 +430,44 @@ export class ParseManager {
       } else {
         return new this.Parse.Promise.error('failed to find activity');
       } 
-    },
-    (err) => {
-
     })
     .then((res) => {
+      console.log(res);
       locationObj.set('coordinates', new this.Parse.GeoPoint(data.startLocation));
       if (!res.exists) {
-        locationObj.save(null, {
-          success: (res) => {
-            activityObj.set('startLocation', res);
-            this.saveActivity(activityObj, error, success);
-          },
-          error: (err, response) => {
-            console.log('ERROR: LOCATION SAVE');
-            console.log(err);
-            console.log(response);
-          }
-
+        return locationObj.save(null).then((res)=>{
+          activityObj.set('startLocation', res);
+          return this.saveActivity(activityObj);
         })
       } else {
         activityObj.set('startLocation', res.obj);
-        this.saveActivity(activityObj, error, success);
+        return this.saveActivity(activityObj);
       }
-    },
-    (err) => {
-      error("failed to tun location exist query");
     })
   }
 
-  saveActivity(activityObj, error: (res) => void, success: (res) => void) {
-    var user = this.Parse.User.current();
+  saveActivity(activityObj) {
+    let user = this.Parse.User.current();
     activityObj.set('author', user);
-    activityObj.save(null, {
-      success: (res) => {
-        console.log('activity saved to parse server');
-        // this.joinActivity(res.get('objectId'), error, success);
-        var userRelation = user.relation('activities');
-        var activity = activityObj.toJSON();
-        userRelation.add(activityObj);
-        user.save(null, {
-          success: (res) => {
-            console.log('user-activity relation saved');
-            console.log(res);
-            success({
-              message: activity['objectId'],
-              item: activity,
-            });
-          },
-          error: (err) => {
-            console.log('parse saving error');
-            console.log(err);
-            error(res);
-          }
-        });
-        // success(res)
-      },
-      error: (err) => {
-        console.log('parse saving error');
-        console.log(err);
-        error(err);
-      }
-    });
+    return activityObj.save(null)
+    .then((res) => {
+      console.log('activity saved to parse server');
+      // this.joinActivity(res.get('objectId'), error, success);
+      var userRelation = user.relation('activities');
+      let activity = activityObj.toJSON();
+      userRelation.add(activityObj);
+      return user.save(null).then((res)=>{
+        return Promise.resolve(activity);
+      });
+    })
+    .then((res) => {
+      console.log('user-activity relation saved');
+      console.log(res);
+      return Promise.resolve({
+        message: res['objectId'],
+        item: res,
+      });
+    })
   }
 
   inviteToActivity(activityId, userArray, success: (res) => void, error: (res) => void) {
@@ -646,53 +614,54 @@ export class ParseManager {
       }
     );
     activityQuery.include('author');
-    return activityQuery.find();
+    return activityQuery.find()
+    .then((res) => {
+      console.log()
+      // console.log(res);
+      var jsRes = [];
+      for(var i = 0; i < res.length; i++) {
+        jsRes.push(res[i].toJSON());
+      }
+      return Promise.resolve(jsRes);
+    });
   }
 
-  getActivitiesByLocation(distance: number, latitude: number, longitude: number, error: (res) => void, success: (res) => void) {
+  getActivitiesByLocation(distance: number, latitude: number, longitude: number) : Promise<Array<any>> { 
     var point = new this.Parse.GeoPoint({
       'latitude': latitude,
       'longitude': longitude,
     });
 
+    console.log('FETCHING BY LOCATION');
     var locationQuery = new this.Parse.Query(this.LocationClass);
     locationQuery.withinKilometers('coordinates', point, distance);
-    locationQuery.find({
-      success: (res) => {
-        console.log(res);
-        for (var i = 0; i < res.length; i++) {
-          var activityQuery = new this.Parse.Query(this.ActivityClass);
-          activityQuery.equalTo('startLocation', res[i]);
-          var d = new Date();
-          activityQuery.include('author');
-          activityQuery.include('startLocation');
-          activityQuery.greaterThanOrEqualTo(
-            'startDate', {
-              "__type": "Date",
-              "iso": d.toISOString()
-            }
-          );
-          activityQuery.find({
-            success: (res) => {
-              console.log(res);
-              for (var i = 0; i < res.length; i++) {
-                success([
-                  res[i].toJSON()
-                ]);
-              }
-            },
-            error: (err) => {
-              console.log('parse saving error');
-              error(err);
-            }
-          });
-        }
-        success([]);
-      },
-      error: (err) => {
-        console.log('parse saving error');
-        error(err);
+    return locationQuery.find()
+    .then((res) => {
+      var activityArray = [];
+      var d = new Date();
+      for (var i = 0; i < res.length; i++) {
+        var activityQuery = new this.Parse.Query(this.ActivityClass);
+        activityQuery.equalTo('startLocation', res[i]);
+        activityQuery.include('author');
+        activityQuery.include('startLocation');
+        activityQuery.greaterThanOrEqualTo('startDate', {
+          "__type": "Date",
+          "iso": d.toISOString()
+        });
+        activityArray[i] = activityQuery.find();
       }
+      return Promise.all(activityArray);
+    })
+    .then((res) => {
+      console.log()
+      console.log(res);
+      var jsRes = [];
+      for(var i = 0; i < res.length; i++) {
+        for(var j = 0; j < res[i].length; j++) {
+          jsRes.push(res[i][j].toJSON());
+        }
+      }
+      return Promise.resolve(jsRes);
     })
   }
 

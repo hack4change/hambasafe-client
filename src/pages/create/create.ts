@@ -198,6 +198,7 @@ export class CreatePage implements OnInit {
           return state['eventData'].getIn(['items', this.activityId]).toJS();
       });
       this.activitySub$ = this.activity$.subscribe((activity) => {
+        console.log(activity);
         if(!!activity) {
           var d = new Date(activity.startDate.iso);
           this.isPublic = activity.isPublic;

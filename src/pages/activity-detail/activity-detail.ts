@@ -145,7 +145,7 @@ export class ActivityDetailPage implements OnInit {
   }
 
   ratingRequired(){
-    return this.mustRate.toString();
+    return !!this.mustRate ? this.mustRate.toString(): 'false';
   }
   getActivityRating(index: number) {
     return index <= this.activityRating ? {

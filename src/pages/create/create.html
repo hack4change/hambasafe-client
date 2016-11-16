@@ -30,7 +30,7 @@
       </ion-item>
       <ion-item class="form-group">
         <ion-label>Event Type</ion-label> <!-- replace tile with selected gender-->
-        <ion-select name="eventType" formControlName="eventType" class="form-control" required>
+        <ion-select name="eventType" [(ngModel)]="eventType" formControlName="eventType" class="form-control" required>
           <ion-option value="WALK">Walk</ion-option>
           <ion-option value="RUN">Run</ion-option>
           <ion-option value="CYCLE">Cycle</ion-option>
@@ -38,7 +38,7 @@
       </ion-item>
       <ion-item class="">
         <ion-label>Intensity</ion-label> <!-- replace tile with selected gender-->
-        <ion-select name="intensity"  formControlName="intensity" required>
+        <ion-select name="intensity"  [(ngModel)]="intensity" formControlName="intensity" required>
           <ion-option value="NOVICE">NOVICE</ion-option>
           <ion-option value="INTERMEDIATE">INTERMEDIATE</ion-option>
           <ion-option value="INTENSE">INTENSE</ion-option>
@@ -46,24 +46,24 @@
       </ion-item>
       <ion-item class="">
         <ion-label floating>Name</ion-label>
-        <ion-input name="name" formControlName="name" type="text" ngControl="name" required></ion-input>
+        <ion-input name="name" [(ngModel)]="name" formControlName="name" type="text" ngControl="name" required></ion-input>
       </ion-item>
-      <ion-item *ngIf="createForm.controls.name.errors?.required && createForm.controls.name.touched" class="error">
-          Event Type is required
-      </ion-item>
-      <ion-item *ngIf="createForm.controls.name.errors?.minLength?.requiredLength != createForm.controls.name.errors?.minLength?.actualLength && createForm.controls.name.touched" class="error">
-        Minimum of 3 characters
-      </ion-item>
-      <ion-item *ngIf="!!createForm.controls.name.errors?.maxLength && createForm.controls.name.touched" class="error">
-        Maximum of 40 characters
-      </ion-item>
+      <!-- <ion-item *ngIf="createForm.controls.name.errors?.required && createForm.controls.name.touched" class="error"> -->
+      <!--     Event Type is required -->
+      <!-- </ion-item> -->
+      <!-- <ion-item *ngIf="createForm.controls.name.errors?.minLength?.requiredLength != createForm.controls.name.errors?.minLength?.actualLength && createForm.controls.name.touched" class="error"> -->
+      <!--   Minimum of 3 characters -->
+      <!-- </ion-item> -->
+      <!-- <ion-item *ngIf="!!createForm.controls.name.errors?.maxLength && createForm.controls.name.touched" class="error"> -->
+      <!--   Maximum of 40 characters -->
+      <!-- </ion-item> -->
       <ion-item class="">
         <ion-label floating>Description</ion-label>
-        <ion-input name="description" formControlName="description" ngControl="description" type="text" required></ion-input>
+        <ion-input name="description" [(ngModel)]="description" formControlName="description" ngControl="description" type="text" required></ion-input>
       </ion-item>
       <ion-item class="">
         <ion-label floating>Estimated distance(kilometers)</ion-label>
-        <ion-input name="distance" formControlName="distance" ngControl="distance" type="number" required></ion-input>
+        <ion-input name="distance" [(ngModel)]="distance" formControlName="distance" ngControl="distance" type="number" required></ion-input>
       </ion-item>
       <ion-item *ngIf="!startLocation" (click)="openMap('START_LOCATION')" class="clean">
         <ion-label floating>Where does it start?</ion-label>
@@ -79,17 +79,17 @@
         <ion-label floating>
           What time does it start?
         </ion-label>
-        <ion-datetime name="startTime" displayFormat="h:mm A" pickerFormat="h mm A" formControlName="startTime"></ion-datetime> 
+        <ion-datetime name="startTime" displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime" formControlName="startTime"></ion-datetime> 
       </ion-item>
       <ion-item class="">
         <ion-label floating>
           What day does it start?
         </ion-label>
-        <ion-datetime name="startDate" min="{{ minDate }}" max="{{ maxDate }}" displayFormat="DD/MMM/YY" value="startDate" pickerFormat="DD MM YYYY" formControlName="startDate"></ion-datetime>
+        <ion-datetime name="startDate" min="{{ minDate }}" max="{{ maxDate }}" displayFormat="DD/MMM/YY" value="startDate" pickerFormat="DD MM YYYY" [(ngModel)]="startDate"  formControlName="startDate"></ion-datetime>
       </ion-item>
       <ion-item class="">
         <ion-label floating>Wait time(minutes)?</ion-label>
-        <ion-input name="waitTime" ngControl="waitTime" formControlName="waitTime" type="number"></ion-input>
+        <ion-input name="waitTime" ngControl="waitTime" [(ngModel)]="waitTime" formControlName="waitTime" type="number"></ion-input>
       </ion-item>
     </ion-list>
     </form>

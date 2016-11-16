@@ -97,10 +97,10 @@ export class EventDataActions {
       // Do request.
       this.parseManager.getActivitiesByQuery(query, latitude, longitude)
       .then((res) => {
-        _.each(res, (activityItem)=>{
-          return this.ngRedux.dispatch(this.setFetchSuccessState([activityItem.toJSON()]));
-        });
-        return Promise.resolve();
+        console.log('succesfully fetched activities by query');
+        console.log(res);
+        this.ngRedux.dispatch(this.setFetchSuccessState(res));
+        return Promise.resolve(res);
       })
       .catch((err)=> {
         return dispatch(this.setFetchErrorState(err));
@@ -114,13 +114,16 @@ export class EventDataActions {
       // Set loading state.
       dispatch(this.setFetchLoadingState());
       // Do request.
-      this.parseManager.getActivitiesByLocation(
-        distance,
-        latitude,
-        longitude,
-        (error) => dispatch(this.setFetchErrorState(error)),
-          (response) => dispatch(this.setFetchSuccessState(response))
-      );
+      this.parseManager.getActivitiesByLocation(distance, latitude, longitude)
+      .then((res) => {
+        console.log('succesfully fetched activities by coords');
+        console.log(res);
+        this.ngRedux.dispatch(this.setFetchSuccessState(res));
+      })
+      .catch((err) => {
+        console.log('parse saving error');
+        this.ngRedux.dispatch(this.setFetchErrorState(err));
+      })
     };
   }
 
@@ -131,14 +134,15 @@ export class EventDataActions {
     return dispatch => {
       console.log('event Create')
       dispatch(this.setCreateLoadingState());
-      this.parseManager.createActivity(
-        data,
-        (error) => dispatch(this.setCreateErrorState(error)),
-          (response) => dispatch(this.setCreateSuccessState(response))
-      );
-      // Set loading state.
-
-      // Do request.
+      this.parseManager.createActivity(data)
+      .then((res) => {
+        console.log(res);
+        return this.ngRedux.dispatch(this.setCreateSuccessState(res));
+      })
+      .catch((err) => {
+        console.log('PARSE CREATE ACTIVITY ERROR');
+        this.ngRedux.dispatch(this.setCreateErrorState(err));
+      })
     };
   }
 
@@ -149,12 +153,15 @@ export class EventDataActions {
     return dispatch => {
       console.log('event Create')
       dispatch(this.setCreateLoadingState());
-      this.parseManager.updateActivity(
-        activityId,
-        data,
-        (error) => dispatch(this.setCreateErrorState(error)),
-          (response) => dispatch(this.setCreateSuccessState(response))
-      );
+      this.parseManager.updateActivity(activityId, data)
+      .then((res) => {
+        console.log(res);
+        this.ngRedux.dispatch(this.setCreateSuccessState(res));
+      })
+      .catch((err) => {
+        console.log('PARSE CREATE ACTIVITY ERROR');
+        this.ngRedux.dispatch(this.setCreateErrorState(err));
+      })
       // Set loading state.
 
       // Do request.

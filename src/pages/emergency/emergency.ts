@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NavController } from 'ionic-angular';
+import { CallNumber } from 'ionic-native';
 
 /*
   Generated class for the Emergency page.
@@ -12,6 +13,11 @@ import { NavController } from 'ionic-angular';
   templateUrl: 'emergency.html'
 })
 export class EmergencyPage implements OnInit {
+  public phoneNumberList = [
+    {
+      phoneNumber : '2037234729',
+    }
+  ];
 
   constructor(public navCtrl: NavController) {}
 
@@ -26,4 +32,9 @@ export class EmergencyPage implements OnInit {
 	goBack() {
 		this.navCtrl.pop();
 	}
+  callNumber(phoneNumber) : void {
+    CallNumber.callNumber(phoneNumber, true)
+    .then(() => console.log('Launched dialer!'))
+    .catch(() => console.log('Error launching dialer'));
+  }
 }
