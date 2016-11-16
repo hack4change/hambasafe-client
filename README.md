@@ -35,7 +35,7 @@ In time, it will be available on the App & Play Stores
   + Research redux, the key things to know
     - Reducers manange a unique state
     - Actions call functions in parse-manager, parse is the backend.
-    - Actions also dispacth to the store(are operated on by a reducer).
+    - Actions also dispatch to the store(are operated on by a reducer), on return from the promise.
 
 ## News to use or lose as you choose:
 * The app logic is contained in `./app`
