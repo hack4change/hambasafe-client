@@ -88,12 +88,14 @@ export class AuthActions {
       } else {
         promise = this.authBrowser();
       }
-      promise.then((res) => {
+      promise
+      .then((res) => {
         return this.getProfile();
       })
       .then((res) => {
         this.ngRedux.dispatch(this.setAuthSuccess(res));
-      }).catch((err)=>{
+      })
+      .catch((err)=>{
         console.log(err);
         this.ngRedux.dispatch(this.setAuthError(err));
       })
@@ -159,10 +161,12 @@ export class AuthActions {
       } else {
         promise = this.fbLogout();
       }
-      promise.then((res) => {
-        return dispatch(this.setLogoutSuccess());
-      }).catch((err)=>{
-        return dispatch(this.setLogoutError(err));
+      promise
+      .then((res) => {
+        return this.ngRedux.dispatch(this.setLogoutSuccess());
+      })
+      .catch((err)=>{
+        return this.ngRedux.dispatch(this.setLogoutError(err));
       })
     };
   };

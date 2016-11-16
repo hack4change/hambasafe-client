@@ -211,7 +211,6 @@ export class ParseManager {
       className: "_User",
       objectId: friendId
     });
-
     var friendQuery = this.Parse.Query.or(query, query2);
     return friendQuery.find()
     .then((friends) => {
@@ -268,7 +267,7 @@ export class ParseManager {
   /**
    * INVITES
    **/
-  deleteInvite(activityId: string, error: (res) => void, success: (res) => void) {
+  deleteInvite(activityId: string) : Promise<any> {
     var query = new Parse.Query(this.InviteClass);
     query.equalTo('inviteePtr', this.Parse.User.current());
     query.equalTo('activityPtr', {
@@ -276,7 +275,7 @@ export class ParseManager {
       className: "Activity",
       objectId: activityId
     });
-    query.find()
+    return query.find()
     .then((invites) => {
       console.log('found invites');
       console.log();
@@ -289,7 +288,7 @@ export class ParseManager {
         });
       });
       return promise;
-    }).then((res)=>success(res));
+    })
   }
 
   /***
@@ -396,7 +395,9 @@ export class ParseManager {
 
   inviteToActivity(activityId, userArray) : Promise<any> {
     console.log('inviting');
-    var user = this.Parse.User.current();
+    let user = this.Parse.User.current();
+    let inviteeObj;
+    // let activityObj;
     var activityQuery = new this.Parse.Query(this.ActivityClass);
     return activityQuery.get(activityId)
     .then((activityObj) => {
@@ -406,10 +407,11 @@ export class ParseManager {
         var inviteeId = userArray[i];
         var userQuery = new this.Parse.Query(this.Parse.User);
         promises[i] = userQuery.get(inviteeId)
-        .then((inviteeObj) => {
+        .then((res) => {
+          inviteeObj = res;
           var inviteQuery = new this.Parse.Query(this.InviteClass);
           inviteQuery.equalTo('activityPtr', activityObj)
-          inviteQuery.equalTo('inviteePtr', inviteeObj)
+          inviteQuery.equalTo('inviteePtr', res);
           return inviteQuery.find()
         })
         .then((invitedUsers) => {
@@ -426,56 +428,32 @@ export class ParseManager {
     })
   }
 
-  joinActivity(activityId: any, error: (res) => void, success: (res) => void) {
+  joinActivity(activityId: String) : Promise<any> {
     console.log('Joining');
     console.log(activityId);
-    var activityQuery = new this.Parse.Query(this.ActivityClass);
-    activityQuery.get(activityId, {
-      success: (res) => {
-        var attend = new this.AttendanceClass();
-        attend.set('userReference', this.Parse.User.current());
-        attend.set('activityReference', res);
-        var activityObj = res;
-        attend.save(null, {
-          success: (res) => {
-            console.log('joined Event')
-            var inviteQuery = new this.Parse.Query(this.InviteClass);
-            inviteQuery.equalTo("activityPtr", activityObj)
-            inviteQuery.equalTo("inviteePtr", this.Parse.User.current())
-            inviteQuery.find({
-              success: (invitesObj) => {
-                for (var i = 0; i < invitesObj.length; i++) {
-                  console.log('found invite');
-                  invitesObj[i].destroy({
-                    success: function(res) {
-                      // The object was deleted from the Parse Cloud.
-                      console.log('invite deleted')
-                    },
-                    error: function(res, error) {
-                      // The delete failed.
-                      // error is a Parse.Error with an error code and message.
-                    }
-                  });
-                }
-              },
-              error: (err) => {
-                error(err);
-              }
-            })
-            success(activityObj.toJSON());
-          },
-          error: (err) => {
-            console.log('ERROR: joining Event')
-            console.log(err);
-            error(err);
-          }
-        })
-      },
-      error: (err) => {
-        console.log('ERROR: joining Event');
-        console.log(err);
-        error(err);
+    let activityObj;
+    let activityQuery = new this.Parse.Query(this.ActivityClass);
+    return activityQuery.get(activityId)
+    .then((res) => {
+      var attend = new this.AttendanceClass();
+      attend.set('userReference', this.Parse.User.current());
+      attend.set('activityReference', res);
+      activityObj = res;
+      return attend.save(null)
+    })
+    .then((res) => {
+      console.log('joined Event')
+      var inviteQuery = new this.Parse.Query(this.InviteClass);
+      inviteQuery.equalTo("activityPtr", activityObj)
+      inviteQuery.equalTo("inviteePtr", this.Parse.User.current())
+      return inviteQuery.find()
+    })
+    .then((invitesObj) => {
+      for (var i = 0; i < invitesObj.length; i++) {
+        console.log('found invite');
+        invitesObj[i].destroy();
       }
+      return Promise.resolve(activityObj.toJSON());
     })
   }
 
@@ -653,7 +631,7 @@ export class ParseManager {
   /**
    * Rating Functions
    */
-  rateUser(userId: string, activityId: string, rating: number, success: (res) => void, error: (err) => void) {
+  rateUser(userId: string, activityId: string, rating: number) : Promise<any>{
     var user = this.Parse.User.current();
     var attendanceQuery = new this.Parse.Query(this.AttendanceClass);
     var userAttendedPtr;
@@ -668,7 +646,7 @@ export class ParseManager {
       className: "_User",
       objectId: userId
     });
-    attendanceQuery.find().then((attendedResult) => {
+    return attendanceQuery.find().then((attendedResult) => {
       console.log(attendedResult.length);
       if (attendedResult.length) {
         userAttendedPtr = attendedResult[0];
@@ -714,13 +692,10 @@ export class ParseManager {
         userAttendance[0].set('ratingPtr', userRatingObj);
         return userAttendance[0].save()
       }
-    }).then((res) => {
-      console.log('Successfully saved rating ptr in attendance')
-      success(res)
     })
   }
 
-  rateActivity(activityId: string, rating: number, success: (res) => void, error: (err) => void) {
+  rateActivity(activityId: string, rating: number) {
     var user = this.Parse.User.current();
     var activityRatingObj;
     var ratingQuery = new this.Parse.Query(this.ActivityRatingClass);
@@ -730,7 +705,7 @@ export class ParseManager {
       objectId: activityId
     })
     ratingQuery.equalTo("userPtr", user)
-    ratingQuery.find().then((ratingPtr) => {
+    return ratingQuery.find().then((ratingPtr) => {
       if (!ratingPtr.length) {
         var ratingToCreate = new this.ActivityRatingClass();
         ratingToCreate.set('activityPtr', {
@@ -762,9 +737,6 @@ export class ParseManager {
         attendance[0].set('ratingPtr', activityRatingObj);
         return attendance[0].save()
       }
-    }).then((res) => {
-      console.log('Successfully saved rating ptr in attendance')
-      success(res)
     })
   }
 
@@ -774,14 +746,16 @@ export class ParseManager {
   /**
    * Friend Functions
    */
-  addFriends(userArray, success: (res) => void, error: (res) => void) {
+  addFriends(userArray) : Promise<any> {
     var currUser = this.Parse.User.current();
+    var promises = [];
     _.each(userArray, (userId) => {
       if(userId === currUser['id']){
         return;
       }
       var userQuery = new this.Parse.Query(this.Parse.User);
-      userQuery.get(userId)
+      
+      promises.push(userQuery.get(userId)
       .then((res) => {
         if(!!res) {
           var friendObj = new this.FriendClass();
@@ -793,21 +767,16 @@ export class ParseManager {
           })
           return friendObj.save()
         }
-      })
-      .then((res)=>{
-        // success() 
-        console.log('FRIENDS!!! :-)');
-      })
-
-    
+      }))
     })
+    return Promise.all(promises);
 
   }
 
   /*
    *  Registration Function
    */
-  signUp(data, success: (res) => void, error: (err) => void) {
+  signUp(data) {
     console.log('signUp');
     console.log(data);
     _.forEach(data, (value, key) => {
@@ -817,17 +786,10 @@ export class ParseManager {
         this.Parse.User.current().set(key, value);
       }
     })
-    this.Parse.User.current().save(null, {
-      success: (res) => {
-        success(res);
-      },
-      error: (err) => {
-        console.log("error");
-        console.log(err);
-        error(err);
-      }
+    return this.Parse.User.current().save(null)
+    .then((res) => {
+      return Promise.resolve(res);
     });
-    console.log('here');
   }
   userRegistered() {
     if (!this.Parse.User.current()) return false;

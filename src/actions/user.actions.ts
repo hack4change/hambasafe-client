@@ -287,11 +287,14 @@ export class UserActions {
     return dispatch => {
       console.log('add friend action');
       dispatch(this.setFetchLoading());
-      this.parseManager.addFriends(
-        userKeys,
-        (res) => this.ngRedux.dispatch(this.setAddFriendSuccess(res)),
-          (err) => this.ngRedux.dispatch(this.setAddFriendError(err))
-      )
+      this.parseManager.addFriends(userKeys)
+      .then((res)=>{
+        console.log('FRIENDS!!! :-)');
+        this.ngRedux.dispatch(this.setAddFriendSuccess(res))
+      })
+      .catch((err) => {
+        this.ngRedux.dispatch(this.setAddFriendError(err))
+      })
     };
   };
 
@@ -309,15 +312,13 @@ export class UserActions {
   createUser(data) : any {
     return dispatch => {
       dispatch(this.setCreateUserInit());
-      this.parseManager.signUp(
-        data, 
-        (response : any) =>{
-          dispatch(this.setCreateUserSuccess())
-        },
-        (error) => {
-          dispatch(this.setCreateUserError(error))
-        }
-      )
+      this.parseManager.signUp(data)
+      .then((res : any) =>{
+        this.ngRedux.dispatch(this.setCreateUserSuccess())
+      })
+      .catch((error) => {
+        this.ngRedux.dispatch(this.setCreateUserError(error))
+      });
     };
   };
 
@@ -399,17 +400,13 @@ export class UserActions {
 
   rateUser (userId : string, activityId : string, rating:number) : any {
     return dispatch => {
-      this.parseManager.rateUser(
-        userId,
-        activityId,
-        rating,
-        (res) => {
-          this.setRatingSuccess();
-        },
-        (err) => {
-          this.setRatingFailure(err);
-        }
-      )
+      this.parseManager.rateUser(userId, activityId, rating)
+      .then((res) => {
+        this.setRatingSuccess();
+      })
+      .catch((err) => {
+        this.setRatingFailure(err);
+      })
     }
   }
 

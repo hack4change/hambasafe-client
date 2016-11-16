@@ -51,7 +51,6 @@ constructor(
       this.inviteSub$.on('error', (err) => {
         this.ngRedux.dispatch(this.setSubscribeError(err));
       })
-       
 
       this.parseManager.fetchInvites()
       .then((res) => {
@@ -70,15 +69,13 @@ constructor(
   deleteInvite(activityId:string):any {
     return dispatch => {
       console.log('delete invite');
-      this.parseManager.deleteInvite(
-        activityId, 
-        (err) => {
-          dispatch(this.setDeleteFailure(err));
-        },
-        (res) => {
-          dispatch(this.setDeleteSuccess(res));
-        }
-      )
+      this.parseManager.deleteInvite(activityId)
+      .then((res) => {
+        this.ngRedux.dispatch(this.setDeleteSuccess(res));
+      })
+      .catch((err) => {
+        dispatch(this.setDeleteFailure(err));
+      })
     }
   }
 

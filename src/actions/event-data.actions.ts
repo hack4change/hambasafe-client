@@ -208,15 +208,19 @@ export class EventDataActions {
    *  JOIN
    */
 
-  joinActivity(activityId) : any {
+  joinActivity(activityId: String) : any {
     return dispatch => {
       console.log('event Join')
       dispatch(this.setJoinLoadingState());
-      this.parseManager.joinActivity(
-        activityId,
-        (error) => dispatch(this.setJoinErrorState(error)),
-          (response) => dispatch(this.setJoinSuccessState(response))
-      );
+      this.parseManager.joinActivity(activityId)
+      .then((res)=>{
+        this.ngRedux.dispatch(this.setJoinSuccessState(res))
+      })
+      .catch((err)=>{
+        console.log('ERROR: joining Event');
+        console.log(err);
+        this.ngRedux.dispatch(this.setJoinErrorState(err));
+      })
     };
   };
 
@@ -275,9 +279,12 @@ export class EventDataActions {
     return dispatch => {
       dispatch(this.setInviteLoadingState());
       this.parseManager.inviteToActivity(activityId, userKeys)
-      .r
-        // (res) => dispatch(this.setInviteSuccessState(res)),
-        //   (res) => dispatch(this.setInviteErrorState(res))
+      .then((res) => {
+        this.ngRedux.dispatch(this.setInviteSuccessState(res));
+      })
+      .catch((err)=>{
+        this.ngRedux.dispatch(this.setInviteErrorState(err));
+      })
     }
   }
   setInviteSuccessState(response) {
@@ -370,16 +377,14 @@ export class EventDataActions {
   }
   rateActivity(activityId : string, rating:number) : any {
     return dispatch => {
-      this.parseManager.rateActivity(
-        activityId,
-        rating,
-        (res) => {
-          this.setRatingSuccess();
-        },
-        (err) => {
-          this.setRatingFailure(err);
-        }
-      )
+      this.parseManager.rateActivity(activityId, rating)
+      .then((res) => {
+        console.log('Successfully saved rating ptr in attendance')
+        this.setRatingSuccess();
+      })
+      .catch((err) => {
+        this.setRatingFailure(err);
+      })
     }
   }
 
