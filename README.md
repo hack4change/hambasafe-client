@@ -1,6 +1,6 @@
 #Hambasafe... The Client
 
-##Do not touch this branch until this line is removed.
+##This is the active development the branch, the others are merely here for the sake of history.
 
 ## Better together.
 Hambasafe is a community created app, with a vision of bringing communities together and helping people keep people safe.
