@@ -23,7 +23,12 @@ import {ParseManager} from '../providers/parse-manager';
 @Injectable()
 export class AuthActions {
 
-  constructor(public http: Http, public parseManager: ParseManager, public platform: Platform, public ngRedux: NgRedux<any>) {
+  constructor(
+    public http: Http,
+    public parseManager: ParseManager,
+    public platform: Platform,
+    public ngRedux: NgRedux<any>
+  ) {
     console.log('Hello AuthActions Provider');
   }
 
@@ -89,6 +94,7 @@ export class AuthActions {
       .then((res) => {
         this.ngRedux.dispatch(this.setAuthSuccess(res));
       }).catch((err)=>{
+        console.log(err);
         this.ngRedux.dispatch(this.setAuthError(err));
       })
     }

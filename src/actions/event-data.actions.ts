@@ -14,12 +14,15 @@ const _ = require('lodash');
 */
 @Injectable()
 export class EventDataActions {
+  public attendingSub$;
 
   constructor(public http: Http, public parseManager: ParseManager, public ngRedux: NgRedux<any>) {
     console.log('Hello EventDataActions Provider');
   }
 
   setFetchSuccessState(response) {
+    console.log('FETCH SUCCESS');
+    console.log(response);
     return {
       data: fromJS({
         items: _.keyBy(response, 'objectId'),
@@ -57,11 +60,14 @@ export class EventDataActions {
       // Set loading state.
       dispatch(this.setFetchLoadingState());
 
-      this.parseManager.getActivity(
-        activityId,
-        (error) => dispatch(this.setFetchErrorState(error)),
-          (response) => dispatch(this.setFetchSuccessState(response))
-      );
+      this.parseManager.getActivity(activityId)
+      .then((res) => {
+          this.ngRedux.dispatch(this.setFetchSuccessState(res));
+      })
+      .catch((err) => {
+        console.log(err);
+        this.ngRedux.dispatch(this.setFetchErrorState(err));
+      })
     };
   }
 
@@ -268,12 +274,10 @@ export class EventDataActions {
   inviteToActivity(activityId, userKeys):any {
     return dispatch => {
       dispatch(this.setInviteLoadingState());
-      this.parseManager.inviteToActivity(
-        activityId,
-        userKeys,
-        (res) => dispatch(this.setInviteSuccessState(res)),
-          (res) => dispatch(this.setInviteErrorState(res))
-      )
+      this.parseManager.inviteToActivity(activityId, userKeys)
+      .r
+        // (res) => dispatch(this.setInviteSuccessState(res)),
+        //   (res) => dispatch(this.setInviteErrorState(res))
     }
   }
   setInviteSuccessState(response) {
@@ -307,21 +311,51 @@ export class EventDataActions {
       type: actionTypes.EVENT_INVITE_INIT,
     };
   }
+
   subscribeAttending() : any {
     return dispatch => {
-      this.parseManager.subscribeToAttending(
-        (err) => {
-          dispatch(this.setSubscribeAttendingFail(err))
-        },
-        (res) => {
-          dispatch(this.setFetchSuccessState(res))
-        },
-        (res) => {
-          dispatch(this.setDeleteAttending(res))
+      this.attendingSub$ = this.parseManager.subscribeToAttending();
+      this.attendingSub$
+      .on('create', (attendance) => {
+        var attendedActivity = attendance.get('activityReference').toJSON();
+        attendedActivity.isAttending = true;
+        if (!attendance.get('ratingPtr')) {
+          attendedActivity.mustRate = true;
+        } else {
+          attendedActivity.mustRate = false;
         }
-      );
+        this.ngRedux.dispatch(this.setFetchSuccessState([attendedActivity]))
+      })
+
+      this.attendingSub$
+      .on('update', (attendance) => {
+        var attendedActivity = attendance.get('activityReference').toJSON();
+        attendedActivity.isAttending = true;
+        if (!attendance.get('ratingPtr')) {
+          attendedActivity.mustRate = true;
+        } else {
+          attendedActivity.mustRate = false;
+        }
+        this.ngRedux.dispatch(this.setFetchSuccessState([attendedActivity]))
+      })
+
+      this.attendingSub$
+      .on('delete', (attendance) => {
+        this.ngRedux.dispatch(this.setDeleteAttending(attendance));
+      })
+
+      this.parseManager.fetchAttending()
+      .then((res)=>{
+        this.ngRedux.dispatch(this.setFetchSuccessState(res));
+      })
+      .catch((err)=>{
+        console.log('ERROR: fetch attending');
+        console.log(err);
+        this.ngRedux.dispatch(this.setFetchErrorState(err));
+      });
     }
   }
+
   setCreateAttending(res) : any {
 
   }

@@ -12,7 +12,7 @@ import {Parse} from 'parse';
 */
 @Injectable()
 export class ParseManager {
-  private Parse = Parse;
+  public Parse = Parse;
   // private isFBSdk = false;
 
   private ActivityClass: any;
@@ -23,8 +23,8 @@ export class ParseManager {
   private UserRatingClass: any;
   private ActivityRatingClass: any;
   private attendingSubscription;
-  private friendSubscription;
-  private inviteSubscription;
+  // private friendSubscription;
+  // private inviteSubscription;
   private userSubscription;
 
   constructor(public http: Http) {
@@ -67,96 +67,72 @@ export class ParseManager {
       changeCb(user);
     })
   }
-  subscribeToAttending(error: any, createCb: any, deleteCb: any) {
+
+  subscribeToAttending() {
     var query = new Parse.Query(this.AttendanceClass);
     query.equalTo('userReference', this.Parse.User.current());
     query.include('activityReference');
     query.include('activityReference.startLocation');
     query.include('activityReference.author');
     query.include('ratingPtr');
-    this.attendingSubscription = query.subscribe();
-    this.attendingSubscription.on('create', (attendance) => {
-      var attendedActivity = attendance.get('activityReference').toJSON();
-      attendedActivity.isAttending = true;
-      if (!attendance.get('ratingPtr')) {
-        attendedActivity.mustRate = true;
-      } else {
-        attendedActivity.mustRate = false;
-      }
-      createCb([
-        attendedActivity
-      ]);
-    })
-    this.attendingSubscription.on('update', (attendance) => {
-      var attendedActivity = attendance.get('activityReference').toJSON();
-      attendedActivity.isAttending = true;
-      if (!attendance.get('ratingPtr')) {
-        attendedActivity.mustRate = true;
-      } else {
-        attendedActivity.mustRate = false;
-      }
-      createCb([
-        attendedActivity
-      ]);
-    })
-    query.find({
-      success: (activitiesAttending) => {
-        for (var i = 0; i < activitiesAttending.length; i++) {
-          var attendedActivity = activitiesAttending[i].get('activityReference').toJSON();
-          attendedActivity.isAttending = true;
-          console.log(activitiesAttending[i].get('ratingPtr'));
-          console.log(activitiesAttending[i].toJSON());
-          if(!activitiesAttending[i].get('ratingPtr')) {
-            attendedActivity.mustRate = true;
-          } else {
-            attendedActivity.mustRate = false;
-          }
-          createCb([
-            attendedActivity
-          ]);
-        }
-      },
-      error: function(err) {
-        // error(err);
-      }
-    })
-
+    return query.subscribe();
   }
 
-  subscribeToInvites(success: any, error: any, createCb: any, deleteCb: any) {
+  fetchAttending() : Promise<any> {
+    var query = new Parse.Query(this.AttendanceClass);
+    query.equalTo('userReference', this.Parse.User.current());
+    query.include('activityReference');
+    query.include('activityReference.startLocation');
+    query.include('activityReference.author');
+    query.include('ratingPtr');
+    return query.find()
+    .then((activitiesAttending) => {
+      var jsRes = [];
+      for (var i = 0; i < activitiesAttending.length; i++) {
+        var attendedActivity = activitiesAttending[i].get('activityReference').toJSON();
+        attendedActivity.isAttending = true;
+        console.log(activitiesAttending[i].get('ratingPtr'));
+        console.log(activitiesAttending[i].toJSON());
+        if(!activitiesAttending[i].get('ratingPtr')) {
+          attendedActivity.mustRate = true;
+        } else {
+          attendedActivity.mustRate = false;
+        }
+        jsRes[i] = attendedActivity;
+      }
+      return Promise.resolve(jsRes);
+    })
+  }
+
+  subscribeToInvites() {
     var query = new Parse.Query(this.InviteClass);
     query.equalTo('inviteePtr', this.Parse.User.current());
     query.include('inviteePtr');
     query.include('invitorPtr');
     query.include('activityPtr');
     query.include('activityPtr.author');
-    this.inviteSubscription = query.subscribe();
-    this.inviteSubscription.on('create', (invite) => {
-      console.log('add to invites');
-      console.log(invite);
-      createCb(invite.toJSON());
-    })
-    this.inviteSubscription.on('delete', (invite) => {
-      deleteCb(invite.toJSON()['objectId']);
-    })
-    this.inviteSubscription.on('error', (err) => {
-      error(err);
-    })
-    query.find({
-      success: (invites) => {
-        console.log('add to invites');
-        for (var i = 0; i < invites.length; i++) {
-          createCb(invites[i].toJSON());
-        }
-      },
-      error: (err) => {
-        error(err);
-      }
-    })
-    success();
+    return query.subscribe();
   }
 
-  subscribeToFriends(success: any, error: any, createCb: any, deleteCb: any) {
+  fetchInvites() : Promise<any> {
+    var query = new Parse.Query(this.InviteClass);
+    query.equalTo('inviteePtr', this.Parse.User.current());
+    query.include('inviteePtr');
+    query.include('invitorPtr');
+    query.include('activityPtr');
+    query.include('activityPtr.author');
+    return query.find()
+    .then((res) => {
+      console.log('add to invites');
+      var jsRes = [];
+      for (var i = 0; i < res.length; i++) {
+        jsRes[i] = res[i].toJSON();
+      }
+      return Promise.resolve(jsRes);
+    })
+  }
+
+  subscribeToFriends() {
     var query = new Parse.Query(this.FriendClass);
     var query2 = new Parse.Query(this.FriendClass);
 
@@ -171,105 +147,54 @@ export class ParseManager {
     query2.include('friendPtr');
 
     var friendQuery = this.Parse.Query.or(query, query2);
-    this.friendSubscription = friendQuery.subscribe();
-    this.friendSubscription.on('create', (friend) => {
-      var friendId: string = "";
-      var isConfirmed : boolean = true;
-      var getUser = new this.Parse.Query(this.Parse.User)
-      if(friend.get('userPtr')['id'] !== this.Parse.User.current()['id']){
-        friendId = friend.get('userPtr')['id'];
-        isConfirmed = friend.get('confirmed');
-      } else {
-        friendId = friend.get('friendPtr')['id'];
-      }
-      getUser.get(friendId)
-      .then((res) => {
-        var friendRes = res.toJSON();
-        friendRes.isFriend= true;
-        friendRes.isConfirmed = isConfirmed;
-        createCb(friendRes);
-      })
-    })
-    this.friendSubscription.on('enter', (friend) => {
-      var friendId: string = "";
-      var isConfirmed : boolean = true;
-      var getUser = new this.Parse.Query(this.Parse.User)
-      if(friend.get('userPtr')['id'] !== this.Parse.User.current()['id']){
-        friendId = friend.get('userPtr')['id'];
-        isConfirmed = friend.get('confirmed');
-      } else {
-        friendId = friend.get('friendPtr')['id'];
-      }
-      getUser.get(friendId)
-      .then((res) => {
-        var friendRes = res.toJSON();
-        friendRes.isFriend= true;
-        friendRes.isConfirmed = isConfirmed;
-        createCb(friendRes);
-      })
-    })
-    this.friendSubscription.on('update', (friend) => {
-      var friendId: string = "";
-      var isConfirmed : boolean = true;
-      var getUser = new this.Parse.Query(this.Parse.User)
-      if(friend.get('userPtr')['id'] !== this.Parse.User.current()['id']){
-        friendId = friend.get('userPtr')['id'];
-        isConfirmed = friend.get('confirmed');
-      } else {
-        friendId = friend.get('friendPtr')['id'];
-      }
-      getUser.get(friendId)
-      .then((res) => {
-        var friendRes = res.toJSON();
-        friendRes.isFriend= true;
-        friendRes.isConfirmed = isConfirmed;
-        createCb(friendRes);
-      })
-    })
-    this.friendSubscription.on('delete', (friend) => {
-      console.log('delete from friends');
-      console.log(friend);
-      if(friend.get('userPtr')['id'] !== this.Parse.User.current()['id']){
-        deleteCb(friend.get('userPtr').toJSON()['objectId']);
-      } else {
-        deleteCb(friend.get('friendPtr').toJSON()['objectId']);
-      }
-    })
-    this.friendSubscription.on('error', (err) => {
-      error(err);
-    })
-    friendQuery.find({
-      success: (friends) => {
-        console.log('add to friends');
-        _.each(friends, (friend)=>{
-          var friendId: string = "";
-          var isConfirmed : boolean = true;
-          var getUser = new this.Parse.Query(this.Parse.User)
-          if(friend.get('userPtr')['id'] !== this.Parse.User.current()['id']){
-            friendId = friend.get('userPtr')['id'];
-            isConfirmed = friend.get('confirmed');
-          } else {
-            friendId = friend.get('friendPtr')['id'];
-          }
-          getUser.get(friendId)
-          .then((res) => {
-            var friendRes = res.toJSON();
-            friendRes.isFriend= true;
-            friendRes.isConfirmed = isConfirmed;
-            createCb(friendRes);
-          })
-        })
-      },
-      error: (err) => {
-        error(err);
-      }
-    })
-    success();
+    return friendQuery.subscribe();
   }
+
+  fetchFriends() : Promise<any> {
+    var query = new Parse.Query(this.FriendClass);
+    var query2 = new Parse.Query(this.FriendClass);
+
+    query.equalTo('userPtr', this.Parse.User.current());
+    query.equalTo('confirmed', true);
+
+    query.include('friendPtr');
+    query.include('userPtr');
+
+    query2.equalTo('friendPtr', this.Parse.User.current());
+    query2.include('userPtr');
+    query2.include('friendPtr');
+
+    var friendQuery = this.Parse.Query.or(query, query2);
+    return friendQuery.find()
+    .then((friends) => {
+      console.log('add to friends');
+      let promises = [];
+      _.each(friends, (friend) => {
+        var friendId: string = "";
+        var isConfirmed : boolean = true;
+        var getUser = new this.Parse.Query(this.Parse.User)
+        if(friend.get('userPtr')['id'] !== this.Parse.User.current()['id']){
+          friendId = friend.get('userPtr')['id'];
+          isConfirmed = friend.get('confirmed');
+        } else {
+          friendId = friend.get('friendPtr')['id'];
+        }
+        promises.push(getUser.get(friendId)
+        .then((res) => {
+          var friendRes = res.toJSON();
+          friendRes.isFriend= true;
+          friendRes.isConfirmed = isConfirmed;
+          return Promise.resolve(friendRes);
+        }))
+      })
+      return Promise.all(promises);
+    })
+  }
+
   /**
    *  FRIENDS
    */
-  confirmFriend(friendId, error: (res) => void, success: (res) => void) {
+  confirmFriend(friendId) {
     var query = new Parse.Query(this.FriendClass);
     var query2 = new Parse.Query(this.FriendClass);
 
@@ -288,7 +213,7 @@ export class ParseManager {
     });
 
     var friendQuery = this.Parse.Query.or(query, query2);
-     friendQuery.find()
+    return friendQuery.find()
     .then((friends) => {
       console.log('found invites');
       console.log();
@@ -302,10 +227,10 @@ export class ParseManager {
         });
       });
       return promise;
-    }).then((res)=>success(res));
+    });
   }
 
-  deleteFriend(friendId, error: (res) => void, success: (res) => void) {
+  deleteFriend(friendId) : Promise<any> {
     var query = new Parse.Query(this.FriendClass);
     var query2 = new Parse.Query(this.FriendClass);
 
@@ -324,7 +249,7 @@ export class ParseManager {
     });
 
     var friendQuery = this.Parse.Query.or(query, query2);
-     friendQuery.find()
+    return friendQuery.find()
     .then((friends) => {
       console.log('found invites');
       console.log();
@@ -338,7 +263,6 @@ export class ParseManager {
       });
       return promise;
     })
-    // .then((res)=>success(res));
   }
 
   /**
@@ -470,54 +394,35 @@ export class ParseManager {
     })
   }
 
-  inviteToActivity(activityId, userArray, success: (res) => void, error: (res) => void) {
+  inviteToActivity(activityId, userArray) : Promise<any> {
     console.log('inviting');
     var user = this.Parse.User.current();
     var activityQuery = new this.Parse.Query(this.ActivityClass);
-    activityQuery.get(activityId, {
-      success: (activityObj) => {
-        for (var i = 0; i < userArray.length; i++) {
-          var invite = new this.InviteClass();
-          var inviteeId = userArray[i];
-          var userQuery = new this.Parse.Query(this.Parse.User);
-          userQuery.get(inviteeId, {
-            success: (inviteeObj) => {
-              var inviteQuery = new this.Parse.Query(this.InviteClass);
-              inviteQuery.equalTo('activityPtr', activityObj)
-              inviteQuery.equalTo('inviteePtr', inviteeObj)
-              inviteQuery.find({
-                success: (invitedUsers) => {
-                  if (!invitedUsers.length) {
-                    invite.set('activityPtr', activityObj);
-                    invite.set('invitorPtr', user);
-                    invite.set('inviteePtr', inviteeObj);
-                    invite.save(null, {
-                      success: (inviteRes) => {
-                        console.log('successful invite');
-                        console.log(inviteRes);
-                        success(inviteRes.toJSON());
-                      },
-                      error: (err, result) => {
-                        error(err);
-                      }
-                    })
-
-                  }
-                },
-                error: (err, result) => {
-                  error(err);
-                }
-              })
-            },
-            error: (err, result) => {
-              error(err);
-            }
-          })
-        }
-      },
-      error: (err, result) => {
-        error(err);
+    return activityQuery.get(activityId)
+    .then((activityObj) => {
+      var promises = [];
+      for (var i = 0; i < userArray.length; i++) {
+        var invite = new this.InviteClass();
+        var inviteeId = userArray[i];
+        var userQuery = new this.Parse.Query(this.Parse.User);
+        promises[i] = userQuery.get(inviteeId)
+        .then((inviteeObj) => {
+          var inviteQuery = new this.Parse.Query(this.InviteClass);
+          inviteQuery.equalTo('activityPtr', activityObj)
+          inviteQuery.equalTo('inviteePtr', inviteeObj)
+          return inviteQuery.find()
+        })
+        .then((invitedUsers) => {
+          invite.set('activityPtr', activityObj);
+          invite.set('invitorPtr', user);
+          invite.set('inviteePtr', inviteeObj);
+          return invite.save(null)
+        })
+        .then((inviteRes) => {
+          return Promise.resolve(inviteRes.toJSON());
+        });
       }
+      return Promise.all(promises);
     })
   }
 
@@ -577,22 +482,17 @@ export class ParseManager {
   /*
    * Activity Fetching
    */
-  getActivity(activityId: String, error: (res) => void, success: (res) => void) {
+  getActivity(activityId: String) : Promise<any> {
     var activityQuery = new this.Parse.Query(this.ActivityClass);
     activityQuery.include('author');
-    activityQuery.get(activityId, {
-      success: (res) => {
-        console.log(res);
-        for (var i = 0; i < res.length; i++) {
-          success([
-            res[i].toJSON()
-          ]);
-        }
-      },
-      error: (err) => {
-        console.log('parse saving error');
-        error(err);
+    return activityQuery.get(activityId)
+    .then((res) => {
+      console.log(res);
+      var jsRes = [];
+      for (var i = 0; i < res.length; i++) {
+          jsRes[i] = res[i].toJSON()
       }
+      return Promise.resolve(jsRes);
     });
   }
 
@@ -709,28 +609,25 @@ export class ParseManager {
       return this.Parse.User.current();
   }
 
-  fetchUsersByName(queryString, success: (res) => void, error: (res) => void) {
+  fetchUsersByName(queryString) : Promise<any> {
     var user = this.Parse.User.current();
     var userQuery = new this.Parse.Query(this.Parse.User)
     userQuery.contains('fullname', queryString.toLowerCase());
     userQuery.notEqualTo('objectId', user['id']);
-    userQuery.find({
-      success: (res) => {
-        console.log('FOUND USERS')
-        for (var i = 0; i < res.length; i++) {
-          // if(resObj.toJSON['objectId'] !== user['id']){
-          var resObj = res[i].toJSON();
-          success(resObj);
-          // }
-        }
-      },
-      error: (res) => {
-        console.log('ERROR FINDING USERS');
-        error(res);
+    return userQuery.find()
+    .then((res) => {
+      console.log('FOUND USERS')
+      var jsRes = [];
+      for (var i = 0; i < res.length; i++) {
+        // if(resObj.toJSON['objectId'] !== user['id']){
+        jsRes[i] = res[i].toJSON();
+        // }
       }
+      return Promise.resolve(jsRes);
     })
   }
-  fetchByAttendance(activityId, success: (res) => void, error: (res) => void) {
+
+  fetchByAttendance(activityId) : Promise<any> {
     var user = this.Parse.User.current();
     var attendanceQuery = new this.Parse.Query(this.AttendanceClass)
     attendanceQuery.equalTo('activityReference', {
@@ -740,20 +637,15 @@ export class ParseManager {
     });
     attendanceQuery.notEqualTo('userReference', user);
     attendanceQuery.include('userReference');
-    attendanceQuery.find({
-      success: (res) => {
-        for (var i = 0; i < res.length; i++) {
-          var resObj = res[i].get('userReference').toJSON();
-          resObj.attendance = [
-            activityId
-          ]
-          success(resObj);
-        }
-      },
-      error: (res) => {
-        console.log('ERROR FINDING USERS');
-        error(res);
+    return attendanceQuery.find()
+    .then((res) => {
+      var jsRes = [];
+      for (var i = 0; i < res.length; i++) {
+        var resObj = res[i].get('userReference').toJSON();
+        resObj.attendance = [activityId];
+        jsRes[i] = resObj;
       }
+      return Promise.resolve(jsRes);
     })
   }
 

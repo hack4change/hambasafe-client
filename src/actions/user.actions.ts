@@ -21,6 +21,7 @@ import {ParseManager} from '../providers/parse-manager';
 @Injectable()
 export class UserActions {
 
+  public friendsSub$;
 	public watch : any = null;
   public coords : any = {
   };
@@ -33,22 +34,98 @@ export class UserActions {
   subscribeToFriends() : any {
     return dispatch => {
       dispatch(this.setSubscribeLoading());
-      this.parseManager.subscribeToFriends(
-        () => {
-          dispatch(this.setSubscribeSuccess());
-        },
-        (err) => {
-          dispatch(this.setSubscribeError(err));
-        },
-        (res) => {
-          dispatch(this.setFetchSuccess(res));
-        },
-        (res) => {
-          dispatch(this.setDeleteSuccess(res));
+      this.friendsSub$ = this.parseManager.subscribeToFriends();
+      this.friendsSub$.on('create', (friend) => {
+        var friendId: string = "";
+        var isConfirmed : boolean = true;
+        var getUser = new this.parseManager.Parse.Query(this.parseManager.Parse.User)
+        if(friend.get('userPtr')['id'] !== this.parseManager.Parse.User.current()['id']){
+          friendId = friend.get('userPtr')['id'];
+          isConfirmed = friend.get('confirmed');
+        } else {
+          friendId = friend.get('friendPtr')['id'];
         }
-      )
+        getUser.get(friendId)
+        .then((res) => {
+          var friendRes = res.toJSON();
+          friendRes.isFriend= true;
+          friendRes.isConfirmed = isConfirmed;
+          this.ngRedux.dispatch(this.setFetchSuccess([friendRes]));
+        })
+      })
+      this.friendsSub$.on('enter', (friend) => {
+        var friendId: string = "";
+        var isConfirmed : boolean = true;
+        var getUser = new this.parseManager.Parse.Query(this.parseManager.Parse.User)
+        if(friend.get('userPtr')['id'] !== this.parseManager.Parse.User.current()['id']){
+          friendId = friend.get('userPtr')['id'];
+          isConfirmed = friend.get('confirmed');
+        } else {
+          friendId = friend.get('friendPtr')['id'];
+        }
+        getUser.get(friendId)
+        .then((res) => {
+          var friendRes = res.toJSON();
+          friendRes.isFriend= true;
+          friendRes.isConfirmed = isConfirmed;
+          this.ngRedux.dispatch(this.setFetchSuccess([friendRes]));
+        })
+      })
+      this.friendsSub$.on('update', (friend) => {
+        var friendId: string = "";
+        var isConfirmed : boolean = true;
+        var getUser = new this.parseManager.Parse.Query(this.parseManager.Parse.User)
+        if(friend.get('userPtr')['id'] !== this.parseManager.Parse.User.current()['id']){
+          friendId = friend.get('userPtr')['id'];
+          isConfirmed = friend.get('confirmed');
+        } else {
+          friendId = friend.get('friendPtr')['id'];
+        }
+        getUser.get(friendId)
+        .then((res) => {
+          var friendRes = res.toJSON();
+          friendRes.isFriend= true;
+          friendRes.isConfirmed = isConfirmed;
+          this.ngRedux.dispatch(this.setFetchSuccess([friendRes]));
+        })
+      })
+      this.friendsSub$.on('delete', (friend) => {
+        console.log('delete from friends');
+        console.log(friend);
+        if(friend.get('userPtr')['id'] !== this.parseManager.Parse.User.current()['id']){
+          this.ngRedux.dispatch(this.setDeleteSuccess(friend.get('userPtr').toJSON()['objectId']));
+        } else {
+          this.ngRedux.dispatch(this.setDeleteSuccess(friend.get('friendPtr').toJSON()['objectId']));
+        }
+      })
+      this.friendsSub$.on('error', (err) => {
+        this.ngRedux.dispatch(this.setSubscribeError(err));
+      })
+
+      this.parseManager.fetchFriends()
+      .then((res) => {
+        console.log('FETCH FRIENDS');
+        console.log(res);
+        dispatch(this.setFetchSuccess(res));
+      })
+      .catch((err)=>{
+        console.log('ERROR: FETCH FRIENDS');
+        this.ngRedux.dispatch(this.setSubscribeError(err));
+      })
+      // () => {
+      //   dispatch(this.setSubscribeSuccess());
+      // },
+      // (err) => {
+      // },
+      // (res) => {
+      //   dispatch(this.setFetchSuccess([res]));
+      // },
+      // (res) => {
+      //   dispatch(this.setDeleteSuccess(res));
+      // }
+      // )
     };
-	};
+  };
 
 	subscribeToLocation() : any { 
     let currentLocation$ = this.ngRedux.select(['currentUser', 'location'])
@@ -133,26 +210,24 @@ export class UserActions {
 
   confirmFriend(friendId: string) : any {
     return dispatch => {
-      this.parseManager.confirmFriend(
-        friendId,
-        (res) => {
-        },
-        (res) => {
-        }
-      )
+      this.parseManager.confirmFriend(friendId)
+      .then((res) => {
+        
+      })
+      .catch((err)=>{
+        console.log(err);
+      })
     }
   }
   removeFriend(friendId: string) : any {
     return dispatch => {
-      this.parseManager.deleteFriend(
-        friendId,
-        (res) => {
-          dispatch(this.setDeleteFailure(res));
-        },
-        (res) => {
-          dispatch(this.setDeleteSuccess(res));
-        }
-      )
+      this.parseManager.deleteFriend(friendId)
+      .then((res) => {
+        this.ngRedux.dispatch(this.setDeleteSuccess(res));
+      })
+      .catch((err) => {
+        this.ngRedux.dispatch(this.setDeleteFailure(err));
+      })
     }
   }
   // const blockFriend = (): any => {
@@ -167,11 +242,14 @@ export class UserActions {
   findUsers(query) : any {
     return dispatch => {
       dispatch(this.setFetchLoading());
-      this.parseManager.fetchUsersByName(
-        query, 
-        (res) => dispatch(this.setFetchSuccess(res)),
-          (err) => dispatch(this.setFetchError(err))
-      )
+      this.parseManager.fetchUsersByName(query)
+      .then((res) => {
+        return this.ngRedux.dispatch(this.setFetchSuccess(res));
+      })
+      .catch((err) => {
+        console.log('ERROR: fetchUsersByName '+ query);
+        this.ngRedux.dispatch(this.setFetchError(err))
+      });
     };
   };
 
@@ -181,11 +259,14 @@ export class UserActions {
   fetchByAttendance(activityId: string) : any {
     return dispatch => {
       dispatch(this.setFetchLoading());
-      this.parseManager.fetchByAttendance(
-        activityId, 
-        (res) => dispatch(this.setFetchSuccess(res)),
-          (err) => dispatch(this.setFetchError(err))
-      )
+      this.parseManager.fetchByAttendance(activityId)
+      .then((res) =>{
+        this.ngRedux.dispatch(this.setFetchSuccess(res))
+      })
+      .catch((err) => {
+        console.log('ERROR FINDING USERS');
+        this.ngRedux.dispatch(this.setFetchError(err)) 
+      });
     }
   }
 
@@ -195,7 +276,7 @@ export class UserActions {
   fetchFriends() : any {
     //TODO:
     return dispatch => {
-      dispatch(this.setFetchLoading());
+      this.ngRedux.dispatch(this.setFetchLoading());
     };
   };
 
@@ -208,8 +289,8 @@ export class UserActions {
       dispatch(this.setFetchLoading());
       this.parseManager.addFriends(
         userKeys,
-        (res) => dispatch(this.setAddFriendSuccess(res)),
-          (err) => dispatch(this.setAddFriendError(err))
+        (res) => this.ngRedux.dispatch(this.setAddFriendSuccess(res)),
+          (err) => this.ngRedux.dispatch(this.setAddFriendError(err))
       )
     };
   };
@@ -447,7 +528,7 @@ export class UserActions {
     console.log(response);
     return {
       data: fromJS({
-        items: _.keyBy([response], 'objectId'),//response.data.children.map((p)=>User.fromJS(p.data)),
+        items: _.keyBy(response, 'objectId'),//response.data.children.map((p)=>User.fromJS(p.data)),
         status: 'SUCCESS',
       }),
       type: actionTypes.USER_FETCH_SUCCESS,

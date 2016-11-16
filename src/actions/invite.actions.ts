@@ -9,6 +9,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import {fromJS} from 'immutable';
+import {NgRedux} from 'ng2-redux';
 import * as _ from 'lodash';
 
 import actionTypes from '../actionTypes';
@@ -16,39 +17,54 @@ import actionTypes from '../actionTypes';
 import { ParseManager } from '../providers/parse-manager'
 
 /*
-  Generated class for the InviteActions provider.
+Generated class for the InviteActions provider.
 
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular 2 DI.
+See https://angular.io/docs/ts/latest/guide/dependency-injection.html
+for more info on providers and Angular 2 DI.
 */
 @Injectable()
 export class InviteActions {
+public inviteSub$;
 
-  constructor(
-    public http: Http,
-    public parseManager: ParseManager
-  ) {
-    console.log('Hello InviteActions Provider');
-  }
+constructor(
+  public http: Http,
+  public parseManager: ParseManager,
+  public ngRedux: NgRedux<any>
+) {
+  console.log('Hello InviteActions Provider');
+}
 
   subscribe():any {
     return dispatch => {
       dispatch(this.setSubscribeLoading());
-      this.parseManager.subscribeToInvites(
-        () => {
-          dispatch(this.setSubscribeSuccess());
-        },
-        (err) => {
-          dispatch(this.setSubscribeError(err));
-        },
-        (res) => {
-          dispatch(this.setCreateSuccess(res));
-          dispatch(this.setCreateEvent(res.activityPtr));
-        },
-        (res) => {
-          dispatch(this.setDeleteSuccess(res));
+      this.inviteSub$ = this.parseManager.subscribeToInvites();
+      this.inviteSub$.on('create', (invite) => {
+        console.log('add to invites');
+        console.log(invite);
+        var jsInvite = invite.toJSON();
+        this.ngRedux.dispatch(this.setCreateSuccess(jsInvite));
+        this.ngRedux.dispatch(this.setCreateEvent(jsInvite.activityPtr));
+      })
+      this.inviteSub$.on('delete', (invite) => {
+        this.ngRedux.dispatch(this.setDeleteSuccess(invite.toJSON()['objectId']));
+      })
+      this.inviteSub$.on('error', (err) => {
+        this.ngRedux.dispatch(this.setSubscribeError(err));
+      })
+       
+
+      this.parseManager.fetchInvites()
+      .then((res) => {
+        if(res.length) {
+          this.ngRedux.dispatch(this.setCreateSuccess(res));
+          this.ngRedux.dispatch(this.setCreateEvent(res.activityPtr));
         }
-      )
+      })
+      .catch((err)=>{
+        console.log('ERROR: fetch attending');
+        console.log(err);
+        this.ngRedux.dispatch(this.setSubscribeError(err));
+      });
     }
   }
   deleteInvite(activityId:string):any {
@@ -84,6 +100,8 @@ export class InviteActions {
   }
 
   setCreateEvent(res) {
+    console.log("INVITE EVENT CREATE");
+    console.log(res);
     return {
       data: fromJS({
         items: _.keyBy([res], 'objectId'),
