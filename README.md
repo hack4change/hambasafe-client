@@ -28,6 +28,15 @@ ionic serve -l
 
 In time, it will be available on the App & Play Stores
 
+## For Developers
+* The directory structure is fairy straight forward
+  + Pages are located in `src/pages`
+  + Components are used in pages and are located in `src/components`
+  + Research redux, the key things to know
+    - Reducers manange a unique state
+    - Actions call functions in parse-manager, parse is the backend.
+    - Actions also dispacth to the store(are operated on by a reducer).
+
 ## News to use or lose as you choose:
 * The app logic is contained in `./app`
 * Parse is used as a server backend, with LiveQueries enabled on the Invite and Attendance Classes.
