@@ -22,6 +22,7 @@ import {ParseManager} from '../providers/parse-manager';
 export class UserActions {
 
   public friendsSub$;
+  public userSub$;
 	public watch : any = null;
   public coords : any = {
   };
@@ -355,24 +356,24 @@ export class UserActions {
                   .catch((err) => {
                     console.log('error getting current position');
                     console.log(err);
-                    Diagnostic.switchToLocationSettings();
+                    // Diagnostic.switchToLocationSettings();
                   })
                 } else {
                   console.log('location not authorized');
-                  Diagnostic.switchToLocationSettings();
+                  // Diagnostic.switchToLocationSettings();
                 }
               })
             } else {
               console.log('location not enabled')
-              Diagnostic.switchToLocationSettings();
+              // Diagnostic.switchToLocationSettings();
             }
           }, (error) =>{
             console.log(error);
-            Diagnostic.switchToLocationSettings();
+            // Diagnostic.switchToLocationSettings();
           });
         }, (error) =>{
           console.log(error);
-          Diagnostic.switchToLocationSettings();
+          // Diagnostic.switchToLocationSettings();
         });
       } else {
         var options = {
@@ -395,7 +396,29 @@ export class UserActions {
   }
 
   subscribeToUser(): any {
-  
+    return (dispatch)=> {
+      this.userSub$ = this.parseManager.subscribeToCurrentUser();
+      this.userSub$.on('update', (user) => {
+        console.log('CURRENT USER UPDATE');
+        console.log(user);
+        // var friendId: string = "";
+        // var isConfirmed : boolean = true;
+        // var getUser = new this.parseManager.Parse.Query(this.parseManager.Parse.User)
+        // if(friend.get('userPtr')['id'] !== this.parseManager.Parse.User.current()['id']){
+        //   friendId = friend.get('userPtr')['id'];
+        //   isConfirmed = friend.get('confirmed');
+        // } else {
+        //   friendId = friend.get('friendPtr')['id'];
+        // }
+        // getUser.get(friendId)
+        // .then((res) => {
+        //   var friendRes = res.toJSON();
+        //   friendRes.isFriend= true;
+        //   friendRes.isConfirmed = isConfirmed;
+        //   this.ngRedux.dispatch(this.setFetchSuccess([friendRes]));
+        // })
+      })
+    }
   }
 
   rateUser (userId : string, activityId : string, rating:number) : any {

@@ -114,6 +114,7 @@ export class EventDataActions {
       });
     };
   }
+
   fetchEventsByCoordinates(distance: number, latitude: number, longitude: number) : any {
     return dispatch => {
       console.log('dispatch');

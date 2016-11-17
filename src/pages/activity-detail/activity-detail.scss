@@ -1,5 +1,5 @@
 page-activity-detail {
-  ion-item{
+  ion-item {
     activity-item {
       border-left: 6px solid #0C9EF9;
       .item .item-inner {
@@ -9,5 +9,8 @@ page-activity-detail {
   }
   .invite-button {
     text-align: center;
+  }
+  .map-container {
+    height: 50%; 
   }
 }

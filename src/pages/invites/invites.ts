@@ -94,17 +94,18 @@ export class InvitesPage implements OnInit{
     })
     this.activityInvitesOut$ = this.ngRedux.select((state) => {
       console.log('here');
-      var invites = state['invites'].get('items').toList().toJS();
+      var invites = state['invites'].get('items')
+      .filter((item) => {
+        console.log(item);
+        return item.get('invitorPtr').get('objectId') == this.currentUserId
+      })
+      .toList().toJS();
       var activities = state['eventData'].get('items');
       var invitedActivities = [];
       for(var i = 0; i < invites.length; i++) {
         var activityToPush = activities.get(invites[i].activityPtr['objectId'])
-        // console.log(invites[i].activityPtr['objectId']);
-        // console.log(activityToPush);
         if(!!activityToPush){
           invitedActivities.push(activityToPush.toJSON());
-        } else {
-          //TODO: Dispatch GET ACTIVITY
         }
       }
       return invitedActivities;

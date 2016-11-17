@@ -24,11 +24,11 @@
   <div [ngSwitch]="viewType">
     <ion-list *ngSwitchCase="'RECEIVED'">
       <ion-item-sliding no-lines *ngFor="let activity of activityInvitesIn$ | async">
-        <ion-item detail-push>
+        <ion-item>
           <activity-item [activity]="activity"></activity-item>
         </ion-item>
         <ion-item-options side="right" (ionSwipe)="deleteInvite(activity.objectId)">
-          <button ion-button icon-only expandable color="danger">
+          <button ion-button expandable color="danger">
             <ion-icon name="trash" (click)="deleteInvite(activity.objectId)"></ion-icon>
             Remove
           </button>
@@ -36,7 +36,18 @@
       </ion-item-sliding>
     </ion-list>
     <ion-list *ngSwitchCase="'SENT'">
-      <activity-item *ngFor="let activity of activityInvitesOut$ | async" [activity]="activity"></activity-item>
+      <!-- <activity-item *ngFor="let activity of activityInvitesOut$ | async" [activity]="activity"></activity-item> -->
+      <ion-item-sliding no-lines *ngFor="let activity of activityInvitesOut$ | async">
+        <ion-item>
+          <activity-item [activity]="activity"></activity-item>
+        </ion-item>
+        <ion-item-options side="right" (ionSwipe)="deleteInvite(activity.objectId)">
+          <button ion-button expandable color="danger">
+            <ion-icon name="trash" (click)="deleteInvite(activity.objectId)"></ion-icon>
+            Remove
+          </button>
+        </ion-item-options>
+      </ion-item-sliding>
     </ion-list>
   </div>
 </ion-content>

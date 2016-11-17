@@ -26776,6 +26776,10 @@ ion-toolbar button[full].button-md {
   padding: 0;
 }
 
+activity-item ion-item {
+  border-bottom: 0 !important;
+}
+
 user-item .rated {
   color: #FFBC00;
 }
@@ -26811,6 +26815,10 @@ page-activity-detail ion-item activity-item .item .item-inner {
 
 page-activity-detail .invite-button {
   text-align: center;
+}
+
+page-activity-detail .map-container {
+  height: 50%;
 }
 
 page-activity-invite ion-item {

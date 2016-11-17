@@ -11,6 +11,7 @@ import {Observable, Subscription} from 'rxjs';
 //  *  Actions
 //  */
 import {AuthActions} from '../../actions/auth.actions';
+import {UserActions} from '../../actions/user.actions';
 
 // /*
 //  *  Pages
@@ -42,7 +43,7 @@ export class LandingPage implements OnInit {
 
   loadingPopup: any;
 
-  constructor(private platform: Platform, private navCtrl: NavController, private loadingCtrl:  LoadingController, private ngRedux: NgRedux<any>, private authActions: AuthActions) {};
+  constructor(private platform: Platform, private navCtrl: NavController, private loadingCtrl:  LoadingController, private ngRedux: NgRedux<any>, private authActions: AuthActions, private userActions: UserActions) {};
 
   ngOnInit() {
     // this.navCtrl.setRoot(HomePage);
@@ -57,6 +58,7 @@ export class LandingPage implements OnInit {
           this.loadingPopup.dismiss();
         }
         this.navCtrl.setRoot(ProfilePage);
+        this.ngRedux.dispatch(this.userActions.subscribeToUser());
           // this.navCtrl.setRoot(HomePage).catch(err=>{
           //   console.log(err);
           // });

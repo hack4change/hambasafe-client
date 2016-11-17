@@ -113,6 +113,7 @@ export class ParseManager {
     query.include('invitorPtr');
     query.include('activityPtr');
     query.include('activityPtr.author');
+    query.include('activityPtr.startLocation');
     return query.subscribe();
   }
 
@@ -123,6 +124,7 @@ export class ParseManager {
     query.include('invitorPtr');
     query.include('activityPtr');
     query.include('activityPtr.author');
+    query.include('activityPtr.startLocation');
     return query.find()
     .then((res) => {
       console.log('add to invites');
@@ -132,6 +134,28 @@ export class ParseManager {
       }
       return Promise.resolve(jsRes);
     })
+  }
+
+  subscribeToCurrentUser() {
+     var query = new Parse.Query(this.Parse.User);
+    // var query2 = new Parse.Query(this.FriendClass);
+
+    query.equalTo('objectId', this.Parse.User.current()['id']);
+    // query.equalTo('confirmed', true);
+
+    // query.include('friendPtr');
+    // query.include('userPtr');
+
+    // query2.equalTo('friendPtr', this.Parse.User.current());
+    // query2.include('userPtr');
+    // query2.include('friendPtr');
+
+    // var userQuery = this.Parse.Query(query);
+    query.find().then((res) => {
+      console.log('CURRENT USER');
+      console.log(res);
+    })
+    return query.subscribe();
   }
 
   subscribeToFriends() {
@@ -465,6 +489,7 @@ export class ParseManager {
   getActivity(activityId: String) : Promise<any> {
     var activityQuery = new this.Parse.Query(this.ActivityClass);
     activityQuery.include('author');
+    activityQuery.include('startLocation');
     return activityQuery.get(activityId)
     .then((res) => {
       console.log(res);
@@ -494,6 +519,7 @@ export class ParseManager {
       }
     );
     activityQuery.include('author');
+    activityQuery.include('startLocation');
     return activityQuery.find()
     .then((res) => {
       console.log()

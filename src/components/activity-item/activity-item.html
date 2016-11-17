@@ -1,4 +1,4 @@
-<ion-item  [ngClass]="getClasses()" (click)="viewActivity()">
+<ion-item no-detail  [ngClass]="getClasses()" (click)="viewActivity()">
   <!-- class="borderless" -->
   <ion-avatar item-left>
     <img src="{{ activity?.author?.profilePicture}}">
@@ -25,7 +25,7 @@
   <ion-row>
     {{ getActivityType() }}
     &bull;
-    {{ activity.distance }}
+    {{ activity.distance }}Km
     &bull;
     {{ activity.intensity }}
   </ion-row>

@@ -252,7 +252,6 @@ export class CreatePage implements OnInit {
           content: !!this.isChange ?  "Saving...": "Creating...",
           dismissOnPageChange : true,
         })
-
         this.createModal.present();
         break;
         case 'CREATE_ERROR': 
@@ -314,17 +313,33 @@ export class CreatePage implements OnInit {
   }
   closeMap(type: string) {
     if(type=='START_LOCATION') { 
-      this.startLocation = {
-        'latitude' : this.startMap.latLng.lat(),
-        'longitude' : this.startMap.latLng.lng(),
-      }
+      let lat = null;
+      let lng = null;
+      this.startMap.getLatitude().then((res) => {
+        lat = res; 
+        return this.startMap.getLongitude();
+      }).then((res)=>{
+        console.log(res);
+        console.log(lng);
+        console.log(lat);
+        lng = res;
+        this.startLocation = {
+          'latitude' : lat,
+          'longitude' : lng,
+        }
+        this.activeType = '';
+      }).catch((err)=>{
+        console.log('caught err');
+        console.log(err);
+      });
     } else if(type=='END_LOCATION') {
       this.endLocation = this.endMap.latLng;
     }
-      this.activeType = '';
   }
+
   onCreation() {
   }
+
   goBack(){
     this.nav.pop();
   }
