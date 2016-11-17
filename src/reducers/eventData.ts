@@ -59,6 +59,10 @@ export default function eventData(state:any = INIT_STATE, action:any = {}) {
 //FETCH EVENTS
     case actionTypes.EVENTS_FETCH_INIT:
     case actionTypes.EVENTS_FETCH_SUCCESS:
+    console.log('EVENTS_SUCCESS');
+    console.log(state.get('items').mergeDeep(action.data.get('items')).toJS());
+    console.log(action.data.toJS());
+    console.log(action.data.get('items').toJS());
     return state.set('items', state.get('items').mergeDeep(action.data.get('items')));
     case actionTypes.EVENTS_FETCH_FAIL:
 //RATING EVENTS

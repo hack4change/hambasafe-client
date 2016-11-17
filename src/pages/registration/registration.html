@@ -28,11 +28,11 @@
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Firstname</ion-label>
-        <ion-input  type="text" formControlName="firstName" value="{{ firstName | Capitalize }}" required></ion-input>
+        <ion-input  type="text" formControlName="firstName" [(ngModel)]="firstName" required></ion-input>
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Surname</ion-label>
-        <ion-input type="text" formControlName="lastName" value="{{ lastName | Capitalize }}" required></ion-input>
+        <ion-input type="text" formControlName="lastName" [(ngModel)]="lastName" required></ion-input>
       </ion-item>
       <ion-item (click)="toggleGenderOpen()" [ngClass]="{clean: genderSelected(), active: isGenderOpen()}">
         {{ genderHeader }}
@@ -50,15 +50,15 @@
       </div>
       <ion-item class="borderless">
         <ion-label floating>Date of Birth</ion-label>
-        <ion-datetime displayFormat="DD MMM YY" pickerFormat="DD MMM YY" formControlName="dateOfBirth"></ion-datetime>
+        <ion-datetime displayFormat="DD MMM YY" pickerFormat="DD MMM YY" [(ngModel)]="dateOfBirth"  formControlName="dateOfBirth"></ion-datetime>
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Cell Number</ion-label>
-        <ion-input type="tel" formControlName="mobileNumber" required></ion-input>
+        <ion-input type="tel" [(ngModel)]="mobileNumber" formControlName="mobileNumber" required></ion-input>
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Email</ion-label>
-        <ion-input type="email"  formControlName="email" required></ion-input>
+        <ion-input type="email" [(ngModel)]="email" formControlName="email" required></ion-input>
       </ion-item>
       <ion-item class="borderless">
         <ion-label floating>Confirm Email</ion-label>
@@ -81,11 +81,11 @@
 </ion-content>
 <ion-footer>
   <ion-toolbar position="bottom">
-    <button [disabled]="!registrationForm.valid" ion-button icon-only *ngIf="isEdit" [disabled]="!termsAccepted" full primary (click)="createUser()">
+    <button [disabled]="!registrationForm.valid" ion-button *ngIf="isEdit"  full (click)="createUser()">
       <!--  -->
       Save
     </button>
-    <button [disabled]="!registrationForm.valid" ion-button icon-only *ngIf="!isEdit" [disabled]="!termsAccepted" full primary (click)="createUser()">
+    <button [disabled]="!registrationForm.valid || !termsAccepted" ion-button *ngIf="!isEdit" full (click)="createUser()">
       <!--  -->
       Sign Up!
     </button>

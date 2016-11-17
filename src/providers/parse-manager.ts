@@ -100,6 +100,8 @@ export class ParseManager {
         }
         jsRes[i] = attendedActivity;
       }
+      console.log('RESOLVING ATTENDED');
+      console.log(jsRes);
       return Promise.resolve(jsRes);
     })
   }
@@ -543,7 +545,7 @@ export class ParseManager {
     })
   }
 
-  getActivitiesByTime(error: (res) => void, success: (res) => void) {}
+  // getActivitiesByTime(error: (res) => void, success: (res) => void) {}
 
   getUserActivities(error: (res) => void, success: (res) => void) {
     var userQuery = this.Parse.User.current().relation('activities');
@@ -770,11 +772,10 @@ export class ParseManager {
       }))
     })
     return Promise.all(promises);
-
   }
 
-  /*
-   *  Registration Function
+  /**
+   * Registration Function
    */
   signUp(data) {
     console.log('signUp');

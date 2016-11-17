@@ -93,6 +93,7 @@ export class AuthActions {
         return this.getProfile();
       })
       .then((res) => {
+        console.log(res);
         this.ngRedux.dispatch(this.setAuthSuccess(res));
       })
       .catch((err)=>{
@@ -340,24 +341,28 @@ export class AuthActions {
     var respJson : any = {
       'isRegistered' : false,
     }
-    return FB.getLoginStatus((response) => {
-      console.log('Status');
-      console.log(JSON.stringify(response));
-      if (response.status !== 'connected') {
-        //XXX: NEEDS TO BE FIXED ASAP
-        // return this.setAnonymous();
-        throw new Error(this.setAnonymous());
-      } else {
-        _.merge(respJson, _.pick(response.authResponse, ['accessToken' , 'userID']));
-        respJson.fbId = respJson.userID;
-        respJson.userID = undefined;
-        //TODO: Remove
-        console.log(response);
-      }
-      return Promise.resolve();
-    })
-    .then((res) =>{
-        return FB.api('/me', 'get', {
+    return (new Promise((resolve, reject)=>{
+      FB.getLoginStatus((response) => {
+        console.log('Status');
+        console.log(JSON.stringify(response));
+        if (response.status !== 'connected') {
+          //XXX: NEEDS TO BE FIXED ASAP
+          // return this.setAnonymous();
+          this.setAnonymous()
+          throw new Error('User not authenticated');
+        } else {
+          _.merge(respJson, _.pick(response.authResponse, ['accessToken' , 'userID']));
+          respJson.fbId = respJson.userID;
+          respJson.userID = undefined;
+          //TODO: Remove
+          console.log(response);
+        }
+        resolve();
+      }) 
+    }))
+    .then((res) => {
+      return new Promise((resolve, reject) => {
+        FB.api('/me', 'get', {
           'fields' : [
             'first_name',
             'last_name',
@@ -366,7 +371,16 @@ export class AuthActions {
             'email',
             'picture',
           ]
+        }, (fbResponse) => {
+          console.log(fbResponse);
+          resolve(fbResponse);
         })
+      })
+          
+          // .then((res)=>{
+          // console.log(res);
+          // return Promise.resolve(res);
+        // })
     })
     .then((apiResponse: any) => {
       _.merge(respJson,  _.pick(apiResponse, [

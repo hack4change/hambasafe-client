@@ -99,6 +99,8 @@ export class ProfilePage implements OnInit {
     this.currentUser$ = this.ngRedux.select('currentUser').map((currentUser: Map<string, any>) => currentUser.toJS());
     this.activities$ = this.ngRedux.select(['eventData', 'items'])
     .map((items: Map<string, any>) => {
+      console.log('PROFILE ITEMS');
+      console.log(items.toJS());
       return items.toList().toJS();
     });
     this.currentUserSub$ = this.currentUser$.subscribe((currentUser) => {

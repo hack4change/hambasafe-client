@@ -23,6 +23,7 @@ export class EventDataActions {
   setFetchSuccessState(response) {
     console.log('FETCH SUCCESS');
     console.log(response);
+    console.log(_.keyBy(response, 'objectId'));
     return {
       data: fromJS({
         items: _.keyBy(response, 'objectId'),
@@ -353,6 +354,8 @@ export class EventDataActions {
 
       this.parseManager.fetchAttending()
       .then((res)=>{
+        console.log('ATTENDING FETCH');
+        console.log(res);
         this.ngRedux.dispatch(this.setFetchSuccessState(res));
       })
       .catch((err)=>{

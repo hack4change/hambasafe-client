@@ -55,8 +55,10 @@ constructor(
       this.parseManager.fetchInvites()
       .then((res) => {
         if(res.length) {
-          this.ngRedux.dispatch(this.setCreateSuccess(res));
-          this.ngRedux.dispatch(this.setCreateEvent(res.activityPtr));
+          for(var i = 0; i < res.length; i++){
+            this.ngRedux.dispatch(this.setCreateSuccess(res[i]));
+            this.ngRedux.dispatch(this.setCreateEvent(res[i].activityPtr));
+          }
         }
       })
       .catch((err)=>{

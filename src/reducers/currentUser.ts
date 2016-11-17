@@ -27,15 +27,13 @@ export default function currentUser(state:any = INIT_STATE, action: any= {}) {
     case actionTypes.USER_CREATE_INIT:
       return state.set('status', action.data.get('status'));
     case actionTypes.USER_CREATE_SUCCESS:
-      return  state.set({
-      'status': action.data.get('status'),
-      'message': action.data.get('message')
-    });
+      return  state
+    .set('status', action.data.get('status'))
+    .set('message', action.data.get('message'));
     case actionTypes.USER_CREATE_FAIL:
-      return state.set({
-      'status': action.data.get('status'),
-      'message': action.data.get('message')
-    });
+      return state
+    .set('status', action.data.get('status'))
+    .set('message', action.data.get('message'))
     case actionTypes.USER_AUTH_INIT:
       return state.set('status', action.data.get('status'));
     case actionTypes.USER_AUTH_SUCCESS:

@@ -171,8 +171,8 @@ export class RegistrationPage implements OnInit {
       email: [
         "",
         Validators.compose([
-          Validators.minLength(40),
-          Validators.maxLength(400),
+          // Validators.minLength(40),
+          // Validators.maxLength(400),
           Validators.required
         ]),
       ],
