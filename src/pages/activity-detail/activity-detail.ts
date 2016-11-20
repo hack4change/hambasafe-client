@@ -10,7 +10,9 @@ import {
   NavController,
   NavParams
 } from 'ionic-angular';
-// const _ = require('lodash');
+
+// import * as _ from 'lodash';
+import * as moment from 'moment';
 
 /**
  *  Redux
@@ -29,14 +31,15 @@ import {
 /*
  * Actions
  */
-import {EventDataActions} from '../../actions/event-data.actions';
-import {UserActions} from '../../actions/user.actions';
+import { EventDataActions } from '../../actions/event-data.actions';
+import { UserActions } from '../../actions/user.actions';
 
 /*
  *  Pages
  */
 import { HomePage } from '../home/home';
 import { CreatePage } from '../create/create';
+import { MapPage } from '../map/map';
 import { SearchPage } from '../search/search';
 import { ActivityInvitePage } from '../activity-invite/activity-invite';
 
@@ -95,16 +98,18 @@ export class ActivityDetailPage implements OnInit {
   ngOnInit() {
     this.activityId = this.params.data['activityId'];
     this.mustRate = this.params.data['mustRate'];
-    if(this.mustRate) {
+    // if(this.mustRate) {
       this.ngRedux.dispatch(this.userActions.fetchByAttendance(this.activityId))
-    }
+    // }
     this.userId$ = this.ngRedux.select(['currentUser', 'objectId']);
     this.users$ = this.ngRedux.select(['users', 'items'])
     .map((user:Map<string, any>)=>{
       return user
       .filter((user : Map<string, any>) => {
         return !!user.get('attendance') ? user.get('attendance').includes(this.activityId): false;
-      }).toList().toJS()
+      })
+      .toList()
+      .toJS()
     })
     this.activity$ = this.ngRedux.select(['eventData', 'items'])
     .map((item:Map<string, any>)=>{
@@ -217,5 +222,16 @@ export class ActivityDetailPage implements OnInit {
     this.navCtrl.push(ActivityInvitePage, {
       activityId : this.activityId
     });
+  }
+  viewMap() {
+    console.log()
+    this.navCtrl.push(MapPage, {
+      lng: this.activity.startLocation.coordinates.longitude,
+      lat: this.activity.startLocation.coordinates.latitude,
+      infoText: this.activity.startLocation.tileWords,
+    });
+  }
+  formatDate(dateRef) {
+    return moment(dateRef).format("h:mm a, on dddd MMMM Do YYYY");
   }
 }

@@ -1,7 +1,7 @@
 <ion-header>
   <ion-toolbar class="main-bar" color="primary">
     <ion-buttons start>
-      <button ion-button icon-only dark (click)="goBack()">
+      <button ion-button icon-only (click)="goBack()">
         <ion-icon name="arrow-back"></ion-icon>
       </button>
     </ion-buttons>
@@ -30,18 +30,77 @@
   </ion-toolbar>
 </ion-header>
 <ion-content [ngSwitch]="ratingRequired()">
+  <ion-fab top center edge>
+    <button ion-fab mini color="danger" (click)="viewMap()">
+      <ion-icon name="pin"></ion-icon>
+    </button>
+  </ion-fab>
   <template ngSwitchCase="false">
-    <ion-list>
-      <activity-item detailed="true" [activity]="(activity$ | async)"></activity-item>
+    <!-- <ion-list> -->
+    <!--   <activity-item detailed="true" [activity]="(activity$ | async)"></activity-item> -->
+    <!-- </ion-list> -->
+    <ion-row class="name-header" margin-top>
+      <ion-item class="borderless">
+        <h1 style="font-size: 2.5rem;">
+          {{ activity.name }}
+        </h1>
+      </ion-item>
+    </ion-row>
+    <ion-row>
+      <ion-col>
+        <p class="time-header">
+        {{ formatDate((activity$ | async)?.startDate.iso) }}
+        </p>
+      </ion-col>
+    </ion-row>
+    <ion-row padding-horizontal class="location-header">
+      <ion-col>
+        <div class="activity-location" style="text-overflow: ellipsis; overflow: hidden; font-size: 1.5rem;">
+          <span *ngIf="!!activity.startLocation.suburb">{{ activity.startLocation.suburb }},</span><span> {{  activity.startLocation.city }}</span>
+          <!-- <span> -->
+          <!--   <a item-right href="https://map.what3words.com/{{ (activity$ | async)?.startLocation.tileWords }}"> -->
+          <!--     ({{ (activity$ | async)?.startLocation.tileWords }}) -->
+          <!--   </a> -->
+          <!-- </span> -->
+        </div>
+      </ion-col>
+    </ion-row>
+    <div class="activity-detail-container" padding>
+        <ion-row>
+          <ion-col>
+            <p class="activity-description">
+              {{ (activity$ | async)?.description }}
+            </p>
+          </ion-col>
+        </ion-row>
+        <!-- <ion-row> -->
+        <!--   <ion-col> -->
+        <!--     <p> -->
+        <!--     The meeting spot is at --> 
+        <!--     </p> -->
+        <!--   </ion-col> -->
+        <!-- </ion-row> -->
+        <ion-row>
+          <ion-col width-30 text-center>
+            {{ activity?.eventType }}
+          </ion-col>
+          <ion-col width-10 text-center>
+            &bull;
+          </ion-col>
+          <ion-col width-20 text-center>
+            {{ activity?.distance }} km
+          </ion-col>
+          <ion-col width-10 text-center>
+            &bull;
+          </ion-col>
+          <ion-col width-30 text-center>
+            {{ activity?.intensity }}
+          </ion-col>
+        </ion-row>
+    </div>
+    <ion-list no-lines>
+      <user-item *ngFor="let user of users$ | async" [user]="user"></user-item>
     </ion-list>
-    <div padding>
-      <p>
-        {{ (activity$ | async)?.description }}
-      </p>
-    </div>
-    <div padding class="map-container">
-        <map></map>
-    </div>
   </template>
   <template ngSwitchDefault>
     <ion-list>

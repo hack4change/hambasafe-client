@@ -1,6 +1,12 @@
 import { Component, OnInit, Input} from '@angular/core';
 import {NavController} from 'ionic-angular';
 
+
+/*
+ * 
+ */
+import * as moment from 'moment';
+
 /**
  *  Redux
  */
@@ -26,7 +32,7 @@ export class ActivityItem implements OnInit {
   @Input() detailed: boolean = false;
   @Input() mustRate: boolean = false;
 
-  startFormatted : any;
+  startDate : any;
   actionType : string = '';// Math.floor(Math.random()*2) ? 'RATE' : 'VIEW';
 
   constructor(private nav: NavController, private ngRedux: NgRedux<any>) {};
@@ -34,13 +40,22 @@ export class ActivityItem implements OnInit {
   ngOnInit() {
     //TODO: Remove
     // this.actionType = ;
-    this.startFormatted = new Date(this.activity.startDate.iso);
-    console.log(this.startFormatted);
-    this.startFormatted = this.startFormatted.getUTCDate() + "-"+(this.startFormatted.getUTCMonth()+1) + "-" + this.startFormatted.getUTCFullYear();
+    this.startDate = moment(this.activity.startDate.iso);
+    console.log(this.startDate);
+    // this.startFormatted = this.startFormatted.getUTCDate() + "-"+(this.startFormatted.getUTCMonth()+1) + "-" + this.startFormatted.getUTCFullYear();
   }
+  getStartDate() {
+    return this.startDate.format('DD-MM-YYYY');
+  }
+
+  getStartDateLong() {
+    return this.startDate.format("dddd, MMMM Do YYYY, h:mm:ss a");
+  }
+
   getActivityType(){
-    return !! this.activity.eventType ? this.activity.eventType : '';
+    return !!this.activity.eventType ? this.activity.eventType : '';
   }
+
   viewActivity(){
     console.log(this.activity['objectId']);
     if(!this.detailed) {
@@ -50,7 +65,8 @@ export class ActivityItem implements OnInit {
       }) 
     }
   }
-  getClasses(){
+
+  getClasses() {
     var classes = {
     }
     if( this.mustRate ) {

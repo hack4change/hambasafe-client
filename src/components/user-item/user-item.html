@@ -4,21 +4,24 @@
       <img src="{{ user.profilePicture}}">
     </ion-avatar>
     {{ user.fullname | Capitalize }}
-    <ion-icon name="arrow-back" item-right></ion-icon>
+    <ion-icon *ngIf="options || mustRate" name="arrow-back" item-right></ion-icon>
+    <button large outline ion-button *ngIf="!options && !mustRate" item-right>
+      {{ user.rating }} <ion-icon color="energized" name="star"></ion-icon>
+    </button>
   </ion-item>
   <ion-item-options side="right">
     <button ion-button icon-only [hidden]="!mustRate" item-right *ngFor="let i of maxStars"  [ngClass]="getIsRated(i)" (click)="setRating(i, true)"> 
       <ion-icon name="star"></ion-icon>
     </button>
     <button ion-button icon-only *ngIf="options" color="primary" item-right style="width:50px;/*height: 50px*/"> 
-      <ion-icon style="/*font-size: 5rem;*/" name="person"></ion-icon>
+      <ion-icon name="person"></ion-icon>
 <!-- md-more -->
     </button>
     <button ion-button icon-only *ngIf="options" color="danger" item-right style="width: 50px;" [ngClass]="getIsRated(i)" (click)="removeFriend()"> 
-      <ion-icon style="/*font-size: 5rem;*/" name="trash"></ion-icon>
+      <ion-icon name="trash"></ion-icon>
     </button>
-    <button ion-button icon-only *ngIf="!user.isConfirmed" color="calm" style="width: 50px;" item-right  [ngClass]="getIsRated(i)" (click)="confirmFriend()"> 
-      <ion-icon style="/*font-size: 5rem;*/" name="checkmark"></ion-icon>
+    <button ion-button icon-only *ngIf="options && !user.isConfirmed" color="calm" style="width: 50px;" item-right  [ngClass]="getIsRated(i)" (click)="confirmFriend()"> 
+      <ion-icon name="checkmark"></ion-icon>
     </button>
   </ion-item-options>
 </ion-item-sliding>

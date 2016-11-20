@@ -32,6 +32,7 @@ export class UserActions {
   /*
    * Subscriptions
    */
+  //TODO: Refactor
   subscribeToFriends() : any {
     return dispatch => {
       dispatch(this.setSubscribeLoading());
@@ -40,7 +41,7 @@ export class UserActions {
         var friendId: string = "";
         var isConfirmed : boolean = true;
         var getUser = new this.parseManager.Parse.Query(this.parseManager.Parse.User)
-        if(friend.get('userPtr')['id'] !== this.parseManager.Parse.User.current()['id']){
+        if(friend.get('userPtr')['id'] !== this.parseManager.getCurrentUser()['id']){
           friendId = friend.get('userPtr')['id'];
           isConfirmed = friend.get('confirmed');
         } else {
@@ -58,7 +59,7 @@ export class UserActions {
         var friendId: string = "";
         var isConfirmed : boolean = true;
         var getUser = new this.parseManager.Parse.Query(this.parseManager.Parse.User)
-        if(friend.get('userPtr')['id'] !== this.parseManager.Parse.User.current()['id']){
+        if(friend.get('userPtr')['id'] !== this.parseManager.getCurrentUser()['id']){
           friendId = friend.get('userPtr')['id'];
           isConfirmed = friend.get('confirmed');
         } else {

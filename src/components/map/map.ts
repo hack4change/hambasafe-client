@@ -24,10 +24,11 @@ declare var google;
 export class Map implements OnInit {
   @ViewChild('mapComponent') mapNode;
 
-  @Input() radius   : number  = 0;
-  @Input() moveable : boolean = true;
-  @Input() lat      : number  = null;
-  @Input() lng      : number  = null;
+  @Input() radius         : number  = 0;
+  @Input() moveable       : boolean = true;
+  @Input() lat            : number  = null;
+  @Input() lng            : number  = null;
+  @Input() infoText       : string  = 'Start';
 
   location$               : Observable<any>;
   locationSub$            : Subscription;
@@ -83,7 +84,7 @@ export class Map implements OnInit {
 
   locationConnector() {
     this.location$ = this.ngRedux.select(['currentUser', 'location'])
-    .map((pos:any)=>{
+    .map((pos:any) => {
       return {
         longitude : !!pos ? pos.get('longitude') : 0,
         latitude : !!pos ? pos.get('latitude') : 0
@@ -101,7 +102,7 @@ export class Map implements OnInit {
               console.log('create Map')
               setTimeout(()=>{
                 this.createMapAtCoords(this.coordinates);
-              }, 1000);
+              }, 2000);
             }
           }
         }
@@ -122,6 +123,8 @@ export class Map implements OnInit {
   createDeviceMap(pos) {
     console.log('creating device map');
     console.log(pos);
+    console.log(this.lat);
+    console.log(this.lng);
     if(this.lat !== null && this.lng !== null){
       this.deviceCoords = new GoogleMapsLatLng(this.lat, this.lng);
     } else {
@@ -152,7 +155,7 @@ export class Map implements OnInit {
     // this.deviceMap.setClickable(true);
     this.deviceMap.one(GoogleMapsEvent.MAP_READY).then(() => {
       console.log('Map is ready!');
-      if(!this.deviceMarker){
+      if(!this.deviceMarker) { 
         this.deviceMarkerOptions = {
           'title'       : 'Start',
           'draggable'   : this.moveable,
@@ -180,7 +183,7 @@ export class Map implements OnInit {
                 console.log(ev);
               })
               console.log(this.deviceCircle);
-              this.deviceMarker.addEventListener(GoogleMapsEvent.MARKER_DRAG).subscribe((ev)=>{
+              this.deviceMarker.addEventListener(GoogleMapsEvent.MARKER_DRAG).subscribe((ev) => {
                 console.log('DRAG_END')
                 console.log(ev);
                 this.deviceMarker.getPosition().then((pos) => {
@@ -188,14 +191,14 @@ export class Map implements OnInit {
                   console.log(pos);
                   console.log(this.deviceCircle);
                   // console.log('DEViceu')
-                  if(!!this.deviceCircle){
+                  if(!!this.deviceCircle) {
                     console.log(this.deviceCircle.getCenter())
                     this.deviceCircle.setCenter(pos);
                     console.log(this.deviceCircle.getCenter())
                   }
                   return Promise.resolve();
                 })
-              })
+              });
               this.deviceMarker.addEventListener(GoogleMapsEvent.MARKER_DRAG_END).subscribe((ev)=>{
                 console.log('DRAG_END')
                 console.log(ev);
@@ -287,8 +290,10 @@ export class Map implements OnInit {
 	mapClick = (event, a) => {
 		this.latLng = event.latLng
     this.gMap.setCenter(this.latLng);
-		this.gMarker.setPosition(this.latLng);
-		this.locationCircle.setCenter(this.latLng);
+    if(this.moveable){
+      this.gMarker.setPosition(this.latLng);
+      this.locationCircle.setCenter(this.latLng);
+    }
 	}
   getLatitude() : Promise<number> {
     return new Promise((resolve, reject)=>{

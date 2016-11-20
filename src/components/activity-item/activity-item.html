@@ -11,21 +11,21 @@
     </ion-col>
     <ion-col width-33 style="text-align: right">
       <div *ngIf="!mustRate" class="activity-date">
-        {{  startFormatted }}
+        {{  getStartDate() }}
       </div>
     </ion-col>
   </ion-row>
   <ion-row>
-    <ion-item class="borderless">
+    <ion-col>
       <h1 style="font-size: 2rem;">
         {{ activity.name }}
       </h1>
-    </ion-item>
+    </ion-col>
   </ion-row>
   <ion-row>
     {{ getActivityType() }}
     &bull;
-    {{ activity.distance }}Km
+    {{ activity.distance }}km
     &bull;
     {{ activity.intensity }}
   </ion-row>

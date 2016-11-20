@@ -13,4 +13,25 @@ page-activity-detail {
   .map-container {
     height: 50%; 
   }
+  .activity-title {
+    font-weight:bold;
+    
+  }
+  .activity-detail-container {
+    padding-top: 0; 
+  }
+  .name-header {
+    // margin-top: 5px;
+  }
+  .time-header {
+    margin-top: 0;
+    margin-bottom: 0;
+    color: #0C9EF9;
+    font-size: 2rem;
+    text-align: center;
+    // border-bottom: 1px solid #0C9EF9;
+  }
+  .location-header {
+  
+  }
 }

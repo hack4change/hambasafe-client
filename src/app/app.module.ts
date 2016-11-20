@@ -58,6 +58,7 @@ import { HomePage           } from '../pages/home/home';
 import { InvitesPage        } from '../pages/invites/invites';
 import { LandingPage        } from '../pages/landing/landing';
 import { LatestPage         } from '../pages/latest/latest';
+import { MapPage            } from '../pages/map/map';
 import { ProfilePage        } from '../pages/profile/profile';
 import { RatingPage         } from '../pages/rating/rating';
 import { RegistrationPage   } from '../pages/registration/registration';
@@ -104,6 +105,7 @@ enableProdMode()
     InvitesPage,
     LandingPage,
     LatestPage,
+    MapPage,
     ProfilePage,
     RatingPage,
     RegistrationPage,
@@ -146,6 +148,7 @@ enableProdMode()
     InvitesPage,
     LandingPage,
     LatestPage,
+    MapPage,
     ProfilePage,
     RatingPage,
     RegistrationPage,

@@ -22,21 +22,15 @@ export class ParseManager {
   private FriendClass: any;
   private UserRatingClass: any;
   private ActivityRatingClass: any;
-  private attendingSubscription;
+  // private attendingSubscription;
   // private friendSubscription;
   // private inviteSubscription;
-  private userSubscription;
+  // private userSubscription;
 
   constructor(public http: Http) {
     console.log('Hello ParseManager Provider');
     this.Parse.initialize('test1234');
     this.Parse.serverURL = 'https://mainstream.ninja/parse'
-
-    // this.Parse.FacebookUtils.init({
-    //   appId      : '1824765444411364',
-    //   xfbml      : true,
-    //   version    : 'v2.6'
-    // })
 
     this.ActivityClass = this.Parse.Object.extend("Activity");
     this.AttendanceClass = this.Parse.Object.extend("Attendance");
@@ -59,14 +53,6 @@ export class ParseManager {
    *  SUBSCRIPTIONS
    *
    */
-  subscribeToUser(changeCb: any) {
-    var query = new Parse.Query(this.Parse.User.current()['id']);
-    query.equalTo('objectId')
-    this.userSubscription = query.subscribe();
-    this.attendingSubscription.on('update', (user) => {
-      changeCb(user);
-    })
-  }
 
   subscribeToAttending() {
     var query = new Parse.Query(this.AttendanceClass);
@@ -137,20 +123,9 @@ export class ParseManager {
   }
 
   subscribeToCurrentUser() {
-     var query = new Parse.Query(this.Parse.User);
-    // var query2 = new Parse.Query(this.FriendClass);
-
+    var query = new Parse.Query(this.Parse.User);
+    console.log('SUBSCRIBING TO USER CHANGES - ' + this.Parse.User.current()['id'])
     query.equalTo('objectId', this.Parse.User.current()['id']);
-    // query.equalTo('confirmed', true);
-
-    // query.include('friendPtr');
-    // query.include('userPtr');
-
-    // query2.equalTo('friendPtr', this.Parse.User.current());
-    // query2.include('userPtr');
-    // query2.include('friendPtr');
-
-    // var userQuery = this.Parse.Query(query);
     query.find().then((res) => {
       console.log('CURRENT USER');
       console.log(res);

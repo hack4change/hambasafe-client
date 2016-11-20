@@ -40,6 +40,11 @@
 </ion-header>
 
 <ion-content [ngSwitch]="isEmpty">
+  <ion-fab bottom right *ngIf="!isEmpty">
+    <button ion-fab (click)="goToCreate()" color="calm">
+      <ion-icon name="add"></ion-icon>
+    </button>
+  </ion-fab>
   <!-- <div padding> -->
   <!-- </div> -->
 
@@ -112,16 +117,11 @@
   </template>
   <template ngSwitchDefault>
     <activity-item *ngFor="let activity of activitiesToRate$ | async" [activity]="activity" mustRate="true"></activity-item>
-    <div *ngIf="isFiltered=='public'">
-    <activity-item *ngFor="let activity of activities$ | async" [activity]="activity"></activity-item>
+    <div *ngIf="isFiltered == 'public'">
+      <activity-item *ngFor="let activity of activities$ | async" [activity]="activity"></activity-item>
     </div>
-    <div *ngIf="isFiltered=='friends'">
-    <activity-item *ngFor="let activity of ( (activities$ | async) | SearchFilter:friendsList:'author.objectId' )" [activity]="activity"></activity-item>
+    <div *ngIf="isFiltered == 'friends'">
+      <activity-item *ngFor="let activity of ( (activities$ | async) | SearchFilter:friendsList:'author.objectId' )" [activity]="activity"></activity-item>
     </div>
-    <ion-fab>
-      <button ion-fab (click)="goToCreate()" class="calm-button create-fab">
-        <ion-icon name="add"></ion-icon>
-      </button>
-    </ion-fab>
   </template>
 </ion-content>

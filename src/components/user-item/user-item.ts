@@ -63,14 +63,14 @@ export class UserItem implements OnInit {
     //   item.close();
     // }, 1000)
   }
-  setRating(index:number, lock: boolean){
+  setRating(index:number, lock: boolean) {
     if(lock) {
       this.hasChanged = true;
     }
     this.rating = index;
   }
   isConfirmed(){
-    return !this.user.isConfirmed ? {
+    return !this.user.isConfirmed && this.options ? {
       'to-confirm' : true
     } : {
     };
