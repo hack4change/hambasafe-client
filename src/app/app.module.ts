@@ -18,6 +18,7 @@ import {
   IonicModule,
   Platform,
 } from 'ionic-angular';
+// import { QRCodeModule } from 'angular2-qrcode';
 import {
   MyApp 
 } from './app.component';
@@ -46,6 +47,7 @@ import { UserActions }      from '../actions/user.actions';
  */
 
 import { AboutPage          } from '../pages/about/about';
+import { ActivePage         } from '../pages/active/active';
 import { ActivityDetailPage } from '../pages/activity-detail/activity-detail';
 import { ActivityInvitePage } from '../pages/activity-invite/activity-invite';
 import { ActivityListPage   } from '../pages/activity-list/activity-list';
@@ -70,9 +72,10 @@ import { TermsPage          } from '../pages/terms/terms';
  * Components
  */
 import { ActivityItem } from '../components/activity-item/activity-item';
+import { CheckinComponent } from '../components/checkin/checkin';
 import { InvitesReceived } from '../components/invites-received/invites-received';
 import { InvitesSent } from '../components/invites-sent/invites-sent';
-import { Map } from '../components/map/map';
+import { MapComponent } from '../components/map/map';
 import { UserItem } from '../components/user-item/user-item';
 
 /*
@@ -93,6 +96,7 @@ enableProdMode()
     MyApp,
 
     AboutPage,
+    ActivePage,
     ActivityDetailPage,
     ActivityInvitePage,
     ActivityListPage,
@@ -113,10 +117,12 @@ enableProdMode()
     SplashPage,
     TermsPage,
 
+
     ActivityItem,
+    CheckinComponent,
     InvitesReceived,
     InvitesSent,
-    Map,
+    MapComponent,
     UserItem,
 
     Capitalize,
@@ -126,6 +132,7 @@ enableProdMode()
     //WaitTimeValidator,
   ],
   imports: [
+    // QRCodeModule,
     FormsModule,
     CommonModule,
     IonicModule.forRoot(MyApp),
@@ -136,6 +143,7 @@ enableProdMode()
     MyApp,
 
     AboutPage,
+    ActivePage,
     ActivityDetailPage,
     ActivityInvitePage,
     ActivityListPage,
@@ -157,9 +165,10 @@ enableProdMode()
     TermsPage,
 
     ActivityItem,
+    CheckinComponent,
     InvitesReceived,
     InvitesSent,
-    Map,
+    MapComponent,
     UserItem,
   ],
   providers: [

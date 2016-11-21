@@ -1,7 +1,7 @@
 <ion-header>
-  <ion-toolbar class="main-bar" color="primary">
-    <ion-buttons class="order-left" start>
-      <button ion-button icon-only dark menuToggle>
+  <ion-navbar color="primary">
+    <ion-buttons start>
+      <button ion-button icon-only menuToggle>
         <ion-icon color="light" name="menu"></ion-icon>
       </button>
     </ion-buttons>
@@ -9,17 +9,17 @@
       Profile
     </ion-title>
     <ion-buttons end>
-      <button ion-button icon-only dark (click)="goInvites()" class="indent">
+      <button ion-button icon-only (click)="goInvites()">
         <ion-icon name="mail"></ion-icon>
       </button>
-      <button ion-button icon-only dark (click)="goHome()" class="indent">
-        <ion-icon name="home"></ion-icon>
-      </button>
-      <button ion-button icon-only dark (click)="goSearch()">
-        <ion-icon name="search"></ion-icon>
-      </button>
+      <!-- <button ion-button icon-only (click)="goHome()"> -->
+      <!--   <ion-icon name="home"></ion-icon> -->
+      <!-- </button> -->
+      <!-- <button ion-button icon-only (click)="goSearch()"> -->
+      <!--   <ion-icon name="search"></ion-icon> -->
+      <!-- </button> -->
     </ion-buttons>
-  </ion-toolbar>
+  </ion-navbar>
   <ion-toolbar color="primary" class="profile-details">
     <ion-item color="primary" no-lines>
       <ion-avatar item-left> 
@@ -28,7 +28,7 @@
       <div>
         <ion-item color="primary" no-lines class="profile-row profile-name">
           <span>
-          {{(currentUser$| async)?.firstName | Capitalize }} {{(currentUser$| async)?.lastName | Capitalize }}
+            {{(currentUser$| async)?.firstName | Capitalize }} {{(currentUser$| async)?.lastName | Capitalize }}
           </span>
           <ion-icon item-right class="pull-right" name="md-create" (click)="goEditProfile()"></ion-icon>
         </ion-item>
@@ -52,12 +52,12 @@
     </ion-buttons>
   </ion-toolbar>
   <!-- <ion-toolbar primary no-padding> -->
-    <!-- <div style="text-align:center;"> -->
-     <!-- color:white; -->
-     <!-- <ion-title> -->
-       <!-- My Events -->
-     <!-- </ion-title> -->
-    <!-- </div> -->
+  <!-- <div style="text-align:center;"> -->
+  <!-- color:white; -->
+  <!-- <ion-title> -->
+  <!-- My Events -->
+  <!-- </ion-title> -->
+  <!-- </div> -->
   <!-- </ion-toolbar> -->
   <ion-toolbar class="action-bar">
     <ion-buttons class="split-three">
@@ -66,7 +66,7 @@
         <!--   24 -->
         <!-- </div> -->
         <!-- <div class="button-title"> -->
-          Upcoming
+        Upcoming
         <!-- </div> -->
       </button>
       <button ion-button [ngClass]="getFilterButtonClasses(1)" (click)="goActivityList(1)" block>
@@ -74,7 +74,7 @@
         <!--   102 -->
         <!-- </div> -->
         <!-- <div class="button-title"> -->
-          Joined
+        Joined
         <!-- </div> -->
       </button>
       <button ion-button [ngClass]="getFilterButtonClasses(2)" (click)="goActivityList(2)" block>
@@ -82,7 +82,7 @@
         <!--   2 -->
         <!-- </div> -->
         <!-- <div class="button-title"> -->
-          Created
+        Created
         <!-- </div> -->
       </button>
     </ion-buttons>

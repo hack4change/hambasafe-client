@@ -8,6 +8,7 @@ import {
   NavController,
   NavParams,
 	Platform,
+  LoadingController, 
 } from 'ionic-angular';
 const _ = require('lodash');
 import distanceCalculator from '../../utils/distanceCalculator';
@@ -16,6 +17,10 @@ import distanceCalculator from '../../utils/distanceCalculator';
  *  Redux
  */
 import {NgRedux} from 'ng2-redux';
+
+/**
+ * RxJS
+ */
 import {Observable, Subscription} from 'rxjs';
 
 /*
@@ -36,24 +41,30 @@ import { HomePage } from '../home/home';
 export class SearchPage implements OnInit{
   @ViewChild('myMap') mapChild;
 
-  filter$                   : Observable<any>;
-  activities$               : Observable<any>;
-  location$                 : Observable<any>;
+  public loadingItem;
 
-  filterSub$                : Subscription;
-  activitiesSub$            : Subscription;
-  locationSub$              : Subscription;
+  public filter$                  : Observable<any>;
+  public activities$              : Observable<any>;
+  public location$                : Observable<any>;
 
-  typeSelected              : any;
-  searchQuery               : string;
-  selectedSearch            : any;
-  shownGroup                : any;
-  searchDistance            : number  = 2;
-  public activityType       : string  = '';
-  activeType                : string  = 'TIME';
-  mapSearched               : boolean = false;
-  coordinates               : any     = {};
-	public isDevice						: boolean = false;
+  public filterSub$               : Subscription;
+  public activitiesSub$           : Subscription;
+  public locationSub$             : Subscription;
+
+  public typeSelected             : any;
+  public searchQuery              : string;
+  public selectedSearch           : any;
+  public shownGroup               : any;
+  public searchDistance           : number  = 2;
+  public activityType             : string  = '';
+  public activeType               : string  = 'TIME';
+  public mapSearched              : boolean = false;
+  public coordinates              : any     = {};
+	public isDevice						      : boolean = false;
+
+  public locationCount = 0;
+  public activityCount = 0;
+  public filterCount = 0;
 
   constructor(
     private navCtrl: NavController,
@@ -62,10 +73,15 @@ export class SearchPage implements OnInit{
     private ngRedux: NgRedux<any>,
     private zone: NgZone,
     private userActions : UserActions,
-    private eventDataActions : EventDataActions
-  ) {}
+    private eventDataActions : EventDataActions,
+    public loadingCtrl: LoadingController
+  ) {
+    console.log('SEARCH PAGE OPENING');
+  }
 
   ngOnInit() {
+  }
+  ionViewDidEnter(){
 		this.isDevice = this.platform.is('cordova') && !this.platform.is('browser');
     this.locationConnector();
     this.activityConnector();
@@ -87,8 +103,6 @@ export class SearchPage implements OnInit{
   locationConnector() {
     this.location$ = this.ngRedux.select(['currentUser', 'location'])
     .map((pos : any) => {
-      console.log('location');
-      console.log(pos.toJS());
       return {
         longitude : !!pos ? pos.get('longitude') : 0,
         latitude : !!pos ? pos.get('latitude') : 0
@@ -114,7 +128,6 @@ export class SearchPage implements OnInit{
       console.log(items.toJS());
       return items
       .filter((item) => {
-        console.log(item.toJS());
         return (new Date(item.get('startDate').get('iso'))).getTime() > Date.now();
       })
       // .filter((item:any) => {
@@ -126,14 +139,9 @@ export class SearchPage implements OnInit{
       //   return true;
       // })
       .filter((item:any) => {
-        console.log('here');
-        console.log(item);
         if(this.activeType == 'SEARCH') {
           if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
             if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
-              console.log(item.toJS());
-              console.log(item.get('startLocation').get('coordinates').get('latitude'));
-              console.log(item.get('startLocation').get('coordinates').get('longitude'));
               return distanceCalculator(
                 this.coordinates.latitude,
                 this.coordinates.longitude,
@@ -151,17 +159,6 @@ export class SearchPage implements OnInit{
         //     }
         //   }
         // }
-        console.log(item.toJS());
-        console.log(item.get('startLocation').get('coordinates').get('latitude'));
-        console.log(item.get('startLocation').get('coordinates').get('longitude'));
-        console.log(this.coordinates.latitude);
-        console.log(this.coordinates.longitude);
-        console.log(distanceCalculator(
-          this.coordinates.latitude,
-          this.coordinates.longitude,
-          item.get('startLocation').get('coordinates').get('latitude'),
-          item.get('startLocation').get('coordinates').get('longitude')
-        ) <= 150);
         return distanceCalculator(
           this.coordinates.latitude,
           this.coordinates.longitude,
@@ -172,9 +169,7 @@ export class SearchPage implements OnInit{
       .toList()
       .toJS()
       .sort(function(a, b) {
-        console.log(a);
-        console.log(b);
-        return a.startDate.iso > b.startDate.iso;
+        return new Date(a.startDate.iso) > new Date(b.startDate.iso);
       })
     })
     this.activitiesSub$ = this.activities$.subscribe((activity) => {
@@ -258,6 +253,11 @@ export class SearchPage implements OnInit{
     this.navCtrl.pop();
   }
   goHome(){
+    this.loadingItem = this.loadingCtrl.create({
+      content: '',
+      dismissOnPageChange: true,
+    })
+    this.loadingItem.present();
     this.navCtrl.setRoot(HomePage);
   }
 }

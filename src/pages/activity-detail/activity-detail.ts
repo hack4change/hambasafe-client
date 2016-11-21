@@ -95,12 +95,13 @@ export class ActivityDetailPage implements OnInit {
     console.log("ActivityDetailPage");
   };
 
+  /**
+   * Lifecycle hooks
+   */
   ngOnInit() {
     this.activityId = this.params.data['activityId'];
     this.mustRate = this.params.data['mustRate'];
-    // if(this.mustRate) {
-      this.ngRedux.dispatch(this.userActions.fetchByAttendance(this.activityId))
-    // }
+    this.ngRedux.dispatch(this.userActions.fetchByAttendance(this.activityId))
     this.userId$ = this.ngRedux.select(['currentUser', 'objectId']);
     this.users$ = this.ngRedux.select(['users', 'items'])
     .map((user:Map<string, any>)=>{

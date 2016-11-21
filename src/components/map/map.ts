@@ -21,7 +21,7 @@ declare var google;
   selector: 'map',
   templateUrl: 'map.html'
 })
-export class Map implements OnInit {
+export class MapComponent implements OnInit {
   @ViewChild('mapComponent') mapNode;
 
   @Input() radius         : number  = 0;

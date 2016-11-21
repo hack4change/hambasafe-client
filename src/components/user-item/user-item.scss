@@ -2,6 +2,10 @@ user-item {
   .rated { 
     color: $energized;//#FFD700;
   }
+  .user-checked-in {
+    background-color: map-get($colors, secondary);
+    color: $light;
+  }
   .to-confirm{
     background-color: $calm;
     color: $light;

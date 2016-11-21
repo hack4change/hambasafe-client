@@ -4,10 +4,11 @@ import {
   NgZone
 } from '@angular/core';
 // import {AsyncPipe} from '@angular/common';
-import {NavController} from 'ionic-angular';
+import { NavController, LoadingController } from 'ionic-angular';
 import distanceCalculator from '../../utils/distanceCalculator';
 
-const _ = require('lodash');
+import * as _  from 'lodash';
+import * as moment from 'moment';
 
 /*
  * Actions
@@ -46,6 +47,8 @@ import { SearchPage } from '../search/search';
   templateUrl: 'home.html'
 })
 export class HomePage implements OnInit {
+  public loadingItem;
+
   activities$                  : Observable<any>;
   friends$                  : Observable<any>;
   activitiesToRate$            : Observable<any>;
@@ -63,9 +66,21 @@ export class HomePage implements OnInit {
   coordinates: any;
   friendsList = [];
 
-  constructor(private navCtrl: NavController, private ngRedux: NgRedux<any>, private zone: NgZone, private userActions: UserActions, private eventDataActions: EventDataActions) {}
+  constructor(private navCtrl: NavController, private ngRedux: NgRedux<any>, private zone: NgZone, private userActions: UserActions, private eventDataActions: EventDataActions, public loadingCtrl: LoadingController) { 
+    console.log('HOME PAGE OPENING');
+    // this.loadingItem = this.loadingCtrl.create({
+    //   content: '',
+    //   dismissOnPageChange: true,
+    // })
+    // this.loadingItem.present();
+  }
    
   ngOnInit() {
+    // this.ngRedux.dispatch(this.userActions.getLocation());
+    // this.locationConnector();
+    // this.activityConnector();
+    // this.friendConnector();
+    console.log('HOME LOADED')
     this.ngRedux.dispatch(this.userActions.getLocation());
     this.locationConnector();
     this.activityConnector();
@@ -96,7 +111,6 @@ export class HomePage implements OnInit {
       }, [])
     })
     this.friendsSub$ = this.friends$.subscribe((friendsArray) => {
-
       this.friendsList = friendsArray;
     })
   }
@@ -128,8 +142,13 @@ export class HomePage implements OnInit {
 
   activityConnector() {
     this.activities$ = this.ngRedux.select(['eventData', 'items'])
-    .map((item: any) => {
-      return item.filter((immutableItem: any) => {
+    // .map((items: any) => {})
+    .map((items: any) => {
+      return items
+      // .map((item)=>{
+      //   item.setIn(['startDate', 'iso'], moment(item.getInS))
+      // })
+      .filter((immutableItem: any) => {
         if((new Date(immutableItem.get('startDate').get('iso'))).getTime() <= Date.now()){
           return false
         };
@@ -150,7 +169,10 @@ export class HomePage implements OnInit {
       .toList()
       .toJS()
       .sort(function(a, b) {
-        return a.startDate.iso > b.startDate.iso;
+        console.log(a);
+        console.log(b);
+        console.log(a > b);
+        return new Date(a.startDate.iso) > new Date(b.startDate.iso);
       })
     })
     this.activitiesToRate$ =  this.ngRedux.select(['eventData', 'items'])
@@ -207,10 +229,5 @@ export class HomePage implements OnInit {
 
   goToCreate() {
     this.navCtrl.push(CreatePage);
-  }
-
-  loadSearch() {
-    console.log('goSearch');
-    this.navCtrl.setRoot(SearchPage);
   }
 }

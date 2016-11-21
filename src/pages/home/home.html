@@ -1,22 +1,22 @@
 <ion-header>
-  <ion-toolbar color="primary" class="main-bar">
+  <ion-navbar color="primary">
     <ion-buttons class="order-left" start>
-      <button ion-button dark  icon-only menuToggle>
+      <button ion-button icon-only menuToggle>
         <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
     <ion-title>
       Home
     </ion-title>
-    <ion-buttons end>
+    <!-- <ion-buttons end> -->
       <!-- <button ion-button primary icon-only> -->
       <!--   <ion-icon isActive="true" name="home"></ion-icon> -->
       <!-- </button> -->
-      <button ion-button dark icon-only (click)="loadSearch()">
-        <ion-icon name="search"></ion-icon>
-      </button>
-    </ion-buttons>
-  </ion-toolbar>
+      <!-- <button ion-button dark icon-only (click)="loadSearch()"> -->
+      <!--   <ion-icon name="search"></ion-icon> -->
+      <!-- </button> -->
+    <!-- </ion-buttons> -->
+  </ion-navbar>
   <ion-toolbar>
     <ion-segment [(ngModel)]="isFiltered" light>
       <ion-segment-button (click)="toggleView('public')" value="public">

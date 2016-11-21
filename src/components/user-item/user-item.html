@@ -1,9 +1,10 @@
 <ion-item-sliding>
-  <ion-item [ngClass]="isConfirmed()">
+  <ion-item [ngClass]="getClasses()">
     <ion-avatar item-left>
       <img src="{{ user.profilePicture}}">
     </ion-avatar>
     {{ user.fullname | Capitalize }}
+    <ion-icon *ngIf="checkedIn" name="tick" item-right></ion-icon>
     <ion-icon *ngIf="options || mustRate" name="arrow-back" item-right></ion-icon>
     <button large outline ion-button *ngIf="!options && !mustRate" item-right>
       {{ user.rating }} <ion-icon color="energized" name="star"></ion-icon>

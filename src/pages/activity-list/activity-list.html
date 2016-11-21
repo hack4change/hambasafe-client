@@ -1,15 +1,15 @@
 <ion-header>
-  <ion-toolbar color="primary">
-    <ion-buttons start>
-      <button ion-button icon-only (click)="goBack()">
-        <ion-icon light name="close-circle"></ion-icon>
-      </button>
-    </ion-buttons>
+  <ion-navbar color="primary">
+    <!-- <ion-buttons start> -->
+      <!-- <button ion-button icon-only (click)="goBack()"> -->
+      <!--   <ion-icon light name="close-circle"></ion-icon> -->
+      <!-- </button> -->
+    <!-- </ion-buttons> -->
     <ion-title>
       {{ listHeader }}
       <ion-icon item-right></ion-icon>
     </ion-title>
-  </ion-toolbar>
+  </ion-navbar>
 </ion-header>
 <ion-content >
   <activity-item *ngFor="let activity of activities$ | async" [activity]="activity"></activity-item>

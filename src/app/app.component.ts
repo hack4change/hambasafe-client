@@ -23,6 +23,7 @@ import { AboutPage }        from '../pages/about/about';
 import { EmergencyPage }    from '../pages/emergency/emergency';
 import { FriendsPage }      from '../pages/friends/friends';
 import { HomePage }         from "../pages/home/home";
+import { SearchPage }         from "../pages/search/search";
 import { LandingPage }      from '../pages/landing/landing';
 import { ProfilePage }      from '../pages/profile/profile';
 import { RegistrationPage } from '../pages/registration/registration';
@@ -140,6 +141,11 @@ export class MyApp implements OnInit {
   goToHome() {
     this.menuCtrl.close();
     this.navCtrl.setRoot(HomePage);
+  }
+
+  goToSearch() {
+    this.menuCtrl.close();
+    this.navCtrl.setRoot(SearchPage);
   }
 
   goToFriends() {

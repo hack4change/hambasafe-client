@@ -2,7 +2,7 @@ declare var window;
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import { Platform } from 'ionic-angular';
-import { BackgroundGeolocation, Geoposition, Geolocation, Diagnostic } from 'ionic-native';
+import { BackgroundMode, BackgroundGeolocation, Geoposition, Geolocation, Diagnostic } from 'ionic-native';
 
 import { NgRedux } from 'ng2-redux';
 import { fromJS } from 'immutable';
@@ -38,57 +38,21 @@ export class UserActions {
       dispatch(this.setSubscribeLoading());
       this.friendsSub$ = this.parseManager.subscribeToFriends();
       this.friendsSub$.on('create', (friend) => {
-        var friendId: string = "";
-        var isConfirmed : boolean = true;
-        var getUser = new this.parseManager.Parse.Query(this.parseManager.Parse.User)
-        if(friend.get('userPtr')['id'] !== this.parseManager.getCurrentUser()['id']){
-          friendId = friend.get('userPtr')['id'];
-          isConfirmed = friend.get('confirmed');
-        } else {
-          friendId = friend.get('friendPtr')['id'];
-        }
-        getUser.get(friendId)
-        .then((res) => {
-          var friendRes = res.toJSON();
-          friendRes.isFriend= true;
-          friendRes.isConfirmed = isConfirmed;
-          this.ngRedux.dispatch(this.setFetchSuccess([friendRes]));
+        this.parseManager.fetchFriend(friend).then((res) => {
+          this.ngRedux.dispatch(this.setFetchSuccess([res]));
+          return Promise.resolve(res);
         })
       })
       this.friendsSub$.on('enter', (friend) => {
-        var friendId: string = "";
-        var isConfirmed : boolean = true;
-        var getUser = new this.parseManager.Parse.Query(this.parseManager.Parse.User)
-        if(friend.get('userPtr')['id'] !== this.parseManager.getCurrentUser()['id']){
-          friendId = friend.get('userPtr')['id'];
-          isConfirmed = friend.get('confirmed');
-        } else {
-          friendId = friend.get('friendPtr')['id'];
-        }
-        getUser.get(friendId)
-        .then((res) => {
-          var friendRes = res.toJSON();
-          friendRes.isFriend= true;
-          friendRes.isConfirmed = isConfirmed;
-          this.ngRedux.dispatch(this.setFetchSuccess([friendRes]));
+        this.parseManager.fetchFriend(friend).then((res) => {
+          this.ngRedux.dispatch(this.setFetchSuccess([res]));
+          return Promise.resolve(res);
         })
       })
       this.friendsSub$.on('update', (friend) => {
-        var friendId: string = "";
-        var isConfirmed : boolean = true;
-        var getUser = new this.parseManager.Parse.Query(this.parseManager.Parse.User)
-        if(friend.get('userPtr')['id'] !== this.parseManager.Parse.User.current()['id']){
-          friendId = friend.get('userPtr')['id'];
-          isConfirmed = friend.get('confirmed');
-        } else {
-          friendId = friend.get('friendPtr')['id'];
-        }
-        getUser.get(friendId)
-        .then((res) => {
-          var friendRes = res.toJSON();
-          friendRes.isFriend= true;
-          friendRes.isConfirmed = isConfirmed;
-          this.ngRedux.dispatch(this.setFetchSuccess([friendRes]));
+        this.parseManager.fetchFriend(friend).then((res) => {
+          this.ngRedux.dispatch(this.setFetchSuccess([res]));
+          return Promise.resolve(res);
         })
       })
       this.friendsSub$.on('delete', (friend) => {
@@ -108,7 +72,8 @@ export class UserActions {
       .then((res) => {
         console.log('FETCH FRIENDS');
         console.log(res);
-        dispatch(this.setFetchSuccess(res));
+        this.ngRedux.dispatch(this.setFetchSuccess(res));
+        return Promise.resolve(res);
       })
       .catch((err)=>{
         console.log('ERROR: FETCH FRIENDS');
@@ -145,14 +110,15 @@ export class UserActions {
 			interval: 30000,
 		};
 
-		BackgroundGeolocation.configure((pos) => {
+		BackgroundMode.enable();
+    BackgroundGeolocation.configure((pos) => {
 			console.log('[js] BackgroundGeolocation callback:  ' + pos.latitude + ',' + pos.longitude);
 			this.ngRedux.dispatch(this.setLocation(pos.longitude, pos.latitude));
 
 			// IMPORTANT:  You must execute the finish method here to inform the native plugin that you're finished,
 			// and the background-task may be completed.  You must do this regardless if your HTTP request is successful or not.
 			// IF YOU DON'T, ios will CRASH YOUR APP for spending too much time in the background.
-			if(this.platform.is('ios') ||this.platform.is('ios')){
+			if(this.platform.is('ios') || this.platform.is('wp')) {
 				BackgroundGeolocation.finish(); // FOR IOS ONLY
 			}
 
@@ -192,22 +158,27 @@ export class UserActions {
         Diagnostic.switchToLocationSettings();
       }
     })
-    let options = {
-      frequency: 60000, 
-      enableHighAccuracy: true
-    };
+    // let options = {
+    //   frequency: 60000, 
+    //   enableHighAccuracy: true
+    // };
 
-    this.watch = Geolocation.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
-      console.log('Foreground');
-      console.log(position);
-      // BackgroundGeolocation.getLogEntries(100).then((logEntries) => {
-      //   console.log(JSON.stringify(logEntries));
-      //   console.log(logEntries);
-      // });
+    Geolocation.getCurrentPosition().then((position) => {
       if(position.coords.longitude !== this.coords.longitude || position.coords.latitude !== this.coords.latitude){
         this.ngRedux.dispatch(this.setLocation(position.coords.longitude, position.coords.latitude));
       }
-    });
+    })
+    // this.watch = Geolocation.watchPosition(options).filter((p: any) => p.code === undefined).subscribe((position: Geoposition) => {
+    //   console.log('Foreground');
+    //   console.log(position);
+    //   // BackgroundGeolocation.getLogEntries(100).then((logEntries) => {
+    //   //   console.log(JSON.stringify(logEntries));
+    //   //   console.log(logEntries);
+    //   // });
+    //   if(position.coords.longitude !== this.coords.longitude || position.coords.latitude !== this.coords.latitude){
+    //     this.ngRedux.dispatch(this.setLocation(position.coords.longitude, position.coords.latitude));
+    //   }
+    // });
 	}
 
   confirmFriend(friendId: string) : any {

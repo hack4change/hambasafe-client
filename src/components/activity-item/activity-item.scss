@@ -2,4 +2,12 @@ activity-item {
   ion-item {
     border-bottom: 0 !important;
   }
+  .must-rate {
+    background-color: map-get($colors, energized);
+    color: map-get($colors, light);
+  }
+  .must-checkin {
+    background-color: map-get($colors, primary);
+    color: map-get($colors, light);
+  }
 }

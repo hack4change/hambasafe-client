@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary" class="main-bar">
+  <ion-navbar color="primary">
     <ion-buttons start>
       <button ion-button icon-only menuToggle>
         <ion-icon name="menu"></ion-icon>
@@ -12,14 +12,14 @@
       <button ion-button icon-only light (click)="addFriend()" class="indent">
         <ion-icon name="person-add"></ion-icon>
       </button>
-      <button ion-button icon-only light class="indent" (click)="goHome()">
-        <ion-icon name="home"></ion-icon>
-      </button>
-      <button ion-button icon-only light (click)="goSearch()">
-        <ion-icon name="search"></ion-icon>
-      </button>
+      <!-- <button ion-button icon-only light class="indent" (click)="goHome()"> -->
+      <!--   <ion-icon name="home"></ion-icon> -->
+      <!-- </button> -->
+      <!-- <button ion-button icon-only light (click)="goSearch()"> -->
+      <!--   <ion-icon name="search"></ion-icon> -->
+      <!-- </button> -->
     </ion-buttons>
-  </ion-toolbar>
+  </ion-navbar>
 </ion-header>
 <ion-content>
   <ion-searchbar (ionInput)="getFromInput($event)"></ion-searchbar>

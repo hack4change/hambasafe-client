@@ -590,6 +590,24 @@ export class ParseManager {
       return this.Parse.User.current();
   }
 
+  fetchFriend(friend) : Promise<any> {
+    var friendId: string = "";
+    var isConfirmed : boolean = true;
+    var friendQuery = new this.Parse.Query(this.Parse.User)
+    if(friend.get('userPtr')['id'] !== this.getCurrentUser()['id']) {
+      friendId = friend.get('userPtr')['id'];
+      isConfirmed = friend.get('confirmed');
+    } else {
+      friendId = friend.get('friendPtr')['id'];
+    }
+    return friendQuery.get(friendId).then((res)=>{
+      var jsRes = res.toJSON();
+      jsRes.isFriend= true;
+      jsRes.isConfirmed = isConfirmed;
+      return Promise.resolve(jsRes)
+    })
+  }
+
   fetchUsersByName(queryString) : Promise<any> {
     var user = this.Parse.User.current();
     var userQuery = new this.Parse.Query(this.Parse.User)

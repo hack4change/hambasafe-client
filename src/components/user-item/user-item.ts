@@ -26,6 +26,7 @@ export class UserItem implements OnInit {
   @Input() user;
   @Input() options      : boolean = false;
   @Input() mustRate     : boolean = false;
+  @Input() checkedIn    : boolean = false;
   
   
   rating  : number = 0;
@@ -69,11 +70,14 @@ export class UserItem implements OnInit {
     }
     this.rating = index;
   }
-  isConfirmed(){
-    return !this.user.isConfirmed && this.options ? {
-      'to-confirm' : true
-    } : {
-    };
+  getClasses(){
+    var retObj = {};
+    if(this.checkedIn){
+      retObj['user-checked-in'] = true;
+    } else if (!this.user.isConfirmed && this.options) {
+      retObj['to-confirm'] = true;
+    }
+    return retObj;
   }
   confirmFriend(){
     this.ngRedux.dispatch(this.userActions.confirmFriend(this.user.objectId));

@@ -127,7 +127,7 @@ export class AuthActions {
           console.log(res);
           var expDate = new Date(new Date().getTime() + res.authResponse.expiresIn * 1000 ).toISOString();
           var authData = {
-            id: String(res.authResponse.userID),
+            id: res.authResponse.userID,
             access_token: res.authResponse.accessToken,
             expiration_date: expDate
           }
@@ -136,7 +136,7 @@ export class AuthActions {
       } else {
         var expDate = new Date(new Date().getTime() + res.authResponse.expiresIn * 1000 ).toISOString();
         var authData = {
-          id: String(res.authResponse.userID),
+          id: res.authResponse.userID,
           access_token: res.authResponse.accessToken,
           expiration_date: expDate
         }
@@ -150,7 +150,7 @@ export class AuthActions {
     })
   }
 
-  logoutUser() : any{
+  logoutUser() : any {
     return dispatch => {
       //
       // Set loading state.
@@ -356,8 +356,9 @@ export class AuthActions {
           respJson.userID = undefined;
           //TODO: Remove
           console.log(response);
+          return resolve(respJson);
         }
-        resolve();
+        // return resolve();
       }) 
     }))
     .then((res) => {
@@ -399,4 +400,17 @@ export class AuthActions {
   initializeFacebook(){
     this.parseManager.fbInit();
   }
+
+  // fetchProfile(){
+  //   this.getProfile()
+  //   .then((res) => {
+  //     console.log(res);
+  //     this.ngRedux.dispatch(this.setAuthSuccess(res));
+  //   })
+  //   .catch((err)=>{
+  //     console.log(err);
+  //     this.ngRedux.dispatch(this.setAuthError(err));
+  //   })
+
+  // }
 }

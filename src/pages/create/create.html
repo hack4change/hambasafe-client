@@ -1,17 +1,17 @@
 <ion-header>
-	<ion-toolbar class="icon-only" color="calm">
-		<ion-buttons start>
-			<button ion-button icon-only (click)="goBack()" light>
-				<ion-icon name="close-circle"></ion-icon>
-			</button>
-		</ion-buttons>
+	<ion-navbar class="icon-only" color="calm">
+		<!-- <ion-buttons start> -->
+		<!-- 	<button ion-button icon-only (click)="goBack()" light> -->
+		<!-- 		<ion-icon name="close-circle"></ion-icon> -->
+		<!-- 	</button> -->
+		<!-- </ion-buttons> -->
 		<ion-title *ngIf="!isChange">
 			Create Activity
 		</ion-title>
 		<ion-title *ngIf="isChange">
       Edit Activity
 		</ion-title>
-	</ion-toolbar>
+	</ion-navbar>
 </ion-header>
 <ion-content [ngSwitch]="activeType">
   <template ngSwitchCase="START_LOCATION">

@@ -1,10 +1,10 @@
 <ion-header>
-  <ion-toolbar class="main-bar" color="primary">
-    <ion-buttons start>
-      <button ion-button icon-only (click)="goBack()">
-        <ion-icon name="arrow-back"></ion-icon>
-      </button>
-    </ion-buttons>
+  <ion-navbar color="primary">
+    <!-- <ion-buttons start> -->
+    <!--   <button ion-button icon-only (click)="goBack()"> -->
+    <!--     <ion-icon name="arrow-back"></ion-icon> -->
+    <!--   </button> -->
+    <!-- </ion-buttons> -->
     <ion-buttons *ngIf="!isAuthor" end>
       <button ion-button icon-only dark class="indent" (click)="goHome()">
         <ion-icon name="home"></ion-icon>
@@ -27,7 +27,7 @@
       <!--   <ion-icon name="search"></ion-icon> -->
       <!-- </button> -->
     </ion-buttons>
-  </ion-toolbar>
+  </ion-navbar>
 </ion-header>
 <ion-content [ngSwitch]="ratingRequired()">
   <ion-fab top center edge>
@@ -45,13 +45,6 @@
           {{ activity.name }}
         </h1>
       </ion-item>
-    </ion-row>
-    <ion-row>
-      <ion-col>
-        <p class="time-header">
-        {{ formatDate((activity$ | async)?.startDate.iso) }}
-        </p>
-      </ion-col>
     </ion-row>
     <ion-row padding-horizontal class="location-header">
       <ion-col>
@@ -80,24 +73,31 @@
         <!--     </p> -->
         <!--   </ion-col> -->
         <!-- </ion-row> -->
-        <ion-row>
-          <ion-col width-30 text-center>
-            {{ activity?.eventType }}
-          </ion-col>
-          <ion-col width-10 text-center>
-            &bull;
-          </ion-col>
-          <ion-col width-20 text-center>
-            {{ activity?.distance }} km
-          </ion-col>
-          <ion-col width-10 text-center>
-            &bull;
-          </ion-col>
-          <ion-col width-30 text-center>
-            {{ activity?.intensity }}
-          </ion-col>
-        </ion-row>
     </div>
+    <ion-row>
+      <ion-col>
+        <p class="time-header">
+        {{ formatDate((activity$ | async)?.startDate.iso) }}
+        </p>
+      </ion-col>
+    </ion-row>
+    <ion-row class="detail-row">
+      <ion-col width-30 text-center>
+        {{ activity?.eventType }}
+      </ion-col>
+      <ion-col width-10 text-center>
+        &bull;
+      </ion-col>
+      <ion-col width-20 text-center>
+        {{ activity?.distance }} km
+      </ion-col>
+      <ion-col width-10 text-center>
+        &bull;
+      </ion-col>
+      <ion-col width-30 text-center>
+        {{ activity?.intensity }}
+      </ion-col>
+    </ion-row>
     <ion-list no-lines>
       <user-item *ngFor="let user of users$ | async" [user]="user"></user-item>
     </ion-list>
@@ -139,7 +139,7 @@
   </template>
 </ion-content>
 <ion-footer>
-  <ion-toolbar calm class="main-bar">
+  <ion-toolbar>
     <button ion-button icon-only *ngIf="!mustRate" (click)="joinActivity()" [disabled]="(activity$ | async)?.isAttending" full primary>
       Join!
     </button>
