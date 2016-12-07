@@ -1,5 +1,14 @@
-import {Component, ViewChild, OnInit, Input} from '@angular/core';
-import {NavController, Platform} from 'ionic-angular';
+import {
+  Component, 
+  ViewChild,
+  OnInit, 
+  Input
+} from '@angular/core';
+import {
+  NavController,
+  Platform,
+  Events,
+} from 'ionic-angular';
 import { /*CameraPosition,*/ GoogleMap, GoogleMapsEvent, GoogleMapsLatLng, GoogleMapsMarker, GoogleMapsMarkerOptions, GoogleMapsAnimation} from 'ionic-native';
 // import {Geolocation} from 'ionic-native';
 const _ = require('lodash');
@@ -55,10 +64,29 @@ export class MapComponent implements OnInit {
   private locationCircle  : any;
   private geoCoder        : any;
 
-  constructor(public platform: Platform, private nav: NavController, private ngRedux: NgRedux<any>, private userActions : UserActions, private eventDataActions : EventDataActions) {};
+  constructor(
+    public platform: Platform,
+    private nav: NavController,
+    private events: Events,
+    private ngRedux: NgRedux<any>,
+    private userActions : UserActions,
+    private eventDataActions : EventDataActions
+  ) {};
 
   ngOnInit() {
     this.geoCoder = new google.maps.Geocoder;
+    this.events.subscribe('menu:opened', (props)=>{
+      console.log('menuOpened');
+      if(!!this.deviceMap){
+        this.deviceMap.setClickable(false);
+      }
+    })
+    this.events.subscribe('menu:closed', (props)=>{
+      console.log('menuClosed');
+      if(!!this.deviceMap){
+        this.deviceMap.setClickable(true);
+      }
+    })
   }
   ngAfterContentInit() {
     // var options = {
@@ -217,6 +245,16 @@ export class MapComponent implements OnInit {
               })
             })
           }
+          this.deviceMap.on(GoogleMapsEvent.MAP_LONG_CLICK).subscribe((latLng) => {
+            console.log("Map was long clicked.\n");
+            this.latLng = latLng;
+            if(this.moveable){
+              this.deviceMarker.setPosition(latLng);
+              if(this.radius) {
+                this.deviceCircle.setCenter(latLng);
+              }
+            }
+          }); 
           return Promise.resolve();
         });
         this.deviceMap.on(GoogleMapsEvent.MAP_CLICK, (ev) => {

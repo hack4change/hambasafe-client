@@ -1,4 +1,4 @@
-<ion-menu [content]="myNavRoot" id="anonymous-menu">
+<ion-menu [content]="myNavRoot" id="anonymous-menu" (ionClose)="menuClosed()">
 
   <!-- <ion-header no-shadow> -->
   <!-- <ion-toolbar> -->
@@ -78,7 +78,7 @@
   </ion-footer>
 </ion-menu>
 
-<ion-menu [content]="myNavRoot" id="authorised-menu">
+<ion-menu [content]="myNavRoot" id="authorised-menu" (ionClose)="menuClosed()">
   <ion-header>
     <ion-toolbar color="primary">
       <ion-title>
@@ -95,10 +95,6 @@
       <ion-item menuClose (click)="goToSearch()">
         <ion-icon item-left name="search" color="primary"></ion-icon>
          Search
-      </ion-item>
-      <ion-item menuClose (click)="goToProfile()">
-        <ion-icon item-left name="person" color="primary"></ion-icon>
-        My Profile
       </ion-item>
       <ion-item menuClose (click)="goToFriends()">
         <ion-icon item-left name="people" color="primary"></ion-icon>

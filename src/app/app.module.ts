@@ -61,7 +61,7 @@ import { InvitesPage        } from '../pages/invites/invites';
 import { LandingPage        } from '../pages/landing/landing';
 import { LatestPage         } from '../pages/latest/latest';
 import { MapPage            } from '../pages/map/map';
-import { ProfilePage        } from '../pages/profile/profile';
+// import { ProfilePage        } from '../pages/profile/profile';
 import { RatingPage         } from '../pages/rating/rating';
 import { RegistrationPage   } from '../pages/registration/registration';
 import { SearchPage         } from '../pages/search/search';
@@ -110,7 +110,7 @@ enableProdMode()
     LandingPage,
     LatestPage,
     MapPage,
-    ProfilePage,
+    // ProfilePage,
     RatingPage,
     RegistrationPage,
     SearchPage,
@@ -157,7 +157,7 @@ enableProdMode()
     LandingPage,
     LatestPage,
     MapPage,
-    ProfilePage,
+    // ProfilePage,
     RatingPage,
     RegistrationPage,
     SearchPage,

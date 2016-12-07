@@ -32809,22 +32809,12 @@ activity-item ion-item {
   border-bottom: 0 !important;
 }
 
-activity-item .must-rate {
-  background-color: #FFBC00;
-  color: #ffffff;
-}
-
-activity-item .must-checkin {
-  background-color: #0C9EF9;
-  color: #ffffff;
-}
-
 user-item .rated {
   color: #FFBC00;
 }
 
 user-item .user-checked-in {
-  background-color: #32db64;
+  background-color: #0C9EF9;
   color: #fff;
 }
 
@@ -32867,10 +32857,6 @@ page-activity-detail .map-container {
 
 page-activity-detail .activity-title {
   font-weight: bold;
-}
-
-page-activity-detail .activity-detail-container {
-  padding-top: 0;
 }
 
 page-activity-detail .time-header {
@@ -32932,27 +32918,102 @@ page-emergency .emergency-container .emergency-numbers {
   flex: 6;
 }
 
-page-home .home-container {
-  height: 100%;
+page-home .profile-details {
+  min-height: 70px;
 }
 
-page-home button {
-  font-weight: 600;
-  letter-spacing: 0.1em;
+page-home .profile-details ion-label {
+  margin: 0;
 }
 
-page-home scroll-content {
-  background-color: #0C9EF9;
+page-home .profile-details ion-avatar {
+  margin: 0;
+  margin-right: 8px;
+  min-width: 7rem;
+  min-height: 7rem;
 }
 
-page-home .create-fab {
-  position: fixed;
-  bottom: 2%;
-  right: 2%;
+page-home .profile-details ion-avatar img {
+  min-width: 7rem;
+  min-height: 7rem;
+  border-radius: 50%;
 }
 
-page-home .calm-button {
-  background-color: #11c1f3;
+page-home .profile-details .profile-row {
+  min-height: 2em;
+  display: block;
+  padding-left: 0.5rem;
+  font-weight: bold;
+  font-size: 1.5rem;
+  color: #555;
+}
+
+page-home .profile-details .profile-row ion-icon {
+  padding-right: 0.5rem;
+  margin-right: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+page-home .profile-details .profile-row ion-icon[name="star"] {
+  padding-left: 0.3rem;
+  font-size: 2.5rem;
+}
+
+page-home .profile-details .profile-row ion-icon[name="md-create"] {
+  background-color: #ef473a;
+  color: #fff;
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+  border-radius: 0.25rem;
+}
+
+page-home .profile-details .profile-row ion-icon[name="ios-checkmark-circle"] {
+  color: #fff;
+  padding-right: 0;
+  font-size: 3rem;
+}
+
+page-home .profile-details .profile-name {
+  font-size: 1.8rem;
+}
+
+page-home .profile-details .profile-name span {
+  color: #fff;
+  font-size: 24px;
+}
+
+page-home .action-bar {
+  border-top: 1px solid #EEE;
+  border-bottom: 1px solid #EEE;
+}
+
+page-home .split-three {
+  width: 100%;
+  margin: 0;
+}
+
+page-home .split-three button {
+  width: 32.5%;
+  margin: 0;
+  border-left: 1px solid #EEE;
+}
+
+page-home .button-number {
+  font-weight: bold;
+  font-size: 1.8rem;
+}
+
+page-home .button-title {
+  font-size: 1.3rem;
+}
+
+page-home .active-filter {
+  color: #0C9EF9;
+}
+
+page-home .inactive-filter {
+  color: #444;
 }
 
 page-invites ion-list ion-item-options {
@@ -33041,104 +33102,6 @@ page-landing ion-toolbar .toolbar-title {
 
 page-landing ion-toolbar .toolbar-title a {
   color: white;
-}
-
-page-profile .profile-details {
-  min-height: 70px;
-}
-
-page-profile .profile-details ion-label {
-  margin: 0;
-}
-
-page-profile .profile-details ion-avatar {
-  margin: 0;
-  margin-right: 8px;
-  min-width: 7rem;
-  min-height: 7rem;
-}
-
-page-profile .profile-details ion-avatar img {
-  min-width: 7rem;
-  min-height: 7rem;
-  border-radius: 50%;
-}
-
-page-profile .profile-details .profile-row {
-  min-height: 2em;
-  display: block;
-  padding-left: 0.5rem;
-  font-weight: bold;
-  font-size: 1.5rem;
-  color: #555;
-}
-
-page-profile .profile-details .profile-row ion-icon {
-  padding-right: 0.5rem;
-  margin-right: 0;
-  margin-top: 0;
-  margin-bottom: 0;
-}
-
-page-profile .profile-details .profile-row ion-icon[name="star"] {
-  padding-left: 0.3rem;
-  font-size: 2.5rem;
-}
-
-page-profile .profile-details .profile-row ion-icon[name="md-create"] {
-  background-color: #ef473a;
-  color: #fff;
-  padding-left: 0.3rem;
-  padding-right: 0.3rem;
-  border-radius: 0.25rem;
-}
-
-page-profile .profile-details .profile-row ion-icon[name="ios-checkmark-circle"] {
-  color: #fff;
-  padding-right: 0;
-  font-size: 3rem;
-}
-
-page-profile .profile-details .profile-name {
-  font-size: 1.8rem;
-}
-
-page-profile .profile-details .profile-name span {
-  color: #fff;
-  font-size: 24px;
-}
-
-page-profile .action-bar {
-  border-top: 1px solid #EEE;
-  border-bottom: 1px solid #EEE;
-}
-
-page-profile .split-three {
-  width: 100%;
-  margin: 0;
-}
-
-page-profile .split-three button {
-  width: 32.5%;
-  margin: 0;
-  border-left: 1px solid #EEE;
-}
-
-page-profile .button-number {
-  font-weight: bold;
-  font-size: 1.8rem;
-}
-
-page-profile .button-title {
-  font-size: 1.3rem;
-}
-
-page-profile .active-filter {
-  color: #0C9EF9;
-}
-
-page-profile .inactive-filter {
-  color: #444;
 }
 
 page-registration .toolbar-title {

@@ -9,8 +9,10 @@ import {
   NavParams,
 	Platform,
   LoadingController, 
+  Events,
 } from 'ionic-angular';
 const _ = require('lodash');
+import * as moment from 'moment';
 import distanceCalculator from '../../utils/distanceCalculator';
 
 /**
@@ -22,6 +24,7 @@ import {NgRedux} from 'ng2-redux';
  * RxJS
  */
 import {Observable, Subscription} from 'rxjs';
+
 
 /*
  * Actions
@@ -57,24 +60,27 @@ export class SearchPage implements OnInit{
   public shownGroup               : any;
   public searchDistance           : number  = 2;
   public activityType             : string  = '';
-  public activeType               : string  = 'TIME';
+  public activeType               : string  = 'DISTANCE';
   public mapSearched              : boolean = false;
   public coordinates              : any     = {};
 	public isDevice						      : boolean = false;
+  public greatestDistance         : number = 2;
+
 
   public locationCount = 0;
   public activityCount = 0;
   public filterCount = 0;
 
   constructor(
-    private navCtrl: NavController,
-    private params: NavParams,
-    private platform: Platform,
-    private ngRedux: NgRedux<any>,
-    private zone: NgZone,
-    private userActions : UserActions,
-    private eventDataActions : EventDataActions,
-    public loadingCtrl: LoadingController
+    private navCtrl           : NavController,
+    private params            : NavParams,
+    private platform          : Platform,
+    private events            : Events,
+    private ngRedux           : NgRedux<any>,
+    private zone              : NgZone,
+    private userActions       : UserActions,
+    private eventDataActions  : EventDataActions,
+    public loadingCtrl        : LoadingController
   ) {
     console.log('SEARCH PAGE OPENING');
   }
@@ -128,16 +134,11 @@ export class SearchPage implements OnInit{
       console.log(items.toJS());
       return items
       .filter((item) => {
-        return (new Date(item.get('startDate').get('iso'))).getTime() > Date.now();
+        return !item.isAttending;
       })
-      // .filter((item:any) => {
-      //   console.log(this.activityType);
-      //   // if(this.activityType !== '' && this.activeType === 'TIME') {
-      //   //   console.log(this.activeType);
-      //   //   return item && item.get('eventType') ? this.activeType === item.get('eventType'): false;
-      //   // }
-      //   return true;
-      // })
+      .filter((item) => {
+        return moment(item.get('startDate').get('iso')) > moment().add('days', '2'); //TODO: Modify for time considered active;
+      })
       .filter((item:any) => {
         if(this.activeType == 'SEARCH') {
           if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
@@ -152,13 +153,6 @@ export class SearchPage implements OnInit{
           }
           return false;
         }
-        // else if(this.activeType == 'TIME') {
-        //   if(!!this.searchQuery) {
-        //     if(!item.get('eventType').contains(this.searchQuery.toUpperCase())){
-        //       return false;
-        //     }
-        //   }
-        // }
         return distanceCalculator(
           this.coordinates.latitude,
           this.coordinates.longitude,
@@ -167,10 +161,11 @@ export class SearchPage implements OnInit{
         ) <= 150;
       })
       .toList()
-      .toJS()
-      .sort(function(a, b) {
-        return new Date(a.startDate.iso) > new Date(b.startDate.iso);
+      .sort((a, b) => {
+        console.log(moment(a.getIn(['startDate','iso'])) > moment(b.getIn(['startDate','iso'])));
+        return moment(a.getIn(['startDate','iso'])) > moment(b.getIn(['startDate','iso']));
       })
+      .toJS();
     })
     this.activitiesSub$ = this.activities$.subscribe((activity) => {
       console.log()
@@ -207,6 +202,18 @@ export class SearchPage implements OnInit{
   toggleView(clickedType) {
     console.log('toggleView');
     this.activeType = clickedType;
+  }
+
+  sliderChange() {
+    console.log('sliderUpdate');
+    // if(this.searchDistance > this.greatestDistance && this.coordinates) {
+      if (!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
+        if (Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
+          this.ngRedux.dispatch(this.eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.latitude, this.coordinates.longitude));
+          this.greatestDistance = this.searchDistance;
+        }
+      }
+    // }
   }
 
   searchRadius() {
@@ -259,5 +266,8 @@ export class SearchPage implements OnInit{
     })
     this.loadingItem.present();
     this.navCtrl.setRoot(HomePage);
+  }
+  menuOpened(){
+    this.events.publish('menu:opened',  {});
   }
 }

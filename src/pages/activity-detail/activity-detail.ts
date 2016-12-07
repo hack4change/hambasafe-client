@@ -85,7 +85,7 @@ export class ActivityDetailPage implements OnInit {
   groupRating: number = 0;
 
   constructor(
-    private navCtrl: NavController,
+    public navCtrl: NavController,
     private params: NavParams,
     private ngRedux: NgRedux<any>,
     private zone: NgZone,
@@ -107,13 +107,13 @@ export class ActivityDetailPage implements OnInit {
     .map((user:Map<string, any>)=>{
       return user
       .filter((user : Map<string, any>) => {
-        return !!user.get('attendance') ? user.get('attendance').includes(this.activityId): false;
+        return !!user.get('attendance') ? user.get('attendance').includes(this.activityId) : false;
       })
       .toList()
       .toJS()
     })
     this.activity$ = this.ngRedux.select(['eventData', 'items'])
-    .map((item:Map<string, any>)=>{
+    .map((item : Map<string, any>) => {
       if(!this.activityId) {
         return;
       }

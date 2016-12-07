@@ -6,15 +6,15 @@
     {{ user.fullname | Capitalize }}
     <ion-icon *ngIf="checkedIn" name="tick" item-right></ion-icon>
     <ion-icon *ngIf="options || mustRate" name="arrow-back" item-right></ion-icon>
-    <button large outline ion-button *ngIf="!options && !mustRate" item-right>
-      {{ user.rating }} <ion-icon color="energized" name="star"></ion-icon>
+    <button large outline ion-button *ngIf="!options && !mustRate" (click)='viewProfile()' item-right>
+      {{ user.rating || 0 }} <ion-icon color="energized" name="star"></ion-icon>
     </button>
   </ion-item>
   <ion-item-options side="right">
-    <button ion-button icon-only [hidden]="!mustRate" item-right *ngFor="let i of maxStars"  [ngClass]="getIsRated(i)" (click)="setRating(i, true)"> 
+    <button ion-button icon-only [hidden]="!mustRate" item-right *ngFor="let i of maxStars"   (click)="setRating(i, true)"> 
       <ion-icon name="star"></ion-icon>
     </button>
-    <button ion-button icon-only *ngIf="options" color="primary" item-right style="width:50px;/*height: 50px*/"> 
+    <button ion-button icon-only *ngIf="options" color="primary" item-right style="width:50px;/*height: 50px*/" (click)='viewProfile()'> 
       <ion-icon name="person"></ion-icon>
 <!-- md-more -->
     </button>

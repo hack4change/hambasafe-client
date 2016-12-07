@@ -30,15 +30,15 @@ export class ParseManager {
   constructor(public http: Http) {
     console.log('Hello ParseManager Provider');
     this.Parse.initialize('test1234');
-    this.Parse.serverURL = 'https://mainstream.ninja/parse'
+    this.Parse.serverURL = 'http://parse.mainstream.ninja/parse'
 
-    this.ActivityClass = this.Parse.Object.extend("Activity");
-    this.AttendanceClass = this.Parse.Object.extend("Attendance");
-    this.LocationClass = this.Parse.Object.extend("Location");
-    this.InviteClass = this.Parse.Object.extend("Invite");
-    this.FriendClass = this.Parse.Object.extend("Friend");
-    this.UserRatingClass = this.Parse.Object.extend("UserRating");
-    this.ActivityRatingClass = this.Parse.Object.extend("ActivityRating");
+    this.ActivityClass        = this.Parse.Object.extend("Activity");
+    this.AttendanceClass      = this.Parse.Object.extend("Attendance");
+    this.LocationClass        = this.Parse.Object.extend("Location");
+    this.InviteClass          = this.Parse.Object.extend("Invite");
+    this.FriendClass          = this.Parse.Object.extend("Friend");
+    this.UserRatingClass      = this.Parse.Object.extend("UserRating");
+    this.ActivityRatingClass  = this.Parse.Object.extend("ActivityRating");
 
     this.Parse.Object.registerSubclass('Activity', this.ActivityClass);
     this.Parse.Object.registerSubclass('Attendance', this.AttendanceClass);
@@ -53,7 +53,6 @@ export class ParseManager {
    *  SUBSCRIPTIONS
    *
    */
-
   subscribeToAttending() {
     var query = new Parse.Query(this.AttendanceClass);
     query.equalTo('userReference', this.Parse.User.current());
@@ -380,7 +379,12 @@ export class ParseManager {
       var userRelation = user.relation('activities');
       let activity = activityObj.toJSON();
       userRelation.add(activityObj);
-      return user.save(null).then((res)=>{
+      return user.save(null)
+      .then(() => {
+        var relation = activityObj.relation('attendees');
+        relation.add(user);
+        return res.save();
+      }).then((res)=>{
         return Promise.resolve(activity);
       });
     })
@@ -430,6 +434,7 @@ export class ParseManager {
   }
 
   joinActivity(activityId: String) : Promise<any> {
+    let user  = this.Parse.User.current();
     console.log('Joining');
     console.log(activityId);
     let activityObj;
@@ -440,7 +445,11 @@ export class ParseManager {
       attend.set('userReference', this.Parse.User.current());
       attend.set('activityReference', res);
       activityObj = res;
-      return attend.save(null)
+      return attend.save(null).then(() => {
+        var relation = res.relation('attendees');
+        relation.add(user);
+        return res.save();
+      })
     })
     .then((res) => {
       console.log('joined Event')
@@ -546,6 +555,28 @@ export class ParseManager {
     })
   }
 
+  getActivitiesByUserId(id: string) : Promise<any> {
+    console.log('USER ACTIVITIES');
+    var activityQuery = new this.Parse.Query(this.ActivityClass);
+    activityQuery.equalTo('author', {
+      __type: "Pointer",
+      className: "User",
+      objectId: id
+    });
+    activityQuery.include('author');
+    activityQuery.include('startLocation');
+    return activityQuery.find()
+    .then((res) => {
+      console.log()
+      // console.log(res);
+      var jsRes = [];
+      for(var i = 0; i < res.length; i++) {
+        jsRes.push(res[i].toJSON());
+      }
+      return Promise.resolve(jsRes);
+    });
+  }
+
   // getActivitiesByTime(error: (res) => void, success: (res) => void) {}
 
   getUserActivities(error: (res) => void, success: (res) => void) {
@@ -608,6 +639,21 @@ export class ParseManager {
     })
   }
 
+  fetchUserById(id: string) : Promise<any> {
+    var userQuery = new this.Parse.Query(this.Parse.User)
+    return userQuery.get(id)
+    .then((res) => {
+      console.log('FOUND USERS')
+      var jsRes = [];
+      for (var i = 0; i < res.length; i++) {
+        // if(resObj.toJSON['objectId'] !== user['id']){
+        jsRes[i] = res[i].toJSON();
+        // }
+      }
+      return Promise.resolve(jsRes);
+    })
+  }
+
   fetchUsersByName(queryString) : Promise<any> {
     var user = this.Parse.User.current();
     var userQuery = new this.Parse.Query(this.Parse.User)
@@ -625,6 +671,28 @@ export class ParseManager {
       return Promise.resolve(jsRes);
     })
   }
+
+  // fetchByActivitiesByUser(userId) : Promise<any> {
+  //   var user = this.Parse.User.current();
+  //   var attendanceQuery = new this.Parse.Query(this.AttendanceClass)
+  //   attendanceQuery.equalTo('activityReference', {
+  //     __type: "Pointer",
+  //     className: "Activity",
+  //     objectId: activityId
+  //   });
+  //   attendanceQuery.notEqualTo('userReference', user);
+  //   attendanceQuery.include('userReference');
+  //   return attendanceQuery.find()
+  //   .then((res) => {
+  //     var jsRes = [];
+  //     for (var i = 0; i < res.length; i++) {
+  //       var resObj = res[i].get('userReference').toJSON();
+  //       resObj.attendance = [activityId];
+  //       jsRes[i] = resObj;
+  //     }
+  //     return Promise.resolve(jsRes);
+  //   })
+  // }
 
   fetchByAttendance(activityId) : Promise<any> {
     var user = this.Parse.User.current();
@@ -648,7 +716,9 @@ export class ParseManager {
     })
   }
 
-
+  checkIn(userId, activityId): Promise<any>{
+    return Promise.resolve();
+  }
   /**
    * Rating Functions
    */

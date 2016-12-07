@@ -16,14 +16,12 @@ import {UserActions} from '../../actions/user.actions';
 // /*
 //  *  Pages
 //  */
-// import {HomePage} from '../home/home';
-import {ProfilePage} from '../profile/profile';
+import {HomePage} from '../home/home';
 import {TermsPage} from '../terms/terms';
 
 // //TODO: REMOVE
 // import {SearchPage} from '../search/SearchPage';
 // import {RegistrationPage} from '../registration/RegistrationPage';
-// import {ProfilePage} from '../profile/ProfilePage';
 
 
 /*
@@ -57,7 +55,7 @@ export class LandingPage implements OnInit {
           if(!!this.loadingPopup){
           this.loadingPopup.dismiss();
         }
-        this.navCtrl.setRoot(ProfilePage);
+        this.navCtrl.setRoot(HomePage);
         this.ngRedux.dispatch(this.userActions.subscribeToUser());
           // this.navCtrl.setRoot(HomePage).catch(err=>{
           //   console.log(err);

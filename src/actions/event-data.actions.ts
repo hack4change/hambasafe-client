@@ -91,6 +91,28 @@ export class EventDataActions {
     };
   }
 
+  fetchByUserId(id: string) : any {
+    return dispatch => {
+      console.log('dispatch');
+      if(!id) {
+        return;
+      }
+      // Set loading state.
+      dispatch(this.setFetchLoadingState());
+      // Do request.
+      this.parseManager.getActivitiesByUserId(id)
+      .then((res) => {
+        console.log('succesfully fetched activities by query');
+        console.log(res);
+        this.ngRedux.dispatch(this.setFetchSuccessState(res));
+        return Promise.resolve(res);
+      })
+      .catch((err)=> {
+        return dispatch(this.setFetchErrorState(err));
+      });
+    };
+  }
+
   fetchEventsByQuery(query: string, latitude: number, longitude: number) : any {
     return dispatch => {
       console.log('dispatch');
@@ -109,7 +131,7 @@ export class EventDataActions {
         this.ngRedux.dispatch(this.setFetchSuccessState(res));
         return Promise.resolve(res);
       })
-      .catch((err)=> {
+      .catch((err) => {
         return dispatch(this.setFetchErrorState(err));
       });
     };

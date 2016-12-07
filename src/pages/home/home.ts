@@ -1,20 +1,12 @@
 import {
   Component,
-  OnInit,
-  NgZone
+  OnInit
 } from '@angular/core';
-// import {AsyncPipe} from '@angular/common';
-import { NavController, LoadingController } from 'ionic-angular';
-import distanceCalculator from '../../utils/distanceCalculator';
-
-import * as _  from 'lodash';
-import * as moment from 'moment';
-
-/*
- * Actions
- */
-import {EventDataActions} from '../../actions/event-data.actions';
-import {UserActions} from '../../actions/user.actions';
+import {
+  NavController,
+  NavParams,
+  // Loading
+} from 'ionic-angular';
 
 /**
  *  Redux
@@ -22,212 +14,196 @@ import {UserActions} from '../../actions/user.actions';
 import {
   NgRedux
 } from 'ng2-redux';
+
 import {
-  Observable, 
+  Observable,
   Subscription
 } from 'rxjs';
+
 import {
   Map
 } from 'immutable';
 
+import * as moment from 'moment';
+
 /*
  *  Pages
  */
-// import { TermsPage } from '../terms/terms';
 import { CreatePage } from '../create/create';
+// import { HomePage}  from '../home/home';
 import { SearchPage } from '../search/search';
+import { RegistrationPage } from '../registration/registration';
+import { InvitesPage } from '../invites/invites';
+// import { ActivityListPage } from '../activity-list/activity-list';
+import { AddFriendPage } from '../add-friend/add-friend';
 
 /*
- *  Components
+ * Actions
  */
-// import {ActivityItemComponent} from '../../components/activity-item/activity-item.component.ts';
+import { UserActions } from '../../actions/user.actions';
+import { EventDataActions } from '../../actions/event-data.actions';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage implements OnInit {
-  public loadingItem;
+  user$: Observable<any>;
+  activities$ : Observable<any>;
 
-  activities$                  : Observable<any>;
-  friends$                  : Observable<any>;
-  activitiesToRate$            : Observable<any>;
-  location$                    : Observable<any>;
+  userSub$     : Subscription;
+  activitiesSub$  : Subscription;
 
-  activitiesSub$               : Subscription;
-  friendsSub$               : Subscription;
-  activitiesToRateSub$         : Subscription;
-  locationSub$                 : Subscription;
+  userId : string = null;
 
-  isFiltered: string = 'public';
-  isEmpty: any = 'true';
-  searchDistance: number = 2;
-  greatestDistance: number = 2;
-  coordinates: any;
-  friendsList = [];
+  maxStars : Object = [1, 2, 3, 4, 5];
+  userRating : number = 3;
+  queryFunc : Function;
+  querySelected : number = 0;
+  listTypes : any =  [
+    {
+      'header' : '{ Upcoming }',
+      'filterExpression' : (activity) => {
+        console.log(activity);
+        console.log(activity['startDate']);
+        return (new Date(activity['startDate']['iso'])).getTime() >= Date.now() && !!activity['isAttending'];
+      },
+      'sortExpression' : (activityOne, activityTwo) => {
+        return activityOne['dateTimeStart'] <= activityTwo['dateTimeStart'];
+      }
+    },
+    {
+      'header' : '{ Joined }',
+      'fetchExpression' : (activity) => {
+      },
+      'filterExpression' : (activity) => {
+        console.log(activity);
+        return !!activity['isAttending'];
+      },
+      'sortExpression' : (activityOne, activityTwo) => {
+        return activityOne['dateTimeStart'] >= activityTwo['dateTimeStart'];
+      }
+    },
+    {
+      'header' : '{ Created }',
+      'fetchExpression' : () => {
+      },
+      'filterExpression' : (activity) => {
+        console.log(this);
+        return activity['author']['objectId'] === this.userId;
+      },
+      'sortExpression' : (activityOne, activityTwo) => {
+        return activityOne['dateTimeStart'] >= activityTwo['dateTimeStart'];
+      }
+    },
+  ];
 
-  constructor(private navCtrl: NavController, private ngRedux: NgRedux<any>, private zone: NgZone, private userActions: UserActions, private eventDataActions: EventDataActions, public loadingCtrl: LoadingController) { 
-    console.log('HOME PAGE OPENING');
-    // this.loadingItem = this.loadingCtrl.create({
-    //   content: '',
-    //   dismissOnPageChange: true,
-    // })
-    // this.loadingItem.present();
-  }
-   
+  constructor(
+    private navCtrl: NavController,
+    private navParams: NavParams,
+    private ngRedux: NgRedux<any>,
+    private userActions : UserActions,
+    private eventDataActions: EventDataActions
+  ) {}
+
   ngOnInit() {
-    // this.ngRedux.dispatch(this.userActions.getLocation());
-    // this.locationConnector();
-    // this.activityConnector();
-    // this.friendConnector();
-    console.log('HOME LOADED')
-    this.ngRedux.dispatch(this.userActions.getLocation());
-    this.locationConnector();
-    this.activityConnector();
-    this.friendConnector();
+    this.queryFunc = this.listTypes[this.querySelected]['filterExpression'];
+
+    if(this.navParams.get('userId')) {
+      this.userId = this.navParams.get('userId');
+    }
+    if(this.userId){
+      this.user$ = this.ngRedux.select(['users', 'items', this.userId]).map((user: Map<string, any>) => user.toJS());
+    } else {
+      this.user$ = this.ngRedux.select('currentUser').map((currentUser: Map<string, any>) => currentUser.toJS());
+    }
+    this.ngRedux.dispatch(this.userActions.fetchUserById(this.userId));
+    this.ngRedux.dispatch(this.eventDataActions.fetchByUserId(this.userId));
+    
+    this.activities$ = this.ngRedux.select(['eventData', 'items'])
+    .map((items: Map<string, any>) => {
+      console.log('PROFILE ITEMS');
+      return items
+      .toList()
+      .toJS()
+      .sort((a, b) => {
+        return moment(a.startDate.iso) > moment(b.startDate.iso);
+      });
+    });
+    this.userSub$ = this.user$.subscribe((user) => {
+      if(user == undefined){
+
+      }
+      // this.userId = user['objectId'];
+      this.userRating = user['rating'];
+    })
   }
 
   ngOnDestroy() {
     console.log('Destroying Subscriptions')
-    if(!!this.locationSub$) {
-      this.locationSub$.unsubscribe();
+    if(!!this.userSub$) {
+      this.userSub$.unsubscribe();
     }
-    if(!!this.activitiesSub$){
+    if(!!this.activitiesSub$) {
       this.activitiesSub$.unsubscribe();
     }
-    if(!!this.activitiesToRateSub$) {
-      this.activitiesToRateSub$.unsubscribe();
+  }
+	
+	goSearch() {
+    this.navCtrl.setRoot(SearchPage);
+	}
+
+	goCreate() {
+    this.navCtrl.push(CreatePage);
+	}
+
+	goInvites() {
+    this.navCtrl.push(InvitesPage);
+	}
+
+	goActivityList(index: number) {
+    // this.navCtrl.push(ActivityListPage, {
+    //   'header' : this.listTypes[index]['header'],
+    //   'filter' : this.listTypes[index]['filterExpression'],
+    // });
+    this.querySelected = index;
+    this.queryFunc = this.listTypes[this.querySelected]['filterExpression'];
+    console.log(this.queryFunc.toString());
+	}
+
+  goEditProfile() {
+    this.navCtrl.setRoot(RegistrationPage, {
+      'edit': true
+    }) 
+  }
+
+  getIsRated(starNumber: number) {
+    if(starNumber <= this.userRating) {
+      return 'rating-gold';
+    } else {
+      return 'rating-grey';
     }
   }
 
-  friendConnector() {
-    this.friends$ = this.ngRedux.select(['users', 'items'])
-    .map((users: any)=>{
-      return users.reduce(function (memo, user) {
-        if(!!user.get('isFriend')){
-          memo.push(user.get('objectId'));
-        }
-        return memo;
-      }, [])
-    })
-    this.friendsSub$ = this.friends$.subscribe((friendsArray) => {
-      this.friendsList = friendsArray;
-    })
+  addFriend(){
+    this.navCtrl.push(AddFriendPage, {});
   }
-  locationConnector() {
-    this.location$ = this.ngRedux.select(['currentUser', 'location'])
-    .map((pos: Map<string, any>)=> {
+
+  getFilterButtonClasses(index:number) : any{
+    if(this.querySelected == index) {
       return {
-        longitude : pos.get('longitude'),
-        latitude : pos.get('latitude')
-      } 
-    })
-    this.locationSub$ = this.location$.subscribe((pos) => {
-      if(!pos.longitude && pos.longitude !== 0 || !pos.latitude && pos.latitude !== 0) {
-        this.ngRedux.dispatch(this.userActions.getLocation());
-      } else {
-        if(!_.isEqual(pos, this.coordinates)) {
-          this.coordinates = pos;
-          console.log('location update');
-          if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-            if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180 ) {
-              console.log('activity update')
-              this.ngRedux.dispatch(this.eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.latitude, this.coordinates.longitude));
-            }
-          }
-        }
+        'active-filter' : true,
+        'square-corner' : true,
+        'borderless'    : true,
       }
-    });
+    }
+    return {
+      'inactive-filter' : true,
+      'square-corner'   : true,
+      'borderless'      : true,
+    }
   }
-
-  activityConnector() {
-    this.activities$ = this.ngRedux.select(['eventData', 'items'])
-    // .map((items: any) => {})
-    .map((items: any) => {
-      return items
-      // .map((item)=>{
-      //   item.setIn(['startDate', 'iso'], moment(item.getInS))
-      // })
-      .filter((immutableItem: any) => {
-        if((new Date(immutableItem.get('startDate').get('iso'))).getTime() <= Date.now()){
-          return false
-        };
-        console.log(immutableItem);
-        if(!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-          if(Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
-            return distanceCalculator(
-              this.coordinates.latitude,
-              this.coordinates.longitude,
-              immutableItem.get('startLocation').get('coordinates').get('latitude'),
-              immutableItem.get('startLocation').get('coordinates').get('longitude')
-            ) <= this.searchDistance;
-          }
-        }
-        return false;
-
-      })
-      .toList()
-      .toJS()
-      .sort(function(a, b) {
-        console.log(a);
-        console.log(b);
-        console.log(a > b);
-        return new Date(a.startDate.iso) > new Date(b.startDate.iso);
-      })
-    })
-    this.activitiesToRate$ =  this.ngRedux.select(['eventData', 'items'])
-    .map((item: Map<string, any>) => {
-      return item
-      .filter((item) => {
-        if((new Date(item.get('startDate').get('iso'))).getTime() > Date.now()){
-          return false
-        };
-        return !!item.get('isAttending') && !!item.get('mustRate');
-      })
-      .toList()
-      .toJS()
-      .sort(function(a, b) {
-        return a.startDate.iso > b.startDate.iso;
-      })
-    })
-    this.activitiesSub$ = this.activities$.subscribe((x) => {
-      console.log(x);
-      this.zone.run(() => {
-        console.log('isEmpty');
-        console.log(x.length == 0);
-        this.isEmpty = (x.length == 0).toString();
-      })
-    });
-    this.activitiesToRateSub$ = this.activitiesToRate$.subscribe((activity)=> {
-      console.log(activity);
-    });
-  }
-
-  isActive(filterBy) {
-    return this.isFiltered === filterBy;
-  }
-
-  toggleView(newFilter) {
-    this.isFiltered = newFilter;
-  }
-
-  sliderChange() {
-    console.log('sliderUpdate');
-    // if(this.searchDistance > this.greatestDistance && this.coordinates) {
-      if (!!this.coordinates && !!this.coordinates.latitude && !!this.coordinates.longitude) {
-        if (Math.abs(this.coordinates.latitude) <= 90 && Math.abs(this.coordinates.longitude) <= 180) {
-          this.ngRedux.dispatch(this.eventDataActions.fetchEventsByCoordinates(this.searchDistance, this.coordinates.latitude, this.coordinates.longitude));
-          this.greatestDistance = this.searchDistance;
-        }
-      }
-    // }
-  }
-
-  checkEmpty() {
-    return this.isEmpty.toString();
-  }
-
-  goToCreate() {
-    this.navCtrl.push(CreatePage);
+  formatDate(date){
+    return moment(date).format('DD-MMM-YYYY');
   }
 }

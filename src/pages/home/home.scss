@@ -1,21 +1,109 @@
 page-home {
-  .home-container {
-    height: 100%;
+  .profile-details {
+    min-height: 70px;
+    // border-top: 1px solid #EEE;
+    // border-bottom: 1px solid #EEE;
+    ion-label {
+      margin: 0;
+    }
+    ion-avatar{
+      margin: 0;
+      margin-right: 8px;
+      min-width: 7rem;
+      min-height: 7rem;
+      img {
+        min-width: 7rem;
+        min-height: 7rem;
+        border-radius: 50%;
+      }
+    }
+    .profile-row{
+      min-height: 2em;
+      display: block;
+      // height: 50%;
+      padding-left: 0.5rem;
+      font-weight: bold;
+      font-size: 1.5rem;
+      color: #555;
+      ion-icon{
+        padding-right: 0.5rem;
+        // font-size: 2.5rem
+        margin-right: 0;
+        margin-top: 0;
+        margin-bottom: 0;
+      }
+      ion-icon[name="star"] {
+        padding-left: 0.3rem;
+        font-size:2.5rem;
+      }
+      ion-icon[name="md-create"] {
+        background-color: $assertive;
+        color: $light;
+        padding-left: 0.3rem;
+        padding-right: 0.3rem;
+        border-radius: 0.25rem;
+      }
+      ion-icon[name="ios-checkmark-circle"] {
+        color: $light;
+        padding-right: 0;
+        font-size:3rem;
+      }
+    }
+    .profile-name {
+      font-size: 1.8rem;
+      span{
+        color: $light;
+        font-size: 24px;
+      }
+    }
   }
-  button {
-    font-weight: 600; 
-    letter-spacing: 0.1em;
+  .activity-actions {
+    button:not(first-child) {
+      // border-left: 1px solid #EEE;
+    }
   }
-  scroll-content {
-    background-color: $positive;
+  .action-bar {
+    border-top: 1px solid #EEE;
+    border-bottom: 1px solid #EEE;
   }
-  .create-fab{
-    position:fixed;
-    bottom: 2%;
-    right:2%;
+  .split-three {
+    width: 100%;
+    margin: 0;
+    // min-height: 2rem;
+    // button {
+      //   width: 33%;
+      //   div{
+        //     margin-bottom: 0;
+      //   }
+    // }
+    // ion-label{
+      //   margin: 0;
+      //   div {
+        //     text-align: center;
+      //   }
+    // }
+    // font-size: 1rem;
+    .button-inner {
+      // display:block;
+    }
+    button {
+      width: 32.5%;
+      margin: 0;
+      border-left: 1px solid #EEE;
+    }
   }
-  .calm-button{
-    background-color: $calm;
+  .button-number {
+    font-weight: bold;
+    font-size: 1.8rem;
+  }
+  .button-title {
+    font-size: 1.3rem;
   }
 
+  .active-filter {
+    color : $positive;
+  }
+  .inactive-filter {
+    color : $dark;
+  }
 }

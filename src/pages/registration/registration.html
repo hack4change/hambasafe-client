@@ -1,6 +1,6 @@
 <ion-header>
   <ion-navbar color="energized">
-    <ion-buttons start>
+    <ion-buttons left>
       <button ion-button icon-only  menuToggle>
         <ion-icon color="light" class="menu-icon" name="menu"></ion-icon>
       </button>
@@ -66,10 +66,6 @@
         <ion-label floating>Confirm Email</ion-label>
         <ion-input type="email"  formControlName="confirmEmail" required></ion-input>
       </ion-item>
-      <ion-item *ngIf="!isEdit">
-        <!-- <input name="identification" class="hidden-file-input" type="file" accept="image/*" id="identification" formControlName="identification" required /> -->
-        <!-- <label for="identification">Scan my ID or Driver's License</label> -->
-      </ion-item>
       <ion-item class="borderless" (click)="openTerms()">
         <h2 *ngIf="!termsAccepted">
           Accept the Terms of Use
@@ -94,3 +90,7 @@
   </ion-toolbar>
 </ion-footer>
 
+<!-- <ion-item *ngIf="!isEdit"> -->
+<!-- <input name="identification" class="hidden-file-input" type="file" accept="image/*" id="identification" formControlName="identification" required /> -->
+<!-- <label for="identification">Scan my ID or Driver's License</label> -->
+<!-- </ion-item> -->

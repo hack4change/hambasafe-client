@@ -16,7 +16,7 @@ import {NgRedux} from 'ng2-redux';
  *  Pages
  */
 import { ActivityDetailPage } from '../../pages/activity-detail/activity-detail';
-import { ActivePage } from '../../pages/active/active';
+// import { ActivePage } from '../../pages/active/active';//TODO: Remove Comments
 
 /*
   Generated class for the ActivityItem component.
@@ -62,16 +62,17 @@ export class ActivityItem implements OnInit {
 
   viewActivity(){
     console.log(this.activity['objectId']);
-    if(this.startDate.isBetween(moment(), moment().add(1, 'month'), 'minute')){
-      this.nav.push(ActivePage, {
-        'activityId' : this.activity['objectId'],
-      }) 
-    } else if(!this.detailed) {
+    //TODO: Add back in.
+    // if(this.startDate.isBetween(moment(), moment().add(1, 'month'), 'minute')){
+    //   this.nav.push(ActivePage, {
+    //     'activityId' : this.activity['objectId'],
+    //   }) 
+    // } else if(!this.detailed) {
       this.nav.push(ActivityDetailPage, {
         'activityId' : this.activity['objectId'],
         'mustRate'     : this.mustRate,
       }) 
-    }
+    // }
   }
 
   getClasses() {
@@ -79,7 +80,7 @@ export class ActivityItem implements OnInit {
     }
     if(this.mustRate) {
       classes['must-rate'] = true;
-    } else if(this.startDate.isBetween(moment(), moment().add(1, 'month'), 'minute')){
+    } else if(this.startDate.isBetween(moment(), moment().add(1, 'month'), 'minute')) {
       classes['must-checkin'] = true;
     }
     return classes;

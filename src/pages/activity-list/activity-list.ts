@@ -23,6 +23,8 @@ import {
   Map
 } from 'immutable';
 
+import * as moment from 'moment';
+
 /*
  *  Pages
  */
@@ -73,11 +75,20 @@ export class ActivityListPage implements OnInit {
   activityConnector() {
     this.activities$ = this.ngRedux.select(['eventData', 'items'])
     .map((activity:Map<string, any>) => {
+      var b = activity.filter((activity:Map<string, any>) => {
+        return this.shouldInclude(activity);
+      })
+      .toList()
+      .toJS()
+      console.log(b);
       return activity.filter((activity:Map<string, any>) => {
         return this.shouldInclude(activity);
       })
       .toList()
       .toJS()
+      .sort((a, b) => {
+        return moment(a.startDate.iso) > moment(b.startDate.iso);
+      })
     })
 
     this.activitiesSub$ = this.activities$.subscribe((x) => {

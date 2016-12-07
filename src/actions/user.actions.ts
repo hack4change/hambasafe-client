@@ -163,7 +163,7 @@ export class UserActions {
     //   enableHighAccuracy: true
     // };
 
-    Geolocation.getCurrentPosition().then((position) => {
+    Geolocation.getCurrentPosition().then((position : Geoposition) => {
       if(position.coords.longitude !== this.coords.longitude || position.coords.latitude !== this.coords.latitude){
         this.ngRedux.dispatch(this.setLocation(position.coords.longitude, position.coords.latitude));
       }
@@ -274,8 +274,17 @@ export class UserActions {
   /*
    *  FETCH USER
    */
-  fetchUser() : any {
+  fetchUserById(id: string) : any {
     return dispatch => {
+      dispatch(this.setFetchLoading());
+      this.parseManager.fetchUserById(id)
+      .then((res) => {
+        return this.ngRedux.dispatch(this.setFetchSuccess(res));
+      })
+      .catch((err) => {
+        console.log('ERROR: fetchUserById '+ id);
+        this.ngRedux.dispatch(this.setFetchError(err))
+      });
     };
   };
 

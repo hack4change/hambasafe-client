@@ -24,10 +24,10 @@
     <form [formGroup]="createForm">
 <!--  -->
     <ion-list>
-      <ion-item>
-        <ion-label>Public</ion-label>
-        <ion-toggle name="isPublic" formControlName="isPublic" [(ngModel)]="isPublic"></ion-toggle>
-      </ion-item>
+      <!-- <ion-item> -->
+      <!--   <ion-label>Public</ion-label> -->
+      <!--   <ion-toggle name="isPublic" formControlName="isPublic" [(ngModel)]="isPublic"></ion-toggle> -->
+      <!-- </ion-item> -->
       <ion-item class="form-group">
         <ion-label>Event Type</ion-label> <!-- replace tile with selected gender-->
         <ion-select name="eventType" [(ngModel)]="eventType" formControlName="eventType" class="form-control" required>
@@ -75,17 +75,38 @@
         <ion-input [hidden]="true" formControlName="latitude" [(ngModel)]="startLocation.latitude"></ion-input>
         <ion-input [hidden]="true" formControlName="longitude" [(ngModel)]="startLocation.longitude"></ion-input>
       </ion-item>
+            <ion-item>
+              <ion-label floating>
+                What time does it start?
+              </ion-label>
+              <ion-datetime name="startTime" displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime" formControlName="startTime"></ion-datetime> 
+            </ion-item>
+            <ion-item>
+              <ion-label floating>
+                What day does it start?
+              </ion-label>
+              <ion-datetime name="startDate" min="{{ minDate }}" max="{{ maxDate }}" displayFormat="DD/MMM/YY" value="startDate" pickerFormat="DD MM YYYY" [(ngModel)]="startDate"  formControlName="startDate"></ion-datetime>
+            </ion-item>
       <ion-item class="">
-        <ion-label floating>
-          What time does it start?
-        </ion-label>
-        <ion-datetime name="startTime" displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime" formControlName="startTime"></ion-datetime> 
-      </ion-item>
-      <ion-item class="">
-        <ion-label floating>
-          What day does it start?
-        </ion-label>
-        <ion-datetime name="startDate" min="{{ minDate }}" max="{{ maxDate }}" displayFormat="DD/MMM/YY" value="startDate" pickerFormat="DD MM YYYY" [(ngModel)]="startDate"  formControlName="startDate"></ion-datetime>
+        <ion-row>
+          <ion-col>
+            <ion-item>
+              <ion-label floating>
+                What time does it start?
+              </ion-label>
+              <ion-datetime name="startTime" displayFormat="h:mm A" pickerFormat="h mm A" [(ngModel)]="startTime" formControlName="startTime"></ion-datetime> 
+            </ion-item>
+
+          </ion-col>
+          <ion-col>
+            <ion-item>
+              <ion-label floating>
+                What day does it start?
+              </ion-label>
+              <ion-datetime name="startDate" min="{{ minDate }}" max="{{ maxDate }}" displayFormat="DD/MMM/YY" value="startDate" pickerFormat="DD MM YYYY" [(ngModel)]="startDate"  formControlName="startDate"></ion-datetime>
+            </ion-item>
+          </ion-col>
+        </ion-row>
       </ion-item>
       <ion-item class="">
         <ion-label floating>Wait time(minutes)?</ion-label>

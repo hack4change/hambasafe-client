@@ -3,7 +3,7 @@ user-item {
     color: $energized;//#FFD700;
   }
   .user-checked-in {
-    background-color: map-get($colors, secondary);
+    background-color: map-get($colors, primary);
     color: $light;
   }
   .to-confirm{

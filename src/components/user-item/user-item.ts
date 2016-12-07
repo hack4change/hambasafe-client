@@ -9,6 +9,11 @@ import {NgRedux} from 'ng2-redux';
 /*
  *  Pages
  */
+import { HomePage} from '../../pages/home/home';
+
+/**
+ * Actions
+ */
 import { UserActions} from '../../actions/user.actions';
 
 /*
@@ -70,7 +75,7 @@ export class UserItem implements OnInit {
     }
     this.rating = index;
   }
-  getClasses(){
+  getClasses() {
     var retObj = {};
     if(this.checkedIn){
       retObj['user-checked-in'] = true;
@@ -79,10 +84,16 @@ export class UserItem implements OnInit {
     }
     return retObj;
   }
-  confirmFriend(){
+  confirmFriend() {
     this.ngRedux.dispatch(this.userActions.confirmFriend(this.user.objectId));
   }
-  removeFriend(friendId: string){
+  removeFriend(friendId: string) {
     this.ngRedux.dispatch(this.userActions.removeFriend(this.user.objectId));
+  }
+  viewProfile(){
+    console.log('viewProfile');
+    this.nav.push(HomePage, {
+      'userId': this.user.objectId
+    }) 
   }
 }

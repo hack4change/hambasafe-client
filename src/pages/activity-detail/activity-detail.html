@@ -1,19 +1,22 @@
 <ion-header>
   <ion-navbar color="primary">
-    <!-- <ion-buttons start> -->
-    <!--   <button ion-button icon-only (click)="goBack()"> -->
-    <!--     <ion-icon name="arrow-back"></ion-icon> -->
-    <!--   </button> -->
-    <!-- </ion-buttons> -->
-    <ion-buttons *ngIf="!isAuthor" end>
-      <button ion-button icon-only dark class="indent" (click)="goHome()">
-        <ion-icon name="home"></ion-icon>
-      </button>
-      <button ion-button icon-only dark (click)="goSearch()">
-        <ion-icon name="search"></ion-icon>
+    <ion-buttons *ngIf="!navCtrl.canGoBack()" left>
+      <button ion-button icon-only menuToggle>
+        <ion-icon name="menu"></ion-icon>
       </button>
     </ion-buttons>
-    <ion-buttons  *ngIf="isAuthor" end>
+    <!-- <ion-buttons *ngIf="!isAuthor" end> -->
+    <!--   <button ion-button icon-only dark class="indent" (click)="goHome()"> -->
+    <!--     <ion-icon name="home"></ion-icon> -->
+    <!--   </button> -->
+    <!--   <button ion-button icon-only dark (click)="goSearch()"> -->
+    <!--     <ion-icon name="search"></ion-icon> -->
+    <!--   </button> -->
+    <!-- </ion-buttons> -->
+    <ion-title>
+      {{ activity.name }}
+    </ion-title>
+    <ion-buttons *ngIf="isAuthor" end>
       <button [disabled]="cannotEdit()" *ngIf="isAuthor" ion-button icon-only (click)="inviteUsers()" primary>
         <ion-icon name="person-add"></ion-icon>
       </button>
@@ -29,7 +32,7 @@
     </ion-buttons>
   </ion-navbar>
 </ion-header>
-<ion-content [ngSwitch]="ratingRequired()">
+<ion-content padding [ngSwitch]="ratingRequired()">
   <ion-fab top center edge>
     <button ion-fab mini color="danger" (click)="viewMap()">
       <ion-icon name="pin"></ion-icon>
@@ -39,14 +42,14 @@
     <!-- <ion-list> -->
     <!--   <activity-item detailed="true" [activity]="(activity$ | async)"></activity-item> -->
     <!-- </ion-list> -->
-    <ion-row class="name-header" margin-top>
-      <ion-item class="borderless">
-        <h1 style="font-size: 2.5rem;">
-          {{ activity.name }}
-        </h1>
-      </ion-item>
-    </ion-row>
-    <ion-row padding-horizontal class="location-header">
+    <!-- <ion-row class="name-header" margin-top> -->
+    <!--   <ion-item class="borderless"> -->
+    <!--     <h1 style="font-size: 2.5rem;"> -->
+    <!-- {{ activity.name }} -->         
+    <!--     </h1> -->
+    <!--   </ion-item> -->
+    <!-- </ion-row> -->
+    <ion-row class="location-header">
       <ion-col>
         <div class="activity-location" style="text-overflow: ellipsis; overflow: hidden; font-size: 1.5rem;">
           <span *ngIf="!!activity.startLocation.suburb">{{ activity.startLocation.suburb }},</span><span> {{  activity.startLocation.city }}</span>
@@ -58,7 +61,7 @@
         </div>
       </ion-col>
     </ion-row>
-    <div class="activity-detail-container" padding>
+    <div class="activity-detail-container">
         <ion-row>
           <ion-col>
             <p class="activity-description">

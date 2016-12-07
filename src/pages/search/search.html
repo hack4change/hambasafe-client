@@ -1,110 +1,55 @@
 <ion-header>
   <ion-navbar color="primary">
-    <ion-buttons class="order-left" start>
-      <button ion-button icon-only *ngIf="activeType == 'TIME'" menuToggle>
+    <ion-buttons left>
+      <button *ngIf="activeType == 'DISTANCE'" ion-button icon-only menuToggle (click)="menuOpened()">
         <ion-icon name="menu"></ion-icon>
       </button>
-      <button ion-button icon-only *ngIf="activeType == 'DISTANCE'" (click)="toggleView('TIME')" clear>
-        <ion-icon name="ios-arrow-back-outline"></ion-icon>
-      </button>
-      <button ion-button icon-only *ngIf="activeType == 'SEARCH'" (click)="toggleView('DISTANCE')" clear>
-        <ion-icon name="ios-arrow-back-outline"></ion-icon>
+      <button *ngIf="activeType == 'SEARCH'" ion-button icon-only>
+        <ion-icon name="arrow-back"></ion-icon>
       </button>
     </ion-buttons>
     <ion-title>
       Search
     </ion-title>
-    <ion-buttons end>
-      <!-- <button ion-button icon-only dark (click)="goHome()" class="indent"> -->
-      <!--   <ion-icon name="home"></ion-icon> -->
-      <!-- </button> -->
-      <!-- <button ion-button icon-only> -->
-      <!--   <ion-icon isActive="true" color="calm" name="search"></ion-icon> -->
-      <!-- </button> -->
-    </ion-buttons>
   </ion-navbar>
-  <!-- <ion-toolbar color="primary"> -->
-  <!--   <ion-buttons *ngIf="activeType == 'SEARCH'" start> -->
-  <!--     <button ion-button icon-only (click)="toggleView('DISTANCE')"> -->
-  <!--       <ion-icon light name="close-circle"></ion-icon> -->
-  <!--     </button> -->
-  <!--   </ion-buttons> -->
-  <!-- </ion-toolbar> -->
 </ion-header>
 
 <ion-content [ngSwitch]="activeType">
-  <ion-fab *ngIf="activeType === 'TIME'" right bottom>
-    <!-- class="square-corner" -->
-    <button ion-fab (click)="toggleView('DISTANCE')">
-      <ion-icon name="pin"></ion-icon>
-    </button>
-  </ion-fab>
-  <ion-fab *ngIf="!isDevice && activeType === 'DISTANCE'" right bottom>
-    <!-- class="square-corner" -->
-    <button ion-fab (click)="searchRadius()">
-      Go!
-    </button>
-  </ion-fab>
-  <ion-toolbar *ngIf="activeType !== 'DISTANCE'" color="primary">
-    <ion-searchbar placeholder="Filter by Activity Type" (ionInput)="getActivities($event)">
-    </ion-searchbar>
-  </ion-toolbar>
-  <!-- <ion-toolbar> -->
-  <!--   <ion-item class="borderless"> -->
-  <!--     <ion-label>Activity Type</ion-label> -->
-  <!--     <ion-select [(ngModel)]="activityType"> -->
-  <!--       <ion-option selected="true" value="">All</ion-option> -->
-  <!--       <ion-option value="WALK">Walk</ion-option> -->
-  <!--       <ion-option value="RUN">Run</ion-option> -->
-  <!--       <ion-option value="CYCLE">Cycle</ion-option> -->
-  <!--     </ion-select> -->
-  <!--   </ion-item> -->
-  <!-- </ion-toolbar> -->
-  <template ngSwitchCase="TIME">
-    <!-- <ion-toolbar class="buttonbar"> -->
-    <!--   <button ion-button icon-only (click)="toggleView('TIME')" class="square-corner" [ngClass]="{active: isActive('TIME'), 'not-active': !isActive('TIME')}" clear block ion-row center> -->
-    <!--     <ion-icon name="ios-time-outline" item-left></ion-icon> -->
-    <!--   </button> -->
-    <!--   <button ion-button icon-only (click)="toggleView('DISTANCE')" class="square-corner" clear block ion-row center> -->
-    <!--     <ion-icon name="md-pin" item-left></ion-icon> -->
-    <!--   </button> -->
-    <!-- </ion-toolbar> -->
-    <ion-list>
-      <activity-item *ngFor="let activity of ( (activities$ | async) | SearchFilter:searchQuery:'eventType')" [activity]="activity"></activity-item>
-    </ion-list>
-
-  </template>
   <template ngSwitchCase="DISTANCE">
-    <!-- <div style="height: 100%; width: 100%; display: flex; flex-direction: column"> -->
-    <!--   <div style="display: block; flex-grow:1"> -->
-        <!-- <ion-toolbar> -->
-        <!--   <ion-item class="no-border"> -->
-        <!--     <ion-range min="2" max="20" step="2" snaps="true" pin="false" [(ngModel)]="searchDistance" secondary> -->
-        <!--     </ion-range> -->
-        <!--   </ion-item> -->
-        <!-- </ion-toolbar> -->
-        <!-- <ion-toolbar> -->
-        <!--   <button ion-button full block (click)="searchRadius()"> -->
-        <!--     Go! -->
-        <!--   </button> -->
-        <!-- </ion-toolbar> -->
-        <map #myMap [radius]="searchDistance">
-          <ion-fab *ngIf="isDevice" right bottom>
-            <!-- class="square-corner" -->
-            <button ion-fab (click)="searchRadius()">
-              Go!
-            </button>
-          </ion-fab>
-        </map>
-      <!-- </div> -->
-      <!-- <div style=""> -->
-      <!-- </div> -->
-    <!-- </div> -->
+    <div style="display:flex; height:100%; flex-direction:column;">
+      <div style="display:flex;flex-grow:1;">
+        <div style="display:block; width:100%; min-height:100%;">
+          <map #myMap [radius]="searchDistance">
+            <ion-fab *ngIf="isDevice" right bottom>
+              <button ion-fab (click)="searchRadius()">
+                Go!
+              </button>
+            </ion-fab>
+          </map>
+        </div>
+      </div>
+      <ion-toolbar style="align-self:flex-end" margin-bottom no-lines>
+        <ion-item style="padding-right:64px;">
+          <ion-range primary min="2" max="18" step="2" snaps="true" pin="false" (ngModelChange)="sliderChange()" [(ngModel)]="searchDistance">
+            <ion-icon range-left small>{{searchDistance}}km</ion-icon>
+
+            <ion-icon range-right small></ion-icon>
+          </ion-range>
+        </ion-item>
+      </ion-toolbar>
+    </div>
+    <ion-fab *ngIf="!isDevice" right bottom>
+      <button ion-fab (click)="searchRadius()">
+        Go!
+      </button>
+    </ion-fab>
   </template>
   <template ngSwitchCase="SEARCH">
-      <activity-item *ngFor="let activity of ( (activities$ | async) | SearchFilter:searchQuery:'eventType')" [activity]="activity"></activity-item>
+    <activity-item *ngFor="let activity of ( (activities$ | async) | SearchFilter:searchQuery:'eventType')" [activity]="activity"></activity-item>
+    <ion-fab right bottom>
+      <button ion-fab (click)="toggleView('DISTANCE')">
+        <ion-icon name="pin"></ion-icon>
+      </button>
+    </ion-fab>
   </template>
 </ion-content>
-
-<ion-footer *ngIf="activeType=='DISTANCE'">
-</ion-footer>

@@ -1,6 +1,19 @@
-import { Component, ViewChild, OnInit } from '@angular/core';
-import { Platform, NavController, MenuController } from 'ionic-angular';
-import { StatusBar, Splashscreen, ScreenOrientation } from 'ionic-native';
+import {
+  Component,
+  ViewChild,
+  OnInit
+} from '@angular/core';
+import {
+  Platform,
+  NavController,
+  MenuController,
+  Events,
+} from 'ionic-angular';
+import { 
+  StatusBar,
+  Splashscreen,
+  ScreenOrientation 
+} from 'ionic-native';
 import {
   Observable,
   Subscription
@@ -25,7 +38,6 @@ import { FriendsPage }      from '../pages/friends/friends';
 import { HomePage }         from "../pages/home/home";
 import { SearchPage }         from "../pages/search/search";
 import { LandingPage }      from '../pages/landing/landing';
-import { ProfilePage }      from '../pages/profile/profile';
 import { RegistrationPage } from '../pages/registration/registration';
 import { TermsPage }        from '../pages/terms/terms';
 
@@ -49,6 +61,7 @@ export class MyApp implements OnInit {
   constructor(
     public platform : Platform,
     // public navCtrl : NavController,
+    public events   : Events,
     public menuCtrl : MenuController,
     public authActions : AuthActions,
     public userActions : UserActions,
@@ -125,12 +138,14 @@ export class MyApp implements OnInit {
    */
 	setMenuAuthenticated() {
     this.menuCtrl.close();
+    this.events.publish('menu:closed',  {});
     this.menuCtrl.enable(false, 'anonymous-menu');
     this.menuCtrl.enable(true, 'authorised-menu');
   }
 
 	setMenuAnonymous() {
     this.menuCtrl.close();
+    this.events.publish('menu:closed',  {});
     this.menuCtrl.enable(false, 'authorised-menu');
     this.menuCtrl.enable(true, 'anonymous-menu');
   }
@@ -140,32 +155,32 @@ export class MyApp implements OnInit {
    */
   goToHome() {
     this.menuCtrl.close();
+    this.events.publish('menu:closed',  {});
     this.navCtrl.setRoot(HomePage);
   }
 
   goToSearch() {
     this.menuCtrl.close();
+    this.events.publish('menu:closed',  {});
     this.navCtrl.setRoot(SearchPage);
   }
 
   goToFriends() {
     this.menuCtrl.close();
+    this.events.publish('menu:closed',  {});
     this.navCtrl.setRoot(FriendsPage);
   }
 
   goToAbout() {
     this.menuCtrl.close();
+    this.events.publish('menu:closed',  {});
     this.navCtrl.push(AboutPage);
   }
   
   goToEmergency() {
     this.menuCtrl.close();
+    this.events.publish('menu:closed',  {});
     this.navCtrl.push(EmergencyPage);
-  }
-  
-  goToProfile() {
-    this.menuCtrl.close();
-    this.navCtrl.setRoot(ProfilePage);
   }
   
   goToFacebook() {
@@ -185,11 +200,16 @@ export class MyApp implements OnInit {
   }
   goToTerms() {
     this.menuCtrl.close();
+    this.events.publish('menu:closed',  {});
     this.navCtrl.push(TermsPage);
   }
 
   logOut() {
     this.menuCtrl.close();
+    this.events.publish('menu:closed',  {});
     this.ngRedux.dispatch(this.authActions.logoutUser());
+  }
+  menuClosed(){
+    this.events.publish('menu:closed',  {});
   }
 }
